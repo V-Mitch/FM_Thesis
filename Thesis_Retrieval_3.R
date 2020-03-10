@@ -198,6 +198,6 @@ for (i in event_file$Date[1:length(event_file$Date)]){
   }
 }
 
-# write.csv(event_file, file = "~/R tests/finance related projects/audcpi_dataframe.csv")
+# write.csv(event_file, file = "~/R tests/finance related projects/audret_dataframe.csv")
 
 #______m_m <- event_file

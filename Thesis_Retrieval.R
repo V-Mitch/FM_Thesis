@@ -3,7 +3,7 @@ require(lubridate)
 
 # # Canadian CPI (Time is ET, GMT -5 and uses DST)
 file_macro <- "~/R tests/finance related projects/cadcpi_m_m.txt"
-file_prices <- "~/R tests/finance related projects/USDCAD_M1_200001030018_201911222357.csv"
+file_prices <- "~/R tests/finance related projects/USDCAD_M1_200801020901_202002241546.csv"
 schedule_change_1 <- as.numeric(as.Date("2014-11-20"))
 schedule_change_2 <- as.numeric(as.Date("2012-03-23"))
 event_time1 <- "15:30:00" ; event_time2 <- "14:30:00" ; event_time3 <- "13:00:00"

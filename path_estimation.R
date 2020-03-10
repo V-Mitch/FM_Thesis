@@ -1,6 +1,6 @@
 # Requires qLL_Test File
 
-# Parameter Path estimation in Unstable regression coefficients. Müller and Petalas (2010).
+# Parameter Path estimation in Unstable regression coefficients. M?ller and Petalas (2010).
 
 # With respect to the vector of parameters: B0, B1, and sigma squared
 # S_t is the score function or first derivative of the log likelihood
@@ -35,7 +35,7 @@ dl_sig_sqrsig_sqr <- 1/sig_sqr^2 * sum(d_t^2)
 dl_sig_sqrB0 <- -2/sig_sqr * sum(d_t)
 dl_B0B1 <- mean(X_t) / sig_sqr
 dl_B0sig_sqr <- 1/sig_sqr^2 * sum(d_t)
-dl_B0B0 <- n / sig_sqr
+dl_B0B0 <- T / sig_sqr
 H <- 1/T * matrix(c(dl_B1B1, dl_B1sig_sqr, dl_B1B0,
               dl_sig_sqrB1, dl_sig_sqrsig_sqr, dl_sig_sqrB0,
               dl_B0B1, dl_B0sig_sqr, dl_B0B0),
@@ -125,5 +125,5 @@ Path_Matrix[i,] <- B1_t * w_new[i]
 # Step 4
 
 B1_final <-  apply(Path_Matrix, 2, sum)
-plot(B1_final, type = "l", main = paste("coefficient path of the cad core retail sales"))
-
+plot(B1_final, type = "l", main = paste("coefficient path"))
+# write.csv(B1_final, file = "~/R tests/finance related projects/cadcrs_path.csv")
