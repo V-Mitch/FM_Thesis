@@ -1,0 +1,137 @@
+---
+title: "Time Variation of Regression Coefficients related to Macroeconomic News affecting Currency Prices"
+author: "Victor Mitchell"
+bibliography: ["citations.bib"]
+date: "November 5, 2019"
+always_allow_html: no
+output:
+  bookdown::pdf_document2:
+    toc: true
+    toc_depth: 2
+  
+---
+```{r loadlib, results = 'hide', echo = F, message = F, warning = F}
+library(bookdown)
+library(quantmod)
+library(plotly)
+library(jtools)
+library(knitr)
+library(kableExtra)
+library(dplyr)
+#library(phantomjs)
+setwd("~/R tests/finance related projects")
+#price_data_usdcad <- read.delim("~/R tests/finance related projects/USDCAD_M1_201901020600_201911051703.csv")
+# cadcpi_m_m <- read.delim("~/R tests/finance related projects/cadcpi_m_m.txt")
+# cadcpi_newcol <- read.csv("~/R tests/finance related projects/cadcpi_dataframe.csv")
+# usdcad_ticks <- read.delim("~/R tests/finance related projects/USDCAD_201906191500_201906191559_ticks.csv")
+source("brownian_plot.R")
+
+results <- read.delim("~/R tests/finance related projects/result_table_1.txt")
+results_sim <- read.delim("~/R tests/finance related projects/result_table_sim.txt")
+qLL_table <- read.delim("~/R tests/finance related projects/qLL_crit.txt")
+colnames(qLL_table) <- c("k",seq(from = 1,to = 5, by = 1))
+```
+
+\begin{center}
+
+abstract here when I'm done with the writing and have all results
+
+\end{center}
+
+# Introduction
+
+There exists a number of macroeconomic figures that are released on a predetermined schedule for certain countries. These include for example the Non-Farm Employment change that is released on the first friday of every month informing economists and investors alike of the status of employment in the United States.  
+Classic economic theory helps us understand that an increase of interest rates is warranted when economies are performing well and prices are generally increasing. Those who decide to increase national interest rates, the central banks, typically refer to measures of inflation in order to make their decisions. Because of this, investors and traders alike pay close attention to news releases (such as inflation, and also the Non-Farm-Payrolls in the case of the United States) and react according to the results. These news releases are not made public until specific times on specific days and since investors and traders react to the same news the moment it is released, the result is often a violent reaction of price in one direction or another. The common discourse is that the direction and the magnitude of the change of price depends on the difference between the expectation of the market (combined expecation of worldwide investors) and the result of the news release.  
+In this paper, we decide to use currency pairs to measure the price shocks. As certain news pertaining to a particular country affects its respective currency more than other ones, it makes sense to observe the currency most relevant to the news announcement. As currency prices are typically measured in pairs, the second chosen currency will be another major currency that is known for its high liquidity (EUR, USD or CHF) and does not have any other news announcements at the same time^[When simultaneous news cannot be avoided, a sequence of  stability tests will be applied to ensure time variation is identified on a specific news release]. As an example, we would use the USD/CAD currency pair to measure the effect of the Canadian Consumer Price Index (CPI).  
+The paper of [@board_of_governors_of_the_federal_reserve_system_high-frequency_2003] reveals that over the time period between 1987 and 2002 there has been little time-variation in the reaction to news. Some more recently published literature of [@ben_omrane_time-varying_2019] involving an analysis on euro-dollar contracts has determined that unlike the the decade(s) encompassing the "Great Moderation" where there was lower relative volatility in the financial markets, the time period between 2004 and 2014 is characterized by evolving reactions to macroeconomic news.  
+This paper aims to _________
+  
+# Data
+  
+The minute-by-minute OHLC Data of 7 currency pairs were collected from the Metatrader5 platform. This represents over 4 million data points for each pair. Only a small fraction of this data is actually used since we consider only the 5 time frame from when each piece of monthly or quarterly news is released until 5 minutSes afterwards. 
+  
+# Construction of the model.
+  
+Being consistent with previous literature on the subject, the first step involves estimating the impact that each piece of news has on its respective currency assuming 1.) That the news effects are constant over time. 2.) The surprise element $S_t$ of the regression is evaluated as:  
+
+\begin{equation}
+S_t = \frac{A_t - E_t}{\sigma_d}
+\end{equation}
+  
+$A_t$ is the actual result of the news at time $t$, $E_t$ is the expected result aggregated from experts and $\sigma_d$ is the empirical standard deviation of this difference over the entire sample. We use the expectation numbers from the ForexFactory website^[The expectations of most online sources such as "Investing.com" or "DailyFX" are very similar. The aggregation methods are not disclosed to the public.] Thereafter, we use this surprise element in a first simple OLS model.  
+
+\begin{equation}
+R_t = \beta_0 + \beta S_t + \varepsilon_t
+\end{equation}  
+  
+\begin{equation}
+R_t = \beta_0 + \beta_t S_t + \varepsilon_t
+\end{equation}
+  
+
+# Testing for instability of the news impact parameter
+  
+There exists many ways to test whether $\beta_t$ is time dependent or not. We choose the methodology of the authors of [@elliott_efficient_2006] and briefly retrace their steps. In their paper, it is shown that the quasi-Local-Level (qLL) test enables one to test for many different types of persistent processes of the $\beta_t$. It is explained that many of these breaking processes can have a "temporary memory" (strictly speaking are strongly mixing) but will be well approximated by a Wiener process.^[Theorem 7.30 of [@white_asymptotic_2001] can be applied since certain assumptions are made about the process]. This is extremely practical in our scenario as there are many possiblities for the possible variation of the $\beta_t$. The Null Hypothesis implies there is a stable parameter as in a familiar OLS regression. We obtain the likelihood under the Null assuming that the $R_t$ observations are independently and identically distributed (and therefore so are their first differences):  
+  
+\begin{equation}
+L_{H0}(\beta_0, \beta_1, \sigma^2) = log\prod_{t=1}^{T} p(\Delta R_t | S_t ; \beta_0, \beta_1, \sigma^2)
+\end{equation}
+  
+\begin{equation}
+= -\frac{T}{2}log(2\pi) - Tlog(\sigma) - \frac{1}{2\sigma^2}\sum_{t=1}^{T}(\Delta R_t - (\Delta\beta_0 + \Delta\beta_1 S_t))^2
+\end{equation}
+  
+Only the last term of (5) is kept as the first constants will cancel out. $\Delta\beta_0 + \Delta\beta_1 S_t$ becomes 0 as the terms do not change with time.  
+  
+\begin{equation} 
+L_{H0} = \frac{1}{2\sigma^2}\sum_{t=1}^{T}(\Delta R_t)^2
+\end{equation}
+  
+This contrasts with the alternative where instability is implied. We assume $\beta_t - \beta_0$ is approximated by the Gaussian random walk and $\Delta R_t$ is therefore a Gaussian moving average of order 1 MA(1) with the specification: $\Delta R_t \sim \eta_t + \psi_\eta \eta_{t-1}$, $\eta_t \sim iidN(0,\sigma^2_\eta)$, constant $\psi_\eta < 1$. Using the same $iid$ assumption we obtain the likelihood of this alternative process:  
+  
+\begin{equation} 
+L_{HA} = \frac{1}{2\sigma^2}\sum_{t=1}^{T}(\Delta \eta)^2
+\end{equation}
+
+The qLL statistic is obtained by subtracting $L_{HA}$ from $L_{H0}$. The qLL test is therefore a monotone transformation of the Likelihood Ratio Test ($LR_T$), so while it does not follow a chi-square distribution exactly, it does follow a certain related distribution that has its percentiles defined by [@elliott_efficient_2006] and reported in their table, reproduced here as Table \@ref(tab:qLL). The general extension to the $LR_T$ can be made where we can reject the model related to the Null Hypothesis (the stable model) if the critical value is sufficiently negative.
+  
+```{r qLL, echo = FALSE}
+kable(qLL_table, booktabs = T, caption ="Asymptotic critical values of the qLL statistic",
+      format = "latex") %>%
+kable_styling(latex_options = c("striped"))
+```
+  
+In order to see this in practice and ensure it works in our case, we create some hypothetical paths and observe the result of the tests.  
+  
+```{r plots1, echo = FALSE}
+plot1
+```
+
+- Assumptions of the test - appropriate in our case???
+
+```{r echo = FALSE}
+kable(results, booktab = T) %>%
+kable_styling(latex_options = c("striped", "scale_down"))
+```
+  
+```{r echo = FALSE}
+kable(results_sim, booktab = T) %>%
+kable_styling(latex_options = c("striped", "scale_down"))
+```
+
+# Parameter Path Estimations
+
+# Conclusion
+
+# Appendix
+  
+## Parameter Paths  
+  
+```{r echo = FALSE}
+plotpath(read.csv("~/R tests/finance related projects/cadcrs_path.csv"))
+```
+
+
+
+
+
