@@ -124,9 +124,38 @@ Path_Matrix[i,] <- B1_t[i,] * w_new[i]
 # Step 4
 
 B1_final <-  apply(Path_Matrix, 2, sum)
-plot(B1_final, type = "l", main = paste("coefficient path"))
-# write.csv(B1_final, file = "~/R tests/finance related projects/cadcrs_path.csv")
 
 # Step 5 (variance and Bayesian intervals)
 
+kap <- matrix(ncol = T, nrow = 11)
+kap[1,] <- 1
+temp_var <- matrix(ncol = T, nrow = 11)
+var_ome <- matrix(ncol = T, nrow = 11)
+tim <- seq(1,T)
+S <- Hinv * V * Hinv
 
+for (i in 2:length(c)){
+  for (t in 1:T){
+    kap[i,t] <- c[i] * (1 + exp(2*c[i]) + exp(2*c[i]*tim[t]/T) + exp(2*c[i]*(1-tim[t]/T))) / (2*exp(2*c[i]) - 2)
+  }
+}
+
+for (i in 1:length(c)){
+  for (t in 1:T){
+    temp_var[i,t] <- w_new[i] %*% 
+      ((1/T) * S * kap[i,t] + (B1_t[i,t] - B1_final[t]) * (B1_t[i,t] - B1_final[t]))
+  }
+}
+
+var_final <- apply(temp_var, 2, sum)
+
+upper <- B1_final + 1.96 * sqrt(var_final)
+lower <- B1_final - 1.96 * sqrt(var_final)
+
+plot(B1_final, type = "l", main = paste("coefficient path"))
+lines(upper, lty = 3, col = "dark gray")
+lines(lower, lty = 3, col = "dark gray")
+
+# save to file
+path_and_intervals <- data.frame(B1_final, upper, lower)
+# write.csv(B1_final, file = "~/R tests/finance related projects/cadcrs_path.csv")
