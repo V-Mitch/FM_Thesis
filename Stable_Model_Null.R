@@ -3,7 +3,7 @@
 # List of datasets
 # cadcrs_m_m ; usdahe_m_m ; 
 
-data_1 <- read.csv("~/R tests/finance related projects/audret_dataframe.csv")
+data_1 <- read.csv("~/R tests/finance related projects/gbpret_dataframe.csv")
 
 data_2 <- read.csv("~/R tests/finance related projects/audemr_dataframe.csv")
 

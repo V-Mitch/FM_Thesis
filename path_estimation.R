@@ -16,7 +16,8 @@ sig_sqr <- var(mod1$residuals)
 T <- nrow(data_1)
 
 # Main elements of regression and abbreviation of Sum of Errors for simplification
-X_t <- data_1$std_Difference
+#X_t <- data_1$std_Difference
+X_t <- X_t
 Y_t <- data_1$m5
 d_t <- (Y_t - B0 - B1 * X_t)
 
@@ -158,4 +159,4 @@ lines(lower, lty = 3, col = "dark gray")
 
 # save to file
 path_and_intervals <- data.frame(B1_final, upper, lower)
-# write.csv(B1_final, file = "~/R tests/finance related projects/cadcrs_path.csv")
+# write.csv(path_and_intervals, file = "~/R tests/finance related projects/cadcrs_path.csv")

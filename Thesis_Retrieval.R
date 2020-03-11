@@ -2,12 +2,12 @@ rm(list=ls())
 require(lubridate)
 
 # # Canadian CPI (Time is ET, GMT -5 and uses DST)
-file_macro <- "~/R tests/finance related projects/cadcpi_m_m.txt"
-file_prices <- "~/R tests/finance related projects/USDCAD_M1_200801020901_202002241546.csv"
-schedule_change_1 <- as.numeric(as.Date("2014-11-20"))
-schedule_change_2 <- as.numeric(as.Date("2012-03-23"))
-event_time1 <- "15:30:00" ; event_time2 <- "14:30:00" ; event_time3 <- "13:00:00"
-event_end1 <- c("15:35:00","16:00:00","16:30:00") ; event_end2 <- c("14:35:00","15:00:00","15:30:00") ; event_end3 <- c("13:05:00","13:30:00","14:00:00")
+# file_macro <- "~/R tests/finance related projects/cadcpi_m_m.txt"
+# file_prices <- "~/R tests/finance related projects/USDCAD_M1_200801020901_202002241546.csv"
+# schedule_change_1 <- as.numeric(as.Date("2014-11-20"))
+# schedule_change_2 <- as.numeric(as.Date("2012-03-23"))
+# event_time1 <- "15:30:00" ; event_time2 <- "14:30:00" ; event_time3 <- "13:00:00"
+# event_end1 <- c("15:35:00","16:00:00","16:30:00") ; event_end2 <- c("14:35:00","15:00:00","15:30:00") ; event_end3 <- c("13:05:00","13:30:00","14:00:00")
 
 # #UK CPI (GMT 0 with DST)
 # file_macro <- "~/R tests/finance related projects/gbpcpi_y_y.txt"
@@ -18,12 +18,12 @@ event_end1 <- c("15:35:00","16:00:00","16:30:00") ; event_end2 <- c("14:35:00","
 # event_end1 <- c("11:35:00","12:00:00","12:30:00") ; event_end2 <- c("10:35:00","11:00:00","11:30:00")
 
 # # US CPI (Metatrader 5 time in file)
-# file_macro <- "~/R tests/finance related projects/usdcpi_m_m.txt"
-# file_prices <- "~/R tests/finance related projects/USDCHF_M1_200801020900_202001081800.csv"
-# schedule_change_1 <- as.numeric(as.Date("2014-11-20"))
-# schedule_change_2 <- 0
-# event_time1 <- "15:30:00" ; event_time2 <- "14:30:00"
-# event_end1 <- c("15:35:00","16:00:00","16:30:00") ; event_end2 <- c("14:35:00","15:00:00","15:30:00")
+file_macro <- "~/R tests/finance related projects/usdcpi_m_m.txt"
+file_prices <- "~/R tests/finance related projects/USDCHF_M1_200801020900_202001081800.csv"
+schedule_change_1 <- as.numeric(as.Date("2014-11-20"))
+schedule_change_2 <- 0
+event_time1 <- "15:30:00" ; event_time2 <- "14:30:00"
+event_end1 <- c("15:35:00","16:00:00","16:30:00") ; event_end2 <- c("14:35:00","15:00:00","15:30:00")
 
 # Australian CPI (quarterly announcements)
 
