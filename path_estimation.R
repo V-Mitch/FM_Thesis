@@ -54,14 +54,13 @@ Hinv <- solve(H)
 c <- seq(from = 0, to = 50, by = 5)
 qLL <- rep(0,11)
 w <- rep(0,11)
-B1_t <- rep(0,T)
+B1_t <- matrix(ncol = T, nrow = 11)
 Path_Matrix <- matrix(ncol = T, nrow = 11)
 a_t <- rep(0,T)
 b_t <- rep(0,T)
 z_t <- rep(0,T)
 r_pow <- rep(0,T)
 z_b <- rep(0,T)
-B1_t <- rep(0,T)
 r <- 0
 dl_B1 <- rep(0,T)
   
@@ -104,7 +103,7 @@ for (i in 1:length(c)){
     z_b[t] <- r * z_b[t+1] + z_resid[t] - z_resid[t+1]
   }
   # (d)
-  B1_t <- B1 + a_t - r*z_b
+  B1_t[i,] <- B1 + a_t - r*z_b
   # (e)
   if(r < 0){
     r = 0
@@ -119,7 +118,7 @@ for (i in 1:length(c)){
 w_new <- rep(0,10)
 for (i in 1:11){
 w_new[i] <- w[i] / sum(w)
-Path_Matrix[i,] <- B1_t * w_new[i]
+Path_Matrix[i,] <- B1_t[i,] * w_new[i]
 }
 
 # Step 4
@@ -127,3 +126,7 @@ Path_Matrix[i,] <- B1_t * w_new[i]
 B1_final <-  apply(Path_Matrix, 2, sum)
 plot(B1_final, type = "l", main = paste("coefficient path"))
 # write.csv(B1_final, file = "~/R tests/finance related projects/cadcrs_path.csv")
+
+# Step 5 (variance and Bayesian intervals)
+
+
