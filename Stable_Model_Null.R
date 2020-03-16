@@ -3,7 +3,7 @@
 # List of datasets
 # cadcrs_m_m ; usdahe_m_m ; 
 
-data_1 <- read.csv("~/R tests/finance related projects/gbpret_dataframe.csv")
+data_1 <- read.csv("~/R tests/finance related projects/nzdcpi_dataframe.csv")
 
 data_2 <- read.csv("~/R tests/finance related projects/audemr_dataframe.csv")
 
@@ -12,6 +12,7 @@ data_3 <- read.csv("~/R tests/finance related projects/usdemr_m_m_dataframe.csv"
 # data_3$std_Difference <- data_3$std_Difference * -1 (avoid singular matrices)
 
 # 1 parameter case
+# mod1 <- lm(hlm5 ~ abs(std_Difference), data = data_1)
 mod1 <- lm(m5 ~ std_Difference, data = data_1)
 X_t <- t(as.matrix(data_1$std_Difference))
 

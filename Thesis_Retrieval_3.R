@@ -129,6 +129,9 @@ price_file$X.DATE.TIME. <- as.POSIXct(price_file$X.DATE.TIME., format = "%Y-%m-%
 event_file$m5 <- 0
 event_file$m30 <- 0
 event_file$h1 <- 0
+event_file$hlm5 <- 0
+event_file$hlm30 <- 0
+event_file$hlh1 <- 0
 unique.X.DATE. <- sort(unique(price_file$X.DATE.), decreasing = TRUE)
 endtime <- c(0,0,0)
 enddate <- c(0,0,0)
@@ -147,6 +150,7 @@ for (i in event_file$Date[1:length(event_file$Date)]){
   enddate[1] <- strftime(end_date_time1, format = "%Y-%m-%d")
   enddate[2] <- strftime(end_date_time2, format = "%Y-%m-%d")
   enddate[3] <- strftime(end_date_time3, format = "%Y-%m-%d")
+  zi <- 0
   
   ## Cycle through every date in the price data and match with the events days
   for(j in unique.X.DATE.[1:length(unique.X.DATE.)]){
@@ -156,12 +160,15 @@ for (i in event_file$Date[1:length(event_file$Date)]){
       startpips <- price_file[ which(price_file$X.DATE. == j & price_file$X.TIME. == starttime),3]
       cycle.minute.start <- as.numeric(substr(starttime,4,5))
       while(length(startpips)==0){
-        cycle.minute.start <- cycle.minute.start + 1
+        cycle.minute.start <- cycle.minute.start - 1
         starttime <- sub("*:\\d+:*", paste(":",cycle.minute.start,":", sep = ""), starttime)
         startpips <- price_file[ which(price_file$X.DATE. == j & price_file$X.TIME. == starttime), 3]
+        zi <- cycle.minute.start - as.numeric(substr(starttime,4,5))
       }
       #m5
       endpips.m5 <- price_file[ which(price_file$X.DATE. == enddate[1] & price_file$X.TIME. == endtime[1]),6]
+      maxhi.m5 <- max(price_file[ which(price_file$X.DATE. == enddate[1] & price_file$X.TIME. == starttime[1])+0:+5+zi,4])
+      minlo.m5 <- min(price_file[ which(price_file$X.DATE. == enddate[1] & price_file$X.TIME. == starttime[1])+0:+5+zi,5])
       cycle.minute.end <- as.numeric(substr(endtime[1],4,5))
       while(length(endpips.m5)==0){
         cycle.minute.end <- cycle.minute.end + 1
@@ -170,7 +177,9 @@ for (i in event_file$Date[1:length(event_file$Date)]){
       }
       ## Calculation of the difference between the start and ending times in pips 
       pips.m5 <- (endpips.m5 - startpips) * 10000
+      hl.m5 <- (maxhi.m5 - minlo.m5) * 10000
       event_file$m5[which(event_file$Date == i)] <- pips.m5
+      event_file$hlm5[which(event_file$Date == i)] <- hl.m5
       #m30
       endpips.m30 <- price_file[ which(price_file$X.DATE. == enddate[2] & price_file$X.TIME. == endtime[2]),6]
       cycle.minute.end <- as.numeric(substr(endtime[2],4,5))
