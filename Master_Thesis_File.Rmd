@@ -50,7 +50,7 @@ This paper aims to _________
   
 The minute-by-minute OHLC Data of 7 currency pairs were collected from the Metatrader5 platform. This represents over 4 million data points for each pair. Only a small fraction of this data is actually used since we consider only the 5 time frame from when each piece of monthly or quarterly news is released until 5 minutSes afterwards. 
   
-# Construction of the model.
+# Construction of the model
   
 Being consistent with previous literature on the subject, the first step involves estimating the impact that each piece of news has on its respective currency assuming 1.) That the news effects are constant over time. 2.) The surprise element $S_t$ of the regression is evaluated as:  
 
@@ -61,11 +61,13 @@ S_t = \frac{A_t - E_t}{\sigma_d}
 $A_t$ is the actual result of the news at time $t$, $E_t$ is the expected result aggregated from experts and $\sigma_d$ is the empirical standard deviation of this difference over the entire sample. We use the expectation numbers from the ForexFactory website^[The expectations of most online sources such as "Investing.com" or "DailyFX" are very similar. The aggregation methods are not disclosed to the public.] Thereafter, we use this surprise element in a first simple OLS model.  
 
 \begin{equation}
-R_t = \beta_0 + \beta S_t + \varepsilon_t
+R_t = \beta_0 + \beta_1 S_t + \varepsilon_t
 \end{equation}  
   
+Moreover, because we are working with a dataset that has a time element, we can expect the errors of the model above to be autocorrelated. As we haven't yet accounted for the possible variation of $\beta$, the model will be flawed in that it will treat the observations as if they were independent. Previous researchers have used what is called Heteroskedasticity and Autocorrelation-Consistent (HAC) estimators for the variance of our OLS estimator $\beta_1$. We use the Newey-West estimator from 
+  
 \begin{equation}
-R_t = \beta_0 + \beta_t S_t + \varepsilon_t
+R_t = \beta_0 + \beta_{1,t} S_t + \varepsilon_t
 \end{equation}
   
 
