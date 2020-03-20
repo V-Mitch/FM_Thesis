@@ -1,0 +1,84 @@
+---
+title: "Master Thesis - Time Variation of Regression Coefficients related to Macroeconomic News affecting Currency Prices"
+author: "Victor Mitchell"
+bibliography: ["citations.bib"]
+date: "November 5, 2019"
+always_allow_html: no
+output:
+  bookdown::pdf_document2:
+  toc: false
+---
+```{r loadlib, results = 'hide', echo = F, message = F, warning = F}
+library(quantmod)
+library(plotly)
+library(webshot)
+library(stringr)
+library(jtools)
+library(kableExtra)
+#library(phantomjs)
+setwd("~/R tests/finance related projects")
+#price_data_usdcad <- read.delim("~/R tests/finance related projects/USDCAD_M1_201901020600_201911051703.csv")
+cadcpi_m_m <- read.delim("~/R tests/finance related projects/cadcpi_m_m.txt")
+cadcpi_newcol <- read.csv("~/R tests/finance related projects/cadcpi_dataframe.csv")
+usdcad_ticks <- read.delim("~/R tests/finance related projects/USDCAD_201906191500_201906191559_ticks.csv")
+
+results <- read.delim("~/R tests/finance related projects/result_table_1.txt")
+qLL_table <- read.delim("~/R tests/finance related projects/qLL_crit.txt")
+colnames(qLL_table) <- c("k",seq(from = 1,to = 5, by = 1))
+```
+
+# Overview / Introduction
+  
+The motivation for this project is that I would like to gain a deeper understanding of the impact that economic news events have on currency prices traded in pairs on a decentralized market (commonly referred to as the Forex market or FX). Specifically, the movements right before during and right after planned major news events (such as a public release the inflation rate).  
+Classic economic theory helps us understand that an increase of interest rates is warranted when economies are performing well and prices are generally increasing. Those who decide to increase national interest rates, the central banks, typically refer to measures of inflation in order to make their decisions. Because of this, investors and traders alike pay close attention to news releases (such as inflation, and also the Non-Farm-Payrolls in the case of the United States) and react according to the results. These news releases are not made public until specific times on specific days and since investors and traders react to the same news the moment it is released, the result is often a violent reaction of price in one direction or another. The common discourse is that the direction and the magnitude of the change of price depends on the difference between the expectation of the market (combined expecation of worldwide investors) and the result of the news release.  
+  
+Specifically, the starting point has been the construction and exploration of the following datasets:
+
+**Table 1.**   
+Subsample of Month on Month Canadian Consumer Price Index (CPI m/m)
+```{r, echo = FALSE}
+kable(cadcpi_newcol[1:5,], booktabs = T)%>%
+kable_styling(latex_options = c("striped", "scale_down"))
+```
+  
+  
+**Table 2.**  
+  
+Subsample of price data of USDCAD before and after the 19th of June 2019 news release. (Relates to the 5th Row of Table 1.)
+\normalsize
+```{r, echo = FALSE}
+kable(usdcad_ticks[1725:1735,], booktabs = T) %>%
+kable_styling(latex_options = c("striped"))
+```
+  
+![USDCAD, 19th of June between 15h00 and 16h00 GMT+2](candlestick2.png)
+
+# Literature and Models  
+
+There is much literature that already exists pertaining to this subject. One of the most cited base models would have to be the one of Faust (2007). One can begin to study the news events using the basic tool of the literature which is a variant of a regression:
+\begin{equation}
+r_t = \beta S_t + \varepsilon_t
+\end{equation}  
+  
+Defining $r_t$ as the change in price, $\beta$ as the coefficient measuring the effect of $s_t$ the surprise component. $\varepsilon_t$ is the error term.  
+  
+A much more recent study from last year [@ben_omrane_time-varying_2019] demonstrated that the coefficient \beta (\rho in their paper) that represents the reaction investors have to news can be modeled. This is done using the "quasi-Local-Level" test of [@elliott_efficient_2006] and then the procedure of [@muller_efficient_2010] to obtain a parameter path. 
+  
+The three aformentioned papers would be the main guiding literature I would use to reproduce sound analysis. The first aim is therefore to obtain parameter paths for the currency data I have access to. The second aim would be to understand and justify the use of the methods of [@elliott_efficient_2006] and [@muller_efficient_2010] and see if the assumptions and steps mean I am able to obtain sound inference and I can trust the parameter paths. There are a multitude of papers that enhance the original model (1). A third aim would be to obtain parameter paths of an enhanced model. 
+  
+# Bibliography & References
+  
+*Table 1.* Produced using data from forexfactory.com  
+*Table 2.* Produced using data from MetaTrader5brokerage platform: "https://www.metatrader5.com/en"  
+*Figures.* Produced in Rstudio with plotly: "https://rstudio.com/", "https://plot.ly/"  
+
+
+
+
+
+
+
+
+
+
+
