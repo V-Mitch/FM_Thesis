@@ -6,7 +6,11 @@ for (i in 1:10){
   lines(B1_t[i,])
 }
 lines(B1_final, col = "red")
-points(X_t, col = "blue")
+
+N <- 144 
+grw <- rnorm(N, B1, 5)
+lines(grw, col = "blue")
+
 
 ####
 plot(w_new, type = "l")
