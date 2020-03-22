@@ -26,12 +26,33 @@ mod1 <- lm(data_1$m5 ~ data_1$std_Difference + data_2$std_Difference + data_3$st
 X_t <- rbind(data_1$std_Difference, data_2$std_Difference, data_3$std_Difference)
 
 
-#### Asymmetry
-library(dplyr)
-library(magrittr)
+#### Asymmetry case
 
-data_1$std_Difference_neg <- 0
-data_1$std_Difference_neg <- data_1$std_Difference[which(data_1$std_Difference <= 0)]
+library(dplyr)
+
+
+data_1$std_Neg <- 0 ; data_1$std_Pos <- 0
+for(i in 1:nrow(data_1)){
+  if(data_1$std_Difference[i] <= 0){
+    data_1$std_Neg[i] <- data_1$std_Difference[i]
+  }
+  else{
+    data_1$std_Pos[i] <- data_1$std_Difference[i]
+  }
+}
+
+
+mod1 <- lm(m5 ~ std_Difference, data = data_1)
+
+mod2 <- lm(m5 ~ std_Neg + std_Pos , data = data_1)
+
+mod1 <- lm(m5 ~ I(std_Neg + std_Pos), data = data_1)
+
+
+X_t <- rbind(data_1$std_Pos, data_1$std_Neg)
+X_t <- t(as.matrix(data_1$std_Pos))
+X_t <- t(as.matrix(data_1$std_Neg))
+#mod1 <- lm(m5 ~ std_Neg + std_Pos + I(std_Neg^2) + I(std_Pos^2), data = data_1)
   
 
 

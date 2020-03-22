@@ -150,7 +150,7 @@ for (i in event_file$Date[1:length(event_file$Date)]){
   enddate[1] <- strftime(end_date_time1, format = "%Y-%m-%d")
   enddate[2] <- strftime(end_date_time2, format = "%Y-%m-%d")
   enddate[3] <- strftime(end_date_time3, format = "%Y-%m-%d")
-  zi <- 0
+  #zi <- 0
   
   ## Cycle through every date in the price data and match with the events days
   for(j in unique.X.DATE.[1:length(unique.X.DATE.)]){
@@ -207,6 +207,7 @@ for (i in event_file$Date[1:length(event_file$Date)]){
   }
 }
 
-# write.csv(event_file, file = "~/R tests/finance related projects/audret_dataframe.csv")
+
+#write.csv(event_file, file = "~/R tests/finance related projects/audret_dataframe.csv")
 
 #______m_m <- event_file
