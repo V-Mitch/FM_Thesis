@@ -25,7 +25,6 @@ setwd("~/R tests/finance related projects")
 # cadcpi_newcol <- read.csv("~/R tests/finance related projects/cadcpi_dataframe.csv")
 # usdcad_ticks <- read.delim("~/R tests/finance related projects/USDCAD_201906191500_201906191559_ticks.csv")
 source("brownian_plot.R")
-
 results <- read.delim("~/R tests/finance related projects/result_table_1.txt")
 results_sim <- read.delim("~/R tests/finance related projects/result_table_sim.txt")
 qLL_table <- read.delim("~/R tests/finance related projects/qLL_crit.txt")
@@ -140,8 +139,3 @@ plotpath(read.csv("~/R tests/finance related projects/usdcpi_path.csv"), "US Con
 plotpath(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"), "UK Consumer Price Index")
 plotpath(read.csv("~/R tests/finance related projects/nzdcpi_path.csv"), "New Zealand Consumer Price Index")
 ```
-
-
-
-
-

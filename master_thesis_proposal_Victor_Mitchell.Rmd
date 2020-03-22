@@ -62,7 +62,7 @@ r_t = \beta S_t + \varepsilon_t
   
 Defining $r_t$ as the change in price, $\beta$ as the coefficient measuring the effect of $s_t$ the surprise component. $\varepsilon_t$ is the error term.  
   
-A much more recent study from last year [@ben_omrane_time-varying_2019] demonstrated that the coefficient \beta (\rho in their paper) that represents the reaction investors have to news can be modeled. This is done using the "quasi-Local-Level" test of [@elliott_efficient_2006] and then the procedure of [@muller_efficient_2010] to obtain a parameter path. 
+A much more recent study from last year [@ben_omrane_time-varying_2019] demonstrated that the coefficient $\beta$ ($\rho$ in their paper) that represents the reaction investors have to news can be modeled. This is done using the "quasi-Local-Level" test of [@elliott_efficient_2006] and then the procedure of [@muller_efficient_2010] to obtain a parameter path. 
   
 The three aformentioned papers would be the main guiding literature I would use to reproduce sound analysis. The first aim is therefore to obtain parameter paths for the currency data I have access to. The second aim would be to understand and justify the use of the methods of [@elliott_efficient_2006] and [@muller_efficient_2010] and see if the assumptions and steps mean I am able to obtain sound inference and I can trust the parameter paths. There are a multitude of papers that enhance the original model (1). A third aim would be to obtain parameter paths of an enhanced model. 
   
