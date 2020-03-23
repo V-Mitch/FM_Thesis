@@ -65,6 +65,12 @@ R_t = \beta_0 + \beta_1 S_t + \varepsilon_t
   
 Moreover, because we are working with a dataset where subsequent observations are suspected to be related to one another, one could expect that the errors of the basic model above be autocorrelated. Specifically, adjacent $R_t$ would be more similar to one another than reactions that are separated in time to a greater extent. In this case, the inference on the $\beta_1$ would be flawed. Previous researchers have used what is called Heteroskedasticity and Autocorrelation-Consistent (HAC) estimators for the variance of the OLS estimator $\beta_1$. Using the Newey-West estimator for this variance from [@newey_simple_1987], we use modified standard errors of the $\beta_1$ in our results. If we are wrong in our assumption in some of the news instances, and there is no underlying autocorrelation of the $R_t$ observations, our estimation of $\beta_1$ is less efficient than the original estimator in those cases. Nonetheless, it remains consistent and ensures we avoid type 1 error of rejecting a true null hypothesis suggesting $\beta_1 = 0$.  
   
+```{r echo = FALSE}
+kable(results, booktab = T) %>%
+kable_styling(latex_options = c("striped", "scale_down"))
+```
+
+  
 \begin{equation}
 R_t = \beta_0 + \beta_{1,t} S_t + \varepsilon_t
 \end{equation}
@@ -111,10 +117,6 @@ plot1
 
 - Assumptions of the test - appropriate in our case???
 
-```{r echo = FALSE}
-kable(results, booktab = T) %>%
-kable_styling(latex_options = c("striped", "scale_down"))
-```
   
 ```{r echo = FALSE}
 kable(results_sim, booktab = T) %>%
