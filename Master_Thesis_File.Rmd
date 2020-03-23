@@ -25,6 +25,7 @@ setwd("~/R tests/finance related projects")
 # cadcpi_newcol <- read.csv("~/R tests/finance related projects/cadcpi_dataframe.csv")
 # usdcad_ticks <- read.delim("~/R tests/finance related projects/USDCAD_201906191500_201906191559_ticks.csv")
 source("brownian_plot.R")
+newsintro <- read.delim("~/R tests/finance related projects/newsintro.txt")
 results <- read.delim("~/R tests/finance related projects/result_table_1.txt")
 results_sim <- read.delim("~/R tests/finance related projects/result_table_sim.txt")
 qLL_table <- read.delim("~/R tests/finance related projects/qLL_crit.txt")
@@ -47,7 +48,18 @@ This paper aims to _________
   
 # Data
   
-The minute-by-minute OHLC Data of 7 currency pairs were collected from the Metatrader5 platform. This represents over 4 million data points for each pair. Only a small fraction of this data is actually used since we consider only the 5 time frame from when each piece of monthly or quarterly news is released until 5 minutSes afterwards. 
+The minute-by-minute OHLC Data of 7 currency pairs were collected from the Metatrader5 platform. This represents over 4 million data points for each pair. Only a small fraction of this data is actually used since we consider only the 5 time frame from when each piece of monthly or quarterly news is released until 5 minutSes afterwards.  
+  
+```{r newintro, echo = FALSE}
+kable(newsintro, booktabs = T, caption ="Summary of the news figures considered in the study",
+      format = "latex") %>%
+kable_styling(latex_options = c("striped", "scale_down")) %>%
+row_spec(c(1,10), bold = T, color = "black") %>%
+row_spec(c(11,12,13), color = "black",background = "#b3e0ff") %>%
+row_spec(c(14,15), color = "black",background = "#c2f0c2") %>%  
+row_spec(c(16,17), color = "black",background = "#ffd1b3")
+```
+
   
 # Construction of the model
   
@@ -65,12 +77,14 @@ R_t = \beta_0 + \beta_1 S_t + \varepsilon_t
   
 Moreover, because we are working with a dataset where subsequent observations are suspected to be related to one another, one could expect that the errors of the basic model above be autocorrelated. Specifically, adjacent $R_t$ would be more similar to one another than reactions that are separated in time to a greater extent. In this case, the inference on the $\beta_1$ would be flawed. Previous researchers have used what is called Heteroskedasticity and Autocorrelation-Consistent (HAC) estimators for the variance of the OLS estimator $\beta_1$. Using the Newey-West estimator for this variance from [@newey_simple_1987], we use modified standard errors of the $\beta_1$ in our results. If we are wrong in our assumption in some of the news instances, and there is no underlying autocorrelation of the $R_t$ observations, our estimation of $\beta_1$ is less efficient than the original estimator in those cases. Nonetheless, it remains consistent and ensures we avoid type 1 error of rejecting a true null hypothesis suggesting $\beta_1 = 0$.  
   
-```{r echo = FALSE}
-kable(results, booktab = T) %>%
-kable_styling(latex_options = c("striped", "scale_down"))
+```{r tablereg, echo = FALSE}
+kable(results, booktabs = T, caption ="Results of regressions tests - HAC standard errors ",
+      format = "latex") %>%
+kable_styling(latex_options = c("striped"))
 ```
-
   
+Table \@ref(tab:tablereg) shows the result of the different $\beta_1$ coefficients for separate news reports. The construction of the truncation parameter in the Newey-West estimator is such that our monthly news reports consider 2 autocorrelation coefficients whereas the quarterly ones only contain 1. This is due to the difference in the number of observations in our data. A higher estimated autocorrelation between the errors of the regression will result in a stronger correction of the variance of $\beta_1$. In all of the news in Table \@ref(tab:tablereg), the higher standard error does not affect the significance of the term. While it is not formal evidence, we suspect that the news for which the HAC standard error is vastly different than its unedited counterpart contains many unknown regressors that come from any of the findings that are summarized in [@goldberg_time_2013] (mentioned in the introduction).
+
 \begin{equation}
 R_t = \beta_0 + \beta_{1,t} S_t + \varepsilon_t
 \end{equation}
