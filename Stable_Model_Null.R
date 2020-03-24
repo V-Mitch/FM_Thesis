@@ -3,7 +3,7 @@
 # List of datasets
 # cadcrs_m_m ; usdahe_m_m ; 
 
-data_1 <- read.csv("~/R tests/finance related projects/cadcrs_dataframe.csv")
+data_1 <- read.csv("~/R tests/finance related projects/gbpcpi_dataframe.csv")
 
 data_2 <- read.csv("~/R tests/finance related projects/audemr_dataframe.csv")
 
@@ -49,6 +49,8 @@ mod2 <- lm(m5 ~ std_Neg + std_Pos , data = data_1)
 mod1 <- lm(m5 ~ I(std_Neg + std_Pos), data = data_1)
 
 
+
+
 X_t <- rbind(data_1$std_Pos, data_1$std_Neg)
 X_t <- t(as.matrix(data_1$std_Pos))
 X_t <- t(as.matrix(data_1$std_Neg))
@@ -58,17 +60,19 @@ X_t <- t(as.matrix(data_1$std_Neg))
 
 head(data_1)
 
-
+library(sandwich)
+library(lmtest)
 # HAC standard errors
 # When our error terms are serially correlated. We don't have all of the independent variables.
 # New estimator for the variance of Betas. Higher variance.
-
+data_1 <- read.csv("~/R tests/finance related projects/cadcpi_dataframe.csv")
+mod1 <- lm(m5 ~ std_Difference, data = data_1)
 
 m <- 0.75 * (length(data_1$std_Difference))^(1/3)
 
-NW_VCOV <- NeweyWest(lm(m5 ~ std_Difference, data = event_file),
+NW_VCOV <- NeweyWest(lm(m5 ~ std_Difference, data = data_1),
                      lag = m - 1, prewhite = F,
                      adjust = T)
 sqrt(diag(NW_VCOV))[2]
 
-m <- coeftest(mod1, vcov = NW_VCOV)
+coeftest(mod1, vcov = NW_VCOV)

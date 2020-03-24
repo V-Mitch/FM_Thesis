@@ -159,4 +159,6 @@ lines(lower, lty = 3, col = "dark gray")
 
 # save to file
 path_and_intervals <- data.frame(B1_final, upper, lower)
+magnitudes <- data.frame(B1_t)
 # write.csv(path_and_intervals, file = "~/R tests/finance related projects/cadcrs_path.csv")
+# write.csv(magnitudes, file = "~/R tests/finance related projects/gbpcpi_magn.csv")

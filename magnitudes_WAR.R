@@ -32,26 +32,27 @@ N <- 144
 
 #gbpcpi_magn <- read.csv("~/R tests/finance related projects/gbpcpi_magn.csv")
 #final_path <- read.csv("~/R tests/finance related projects/gbpcpi_path.csv")
-B1_final <- final_path$B1_final
-Time <- seq(0,135)
-dat <- data.frame(t(rbind(Time, gbpcpi_magn)))[-1,]
-dat <- data.frame(cbind(B1_final, dat))
-c("Time","one","two","three","four","five","six","seven","eight","nine","ten","eleven") <- colnames(dat)
-ggplot(data=dat, aes(x = X1)) +
-  geom_line(aes(y = X2), color = "steelblue", linetype = "twodash") +
-  geom_line(aes(y = X3)) +
-  geom_line(aes(y = X4)) +
-  geom_line(aes(y = X5)) +
-  geom_line(aes(y = X6)) +
-  geom_line(aes(y = X7)) +
-  geom_line(aes(y = X8)) +
-  geom_line(aes(y = X9)) +
-  geom_line(aes(y = X10)) +
-  geom_line(aes(y = X11)) +
-  geom_line(aes(y = X12)) +
-  geom_line(aes(y = B1_final), color = "green") 
-  
-plotwar <- function(betapaths, title){
-  
-  
+
+plotwar <- function(betapath, beta_weights, title){
+  B1_final <- final_path$B1_final
+  Time <- seq(0,135)
+  dat <- data.frame(t(rbind(Time, gbpcpi_magn)))[-1,]
+  dat <- data.frame(cbind(B1_final, dat))
+  c("Time","one","two","three","four","five","six","seven","eight","nine","ten","eleven") <- colnames(dat)
+  ggplot(data=dat, aes(x = X1)) +
+    geom_line(aes(y = X2), color = "steelblue", linetype = "twodash") +
+    geom_line(aes(y = X3), color = "darkgray") +
+    geom_line(aes(y = X4), color = "darkgray") +
+    geom_line(aes(y = X5), color = "darkgray") +
+    geom_line(aes(y = X6), color = "darkgray") +
+    geom_line(aes(y = X7), color = "darkgray") +
+    geom_line(aes(y = X8), color = "darkgray") +
+    geom_line(aes(y = X9), color = "darkgray") +
+    geom_line(aes(y = X10), color = "darkgray") +
+    geom_line(aes(y = X11), color = "darkgray") +
+    geom_line(aes(y = X12), color = "darkgray") +
+    geom_line(aes(y = B1_final), color = "darkgreen") +
+    ggtitle(title) +
+    theme_tufte()
 }
+

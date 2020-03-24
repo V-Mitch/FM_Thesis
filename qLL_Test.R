@@ -1,6 +1,6 @@
 # Requires Stable_Model_Null File
 
-# qLL Test for k = 1 parameter. Following Elliot and Müller (2006) methodology
+# qLL Test for k = 1 parameter. Following Elliot and M?ller (2006) methodology
 # H0: Stability of the parameter. HA: Instability of the parameter.
 
 # Step 1
@@ -49,3 +49,21 @@ S_Eps_2_t_sqr <- sum(Eps_2_t_sqr)
 
 # Step 6
 r * S_Eps_2_t_sqr - sum(U_t^2)
+
+# Nyblom/Hansen stability test 1989
+
+
+for (t in 1:T){
+  temp_frame <- data_1[t,]
+  
+  # Main elements of regression and abbreviation of Sum of Errors for simplification
+  X_t <- temp_frame$std_Difference
+  Y_t <- temp_frame$m5
+  d_t <- (Y_t - B0 - B1 * X_t)
+  
+  # First derivatives and Score
+  dl_B1[t] <- -1/sig_sqr * sum(d_t*X_t) 
+  dl_sig_sqr[t] <- -t + 1/sig_sqr * sum(d_t)^2
+}
+
+S <- sum(c(dl_B1, dl_sig_sqr))
