@@ -25,6 +25,7 @@ setwd("~/R tests/finance related projects")
 # cadcpi_newcol <- read.csv("~/R tests/finance related projects/cadcpi_dataframe.csv")
 # usdcad_ticks <- read.delim("~/R tests/finance related projects/USDCAD_201906191500_201906191559_ticks.csv")
 source("brownian_plot.R")
+source("magnitudes_WAR.R")
 newsintro <- read.delim("~/R tests/finance related projects/newsintro.txt")
 results <- read.delim("~/R tests/finance related projects/result_table_1.txt")
 results_sim <- read.delim("~/R tests/finance related projects/result_table_sim.txt")
@@ -137,7 +138,16 @@ kable(results_sim, booktab = T) %>%
 kable_styling(latex_options = c("striped", "scale_down"))
 ```
 
-# Parameter Path Estimations
+# Parameter Path Estimations  
+  
+Having established that there is instability over time in the market reactions to the news, we take on the task of obtaining the parameter paths. 
+  
+```{r, echo = FALSE}
+plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
+        read.csv("~/R tests/finance related projects/gbpcpi_magn.csv"),
+        "WAR minimizing over the 11 different randow walk weighting functions")
+```
+
 
 # Conclusion
 
