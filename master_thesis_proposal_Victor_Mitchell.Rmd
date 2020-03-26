@@ -24,6 +24,7 @@ usdcad_ticks <- read.delim("~/R tests/finance related projects/USDCAD_2019061915
 
 results <- read.delim("~/R tests/finance related projects/result_table_1.txt")
 qLL_table <- read.delim("~/R tests/finance related projects/qLL_crit.txt")
+
 colnames(qLL_table) <- c("k",seq(from = 1,to = 5, by = 1))
 ```
 

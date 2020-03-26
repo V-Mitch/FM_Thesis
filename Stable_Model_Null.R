@@ -3,7 +3,7 @@
 # List of datasets
 # cadcrs_m_m ; usdahe_m_m ; 
 
-data_1 <- read.csv("~/R tests/finance related projects/nzdcpi_dataframe.csv")
+data_1 <- read.csv("~/R tests/finance related projects/audemc_dataframe.csv")
 
 data_2 <- read.csv("~/R tests/finance related projects/audemr_dataframe.csv")
 
@@ -73,6 +73,10 @@ m <- 0.75 * (length(data_1$std_Difference))^(1/3)
 NW_VCOV <- NeweyWest(lm(m5 ~ std_Difference, data = data_1),
                      lag = m - 1, prewhite = F,
                      adjust = T)
+
+# NW_VCOV <- NeweyWest(lm(data_1$m5 ~ data_1$std_Difference + data_2$std_Difference + data_3$std_Difference),
+#                      lag = m - 1, prewhite = F,
+#                      adjust = T)
 sqrt(diag(NW_VCOV))[2]
 
 coeftest(mod1, vcov = NW_VCOV)
