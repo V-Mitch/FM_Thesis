@@ -30,6 +30,7 @@ newsintro <- read.delim("~/R tests/finance related projects/newsintro.txt")
 results <- read.delim("~/R tests/finance related projects/result_table_1.txt")
 results_sim <- read.delim("~/R tests/finance related projects/result_table_sim.txt")
 qLL_table <- read.delim("~/R tests/finance related projects/qLL_crit.txt")
+qLL_results <- read.delim("~/R tests/finance related projects/qLL_results.txt")
 colnames(qLL_table) <- c("k",seq(from = 1,to = 5, by = 1))
 ```
 
@@ -123,11 +124,21 @@ L_{HA} = \frac{1}{2\sigma^2}\sum_{t=1}^{T}(\Delta \eta)^2
 The qLL statistic is obtained by subtracting $L_{HA}$ from $L_{H0}$. The qLL test is therefore a monotone transformation of the Likelihood Ratio Test ($LR_T$), so while it does not follow a chi-square distribution exactly, it does follow a certain related distribution that has its percentiles defined by [@elliott_efficient_2006] and reported in their table, reproduced here as Table \@ref(tab:qLL). The general extension to the $LR_T$ can be made where we can reject the model related to the Null Hypothesis (the stable model) if the critical value is sufficiently negative.
   
 ```{r qLL, echo = FALSE}
-kable(qLL_table, booktabs = T, caption ="Asymptotic critical values of the qLL statistic",
+kable(qLL_table, booktabs = T, caption ="Asymptotic Critical Values of the qLL Statistic",
       format = "latex") %>%
 kable_styling(latex_options = c("striped"))
 ```
   
+```{r qLLresults, echo = FALSE}
+kable(qLL_results, booktabs = T, caption ="Instability Test Results",
+      format = "latex") %>%
+kable_styling(latex_options = c("striped")) %>%
+row_spec(c(1,10), bold = T, color = "black") %>%
+row_spec(c(11), color = "black",background = "#b3e0ff") %>%
+row_spec(c(17), color = "black",background = "#c2f0c2") %>%  
+row_spec(c(19), color = "black",background = "#ffd1b3")
+```
+
 In order to see this in practice and ensure it works in our case, we create some hypothetical paths and observe the result of the tests.  
   
 ```{r plots1, echo = FALSE}
@@ -135,12 +146,6 @@ plot1
 ```
 
 - Assumptions of the test - appropriate in our case???
-
-  
-```{r echo = FALSE}
-kable(results_sim, booktab = T) %>%
-kable_styling(latex_options = c("striped", "scale_down"))
-```
 
 # Parameter Path Estimations  
   
