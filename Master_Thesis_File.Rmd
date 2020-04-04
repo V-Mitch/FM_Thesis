@@ -157,6 +157,9 @@ plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
         "WAR minimizing over the 11 different randow walk weighting functions")
 ```
 
+# Stochastic Recursive Linear Least Squares Algorithm
+  
+
 
 # Conclusion
 

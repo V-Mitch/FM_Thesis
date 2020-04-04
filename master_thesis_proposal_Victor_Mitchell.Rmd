@@ -1,8 +1,10 @@
 ---
 title: "Master Thesis - Time Variation of Regression Coefficients related to Macroeconomic News affecting Currency Prices"
-author: "Victor Mitchell"
+author:
+- "Victor Mitchell"
+- "Supervisor: Olivier Scaillet"
 bibliography: ["citations.bib"]
-date: "November 5, 2019"
+date: "April 3rd, 2020"
 always_allow_html: no
 output:
   bookdown::pdf_document2:
@@ -31,12 +33,12 @@ colnames(qLL_table) <- c("k",seq(from = 1,to = 5, by = 1))
 # Overview / Introduction
   
 The motivation for this project is that I would like to gain a deeper understanding of the impact that economic news events have on currency prices traded in pairs on a decentralized market (commonly referred to as the Forex market or FX). Specifically, the movements right before during and right after planned major news events (such as a public release the inflation rate).  
-Classic economic theory helps us understand that an increase of interest rates is warranted when economies are performing well and prices are generally increasing. Those who decide to increase national interest rates, the central banks, typically refer to measures of inflation in order to make their decisions. Because of this, investors and traders alike pay close attention to news releases (such as inflation, and also the Non-Farm-Payrolls in the case of the United States) and react according to the results. These news releases are not made public until specific times on specific days and since investors and traders react to the same news the moment it is released, the result is often a violent reaction of price in one direction or another. The common discourse is that the direction and the magnitude of the change of price depends on the difference between the expectation of the market (combined expecation of worldwide investors) and the result of the news release.  
+Classic economic theory helps one understand that an increase of interest rates is warranted when economies are performing well and prices are generally increasing (whereas a cut is needed for stimulating the economy). The authorities who decide to increase national interest rates, the central banks, typically refer to measures of inflation in order to make their decisions. Because of this, investors and traders alike pay close attention to news releases (such as inflation, and also the Non-Farm-Payrolls in the case of the United States) and react according to the results. These news releases are not made public until specific times on specific days and since investors and traders react to the same news the moment it is released. The result is often a violent reaction of price in one direction or another. The common discourse is that the direction and the magnitude of the change of price depends on the difference between the expectation of the market (combined expecations of worldwide investors) and the result of the news release.  
   
 Specifically, the starting point has been the construction and exploration of the following datasets:
 
 **Table 1.**   
-Subsample of Month on Month Canadian Consumer Price Index (CPI m/m)
+Subsample of Month on Month Canadian Consumer Price Index (CPI m/m). M5, M30 and H1 represent the change in price 5 minutes, 30 minutes and 1 hour immediately after the announcement respectively.
 ```{r, echo = FALSE}
 kable(cadcpi_newcol[1:5,], booktabs = T)%>%
 kable_styling(latex_options = c("striped", "scale_down"))
@@ -52,24 +54,27 @@ kable(usdcad_ticks[1725:1735,], booktabs = T) %>%
 kable_styling(latex_options = c("striped"))
 ```
   
-![USDCAD, 19th of June between 15h00 and 16h00 GMT+2](candlestick2.png)
+![USD/CAD Prices, 19th of June between 15h00 and 16h00 GMT+2](candlestick2.png)
 
 # Literature and Models  
 
-There is much literature that already exists pertaining to this subject. One of the most cited base models would have to be the one of Faust (2007). One can begin to study the news events using the basic tool of the literature which is a variant of a regression:
+There is much literature that already exists pertaining to this subject. One of the most cited base models would have to be the one of @faust_high-frequency_2007. One can begin to study the news events using the basic tool of the literature which is a variant of a regression:
 \begin{equation}
 r_t = \beta S_t + \varepsilon_t
 \end{equation}  
   
-Defining $r_t$ as the change in price, $\beta$ as the coefficient measuring the effect of $s_t$ the surprise component. $\varepsilon_t$ is the error term.  
+With $r_t$ as the change in price, $\beta$ as the coefficient measuring the effect of $s_t$ the surprise component and $\varepsilon_t$ is the error term.  
   
 I am to tackle the problem with two different methods to uncover instability and estimate parameter paths. 
   
-First, I will apply a similar analysis as [@ben_omrane_time-varying_2019] who demonstrate that the coefficient $\beta$ ($\rho$ in their paper) that represents the reaction investors have to news can be modeled. They use in turn the "quasi-Local-Level" test of [@elliott_efficient_2006] and then the procedure of [@muller_efficient_2010] to obtain a parameter path. The latter authors use "Weighted Average Risk" (WAR) minimization to obtain a final path (weighting over possible alternative paths).  
+First, I will apply a similar analysis to the one in @ben_omrane_time-varying_2019 and/or @goldberg_time_2013 who demonstrate that the coefficient $\beta$ that represents the reaction investors have to news can be unstable (It therefore becomes $\beta_t$. Specifically they use the "quasi-Local-Level" test of [@elliott_efficient_2006] (similar to the Likelihood Ratio Test) to detect instability. The main advantage is that this test allows for the detection of instability of $\beta$ no matter what the number of breaking points are in the process of the alternative hypothesis. Afterwards, I will use the procedure of @muller_efficient_2010 which is the natural sequel to obtain a parameter path. This is done by minimizing "Weighted Average Risk" (WAR) to obtain a final path (weighting over possible alternative paths). 
   
-Second, I am to approach the problem with "brute force" and use a method that seems to be used much more in practice. The Recursive Least Squares (RLS) and/or variants appears to be used in practice by 
+As a second approach, I am to tackle the problem with a method that appears to be used much more in practice. I plan to investigate the Stochastic Recursive Least Squares (SRLS) and/or its modifications and apply them to my case. Modeled as $y(k) = x^T (k)a+e(k)$ My main source of learning for this applicable method will be @young_recursive_2011. There exists different possibilities regarding the memory of the estimator such as the exponentially weighted past.  
   
-
+Both methods are inspired or stem from the previous methodologies and literature such as the Kalman Filter and of course the classic OLS. 
+  
+I would like to compare the assumptions, the inference and predictions that are available with these two separate approaches to the parameter variation. I hope to observe results that will prove/disprove the findings of other researchers but for this new period of time (2008 - 2019). For instance, @fatum_asymmetries_2012 show that the market can react differently during a recession but also to a larger extent when expectations are negative rather than positive.
+  
   
 # Bibliography & References
   
