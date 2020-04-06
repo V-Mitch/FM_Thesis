@@ -3,12 +3,14 @@
 # List of datasets
 # cadcrs_m_m ; usdahe_m_m ; 
 
-data_1 <- read.csv("~/R tests/finance related projects/cadcpi_dataframe.csv")
-data_1 <- data_1[nrow(data_1):1,]
+data_1_o <- read.csv("~/R tests/finance related projects/cadcrs_dataframe.csv")
+data_1 <- data_1_o[nrow(data_1_o):1,]
 
-data_2 <- read.csv("~/R tests/finance related projects/audemr_dataframe.csv")
+data_2_o <- read.csv("~/R tests/finance related projects/cademr_dataframe.csv")
+data_2 <- data_2_o[nrow(data_1_o):1,]
 
-data_3 <- read.csv("~/R tests/finance related projects/usdemr_m_m_dataframe.csv")
+data_3_o <- read.csv("~/R tests/finance related projects/usdemr_m_m_dataframe.csv")
+data_3 <- data_3_o[nrow(data_1_o):1,]
 
 # data_3$std_Difference <- data_3$std_Difference * -1 (avoid singular matrices)
 

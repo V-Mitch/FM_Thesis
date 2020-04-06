@@ -153,7 +153,7 @@ var_final <- apply(temp_var, 2, sum)
 upper <- B1_final + 1.96 * sqrt(var_final)
 lower <- B1_final - 1.96 * sqrt(var_final)
 
-plot(B1_final, type = "l", main = paste("coefficient path"))
+plot(B1_final ~ as.Date(data_1$Date), type = "l", main = paste("coefficient path"))
 lines(upper, lty = 3, col = "dark gray")
 lines(lower, lty = 3, col = "dark gray")
 
