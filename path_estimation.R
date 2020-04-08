@@ -152,13 +152,14 @@ var_final <- apply(temp_var, 2, sum)
 
 upper <- B1_final + 1.96 * sqrt(var_final)
 lower <- B1_final - 1.96 * sqrt(var_final)
+B1_ols <- rep(B1, T)
 
 plot(B1_final ~ as.Date(data_1$Date), type = "l", main = paste("coefficient path"))
 lines(upper, lty = 3, col = "dark gray")
 lines(lower, lty = 3, col = "dark gray")
 
 # save to file
-path_and_intervals <- data.frame(B1_final, upper, lower)
+path_and_intervals <- data.frame(B1_final, upper, lower, B1_ols)
 magnitudes <- data.frame(B1_t)
 # write.csv(path_and_intervals, file = "~/R tests/finance related projects/cadcrs_path.csv")
 # write.csv(magnitudes, file = "~/R tests/finance related projects/gbpcpi_magn.csv")
