@@ -155,8 +155,9 @@ lower <- B1_final - 1.96 * sqrt(var_final)
 B1_ols <- rep(B1, T)
 
 plot(B1_final ~ as.Date(data_1$Date), type = "l", main = paste("coefficient path"))
-lines(upper, lty = 3, col = "dark gray")
-lines(lower, lty = 3, col = "dark gray")
+lines(upper ~ as.Date(data_1$Date), lty = 3, col = "dark gray")
+lines(lower ~ as.Date(data_1$Date), lty = 3, col = "dark gray")
+lines(B1_ols ~ as.Date(data_1$Date), lty = 5, col = "steel blue")
 
 # save to file
 path_and_intervals <- data.frame(B1_final, upper, lower, B1_ols)

@@ -172,7 +172,7 @@ plotpath(read.csv("~/R tests/finance related projects/cadcrs_path.csv"), "Canadi
 plotpath(read.csv("~/R tests/finance related projects/cadcpi_path.csv"), "Canadian Consumer Price Index")
 plotpath(read.csv("~/R tests/finance related projects/audret_path.csv"), "Australian Retail Sales")
 plotpath(read.csv("~/R tests/finance related projects/audcpi_path.csv"), "Australian Consumer Price Index")
-plotpath(read.csv("~/R tests/finance related projects/usdnfp_path.csv"), "US NonFarm Employment Change")
+#plotpath(read.csv("~/R tests/finance related projects/usdnfp_path.csv"), "US NonFarm Employment Change")
 plotpath(read.csv("~/R tests/finance related projects/usdcpi_path.csv"), "US Consumer Price Index")
 plotpath(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"), "UK Consumer Price Index")
 plotpath(read.csv("~/R tests/finance related projects/nzdcpi_path.csv"), "New Zealand Consumer Price Index")
