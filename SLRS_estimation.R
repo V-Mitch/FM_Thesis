@@ -19,6 +19,7 @@ beta_hat <- matrix(0,nrow = k, ncol = T)
 upper <- matrix(0,nrow = k, ncol = T)
 lower <- matrix(0,nrow = k, ncol = T)
 epsilon <- matrix(0,nrow = 1, ncol = T)
+epsilon_nd <- matrix(0,nrow = 1, ncol = T)
 beta_hat[,1] <- c(-0.4458, 12.6814)
 g_t <- matrix(0,nrow = k, ncol = T)
 p_t <- matrix(seq(0,0),nrow = k, ncol = k) # p_t matrix will continuously be replaced
@@ -43,6 +44,7 @@ for(t in 2:nrow(data_1)){
   upper[,t] <- beta_hat[,t] + 1.96 * sqrt(diag(p_t)/sqrt(t))
   lower[,t] <- beta_hat[,t] - 1.96 * sqrt(diag(p_t)/sqrt(t))
   epsilon[t] <- t(S_t[,t]) %*% beta_hat[,t]
+  epsilon_nd[t] <- epsilon[t] / (1 + t(S_t[,t]) %*% (p_t/sigma) %*% S_t[,t] ) ^ 0.5
 }
 
 
@@ -57,3 +59,24 @@ lines(lower[2,]~ as.Date(data_1$Date), type = "l", lty = 3)
 # rls_mod <- RLS(data_1$m5, data_1$std_Difference, ist = 30)
 # plot(rls_mod$beta, type = "l")
 # lines(rep(mod1$coefficients[2],T), lty = "dotdash")
+
+# CUSUM test
+w_t <- matrix(0,nrow = 1, ncol = T)
+h <-  dim(S_t)[1] - 1
+p1 <- 1.143 * (T - h) ^ 0.5
+p2 <- 3 * 1.143 * (T - h) ^ 0.5
+sigma_cusum <- 1 / (T - h) * sum(epsilon_nd^2)
+
+for(t in 1:T){
+  w_t[t] <- 1/sqrt(sigma_cusum) * sum(epsilon_nd[1:t])
+}
+
+plot(as.vector(w_t), type = "l", ylim = c(-p2,p2))
+segments(h,p1,T,p2)
+segments(h,-p1,T,-p2)
+
+# CUSUM-squared test
+
+for(t in 1:T){
+  w_t[t] <- 1/sqrt(sigma_cusum) * sum(epsilon_nd[1:t])
+}
