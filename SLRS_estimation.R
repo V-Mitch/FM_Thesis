@@ -18,6 +18,7 @@ T <- nrow(data_1)
 beta_hat <- matrix(0,nrow = k, ncol = T)
 upper <- matrix(0,nrow = k, ncol = T)
 lower <- matrix(0,nrow = k, ncol = T)
+epsilon <- matrix(0,nrow = 1, ncol = T)
 beta_hat[,1] <- c(-0.4458, 12.6814)
 g_t <- matrix(0,nrow = k, ncol = T)
 p_t <- matrix(seq(0,0),nrow = k, ncol = k) # p_t matrix will continuously be replaced
@@ -41,7 +42,10 @@ for(t in 2:nrow(data_1)){
   #upper[,t] <- sqrt(1/T*(dim(X_t[1])-1)*mod1$residuals^2)
   upper[,t] <- beta_hat[,t] + 1.96 * sqrt(diag(p_t)/sqrt(t))
   lower[,t] <- beta_hat[,t] - 1.96 * sqrt(diag(p_t)/sqrt(t))
+  epsilon[t] <- t(S_t[,t]) %*% beta_hat[,t]
 }
+
+
 
 #par(mfrow=c(1,2))
 plot(beta_hat[2,] ~ as.Date(data_1$Date), type = "l")
