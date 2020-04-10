@@ -98,7 +98,7 @@ R_t = \beta_0 + \beta_{1,t} S_t + \varepsilon_t
 
 # Testing for instability of the news impact parameter
   
-There exists many ways to test whether $\beta_t$ is time dependent or not. We choose the methodology of the authors of [@elliott_efficient_2006] and briefly replicate their method. The advantage of their test is that it identifies instability no matter whether it comes in the form of a single break, many breaks, or a continuous change (all of which are feasible in our context).  
+There exists many ways to test whether $\beta_t$ is time dependent or not. We first choose the methodology of the authors of [@elliott_efficient_2006] and briefly replicate their method. The advantage of their test is that it identifies instability no matter whether it comes in the form of a single break, many breaks, or a continuous change (all of which are feasible in our context).  
 The quasi-Local-Level (qLL) test enables one to test for many different types of persistent processes of the $\beta_t$. It is explained that many of these breaking processes can have a "temporary memory" (strictly speaking are strongly mixing) but will be well approximated by a Wiener process.^[Theorem 7.30 of [@white_asymptotic_2001] can be applied since certain assumptions are made about the process]. This is extremely practical in our scenario as there are many possiblities for the possible variation of the $\beta_t$. The Null Hypothesis implies there is a stable parameter as in a familiar OLS regression. We obtain the likelihood under the Null assuming that the $R_t$ observations are independently and identically distributed (and therefore so are their first differences):  
   
 \begin{equation}
@@ -122,6 +122,13 @@ L_{HA} = \frac{1}{2\sigma^2}\sum_{t=1}^{T}(\Delta \eta)^2
 \end{equation}
 
 The qLL statistic is obtained by subtracting $L_{HA}$ from $L_{H0}$. The qLL test is therefore a monotone transformation of the Likelihood Ratio Test ($LR_T$), so while it does not follow a chi-square distribution exactly, it does follow a certain related distribution that has its percentiles defined by [@elliott_efficient_2006] and reported in their table, reproduced here as Table \@ref(tab:qLL). The general extension to the $LR_T$ can be made where we can reject the model related to the Null Hypothesis (the stable model) if the critical value is sufficiently negative.
+  
+Alternitavely, two tests suggested by [@brown_techniques_1975] named the CUSUM and CUSUM-squared were run. The tests use the successive error terms of predictions of an RLS model that assumes stability of the $\beta$ parameter. By examining the errors in prediction, one can observe whether or not they violate the $N(0,\sigma^2)$ assumptions 
+  
+  
+\begin{equation} 
+W_t = \frac{1}{\hat{\sigma_cs}\sum_{i=k+1}^{t} u_{n,i} 
+\end{equation}
   
 ```{r qLL, echo = FALSE}
 kable(qLL_table, booktabs = T, caption ="Asymptotic Critical Values of the qLL Statistic",

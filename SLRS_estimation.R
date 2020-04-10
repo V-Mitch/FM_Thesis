@@ -64,7 +64,7 @@ lines(lower[2,]~ as.Date(data_1$Date), type = "l", lty = 3)
 
 # setup
 w_t <- matrix(0,nrow = 1, ncol = T)
-w2_t <- matrix(0,nrow = 1, ncol = T)
+
 h <-  dim(S_t)[1] - 1
 p1 <- 1.143 * (T - h) ^ 0.5
 p2 <- 3 * 1.143 * (T - h) ^ 0.5
@@ -90,9 +90,23 @@ segments(h,-p5,T,-p6, col = "goldenrod3")
 
 
 # CUSUM-squared test
+# setup
+w2_t <- matrix(0,nrow = 1, ncol = T)
+beta_dist_line <- matrix(0,nrow = 1, ncol = T)
+upper995 <- matrix(0,nrow = 1, ncol = T)
 
-for(t in 1:T){
-  w2_t[t] <- 1/ sum(epsilon_nd^2) * sum(epsilon_nd[t]^2)
+for(t in 2:T){
+  w2_t[t] <- 1/ sum(epsilon_nd^2) * sum(epsilon_nd[1:t]^2)
+  beta_dist_line[t] <- (t-h)/(T-h)
 }
 
+
+
 plot(as.vector(w2_t), type = "l")
+lines(as.vector(beta_dist_line), col = "blue")
+lines(as.vector(beta_dist_line) + 0.144, col = "purple", lty=4)
+lines(as.vector(beta_dist_line) - 0.144, col = "purple", lty=4)
+lines(as.vector(beta_dist_line) + 0.114, col = "purple", lty=5)
+lines(as.vector(beta_dist_line) - 0.114, col = "purple", lty=5)
+lines(as.vector(beta_dist_line) + 0.100, col = "purple", lty=5)
+lines(as.vector(beta_dist_line) - 0.100, col = "purple", lty=5)
