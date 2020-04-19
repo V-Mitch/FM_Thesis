@@ -20,11 +20,11 @@ upper <- matrix(0,nrow = k, ncol = T)
 lower <- matrix(0,nrow = k, ncol = T)
 epsilon <- matrix(0,nrow = 1, ncol = T)
 epsilon_nd <- matrix(0,nrow = 1, ncol = T)
-beta_hat[,1] <- c(-0.4458, 12.6814)
+beta_hat[,1] <- as.vector(mod1$coefficients)
 g_t <- matrix(0,nrow = k, ncol = T)
 p_t <- matrix(seq(0,0),nrow = k, ncol = k) # p_t matrix will continuously be replaced
 p_0 <- matrix(seq(0,0),nrow = k, ncol = k)
-diag(p_0) <- c(1.7294,1.7288)
+diag(p_0) <- c(10^6,10^6)
 
 sigma <- sqrt(1/(T-dim(S_t)[1] -1) * sum(mod1$residuals^2))
 
@@ -62,6 +62,8 @@ lines(lower[2,]~ as.Date(data_1$Date), type = "l", lty = 3)
 
 # CUSUM test
 
+par(mfrow=c(1,2))
+
 # setup
 w_t <- matrix(0,nrow = 1, ncol = T)
 
@@ -78,6 +80,8 @@ sigma_cusum <- 1 / (T - h) * sum(epsilon_nd^2)
 for(t in 1:T){
   w_t[t] <- 1/sqrt(sigma_cusum) * sum(epsilon_nd[1:t])
 }
+
+
 
 plot(as.vector(w_t), type = "l", ylim = c(-p2,p2))
 segments(h,p1,T,p2, col = "goldenrod1")

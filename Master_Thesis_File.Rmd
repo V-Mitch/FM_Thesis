@@ -35,9 +35,7 @@ colnames(qLL_table) <- c("k",seq(from = 1,to = 5, by = 1))
 ```
 
 \begin{center}
-
 abstract here when I'm done with the writing and have all results
-
 \end{center}
 
 # Introduction
@@ -45,7 +43,7 @@ abstract here when I'm done with the writing and have all results
 There exists a number of macroeconomic figures that are released on a predetermined schedule for certain countries. These include for example the Non-Farm Employment change that is released on the first friday of every month informing economists and investors alike of the status of employment in the United States.  
 Classic economic theory helps us understand that an increase of interest rates is warranted when economies are performing well and prices are generally increasing. Those who decide to increase national interest rates, the central banks, typically refer to measures of inflation in order to make their decisions. Because of this, investors and traders alike pay close attention to news releases (such as inflation, and also the Non-Farm-Payrolls in the case of the United States) and react according to the results. These news releases are not made public until specific times on specific days and since investors and traders react to the same news the moment it is released, the result is often a violent reaction of price in one direction or another. The common discourse is that the direction and the magnitude of the change of price depends on the difference between the expectation of the market (combined expecation of worldwide investors) and the result of the news release.  
 In this paper, we decide to use currency pairs to measure the price shocks. As certain news pertaining to a particular country affects its respective currency more than other ones, it makes sense to observe the currency most relevant to the news announcement. As currency prices are typically measured in pairs, the second chosen currency will be another major currency that is known for its high liquidity (EUR, USD or CHF) and does not have any other news announcements at the same time^[When simultaneous news cannot be avoided, a sequence of  stability tests will be applied to ensure time variation is identified on a specific news release]. As an example, we would use the USD/CAD currency pair to measure the effect of the Canadian Consumer Price Index (CPI).  
-The paper of [@board_of_governors_of_the_federal_reserve_system_high-frequency_2003] reveals that over the time period between 1987 and 2002 there has been little time-variation in the reaction to news. Some more recently published literature of [@ben_omrane_time-varying_2019] involving an analysis on euro-dollar contracts has determined that unlike the the decade(s) encompassing the "Great Moderation" where there was lower relative volatility in the financial markets, the time period between 2004 and 2014 is characterized by evolving reactions to macroeconomic news.  
+The paper of [@andersen_micro_2003] reveals that over the time period between 1987 and 2002 there has been little time-variation in the reaction to news. Some more recently published literature of [@ben_omrane_time-varying_2019] involving an analysis on euro-dollar contracts has determined that unlike the the decade(s) encompassing the "Great Moderation" where there was lower relative volatility in the financial markets, the time period between 2004 and 2014 is characterized by evolving reactions to macroeconomic news.  
 This paper aims to _________
   
 # Data
@@ -77,7 +75,7 @@ $A_t$ is the actual result of the news at time $t$, $E_t$ is the expected result
 R_t = \beta_0 + \beta_1 S_t + \varepsilon_t
 \end{equation}  
   
-Moreover, because we are working with a dataset where subsequent observations are suspected to be related to one another, one could expect that the errors of the basic model above be autocorrelated. Specifically, adjacent $R_t$ would be more similar to one another than reactions that are separated in time to a greater extent. In this case, the inference on the $\beta_1$ would be flawed. Previous researchers have used what is called Heteroskedasticity and Autocorrelation-Consistent (HAC) estimators for the variance of the OLS estimator $\beta_1$. Using the Newey-West estimator for this variance from [@newey_simple_1987], we use modified standard errors of the $\beta_1$ in our results. If we are wrong in our assumption in some of the news instances, and there is no underlying autocorrelation of the $R_t$ observations, our estimation of $\beta_1$ is less efficient than the original estimator in those cases. Nonetheless, it remains consistent and ensures we avoid type 1 error of rejecting a true null hypothesis suggesting $\beta_1 = 0$.  
+Moreover, because we are working with a dataset where subsequent observations are suspected to be related to one another, one could expect that the errors of the basic model above be autocorrelated. Specifically, adjacent $R_t$ would be more similar to one another than reactions that are separated in time to a greater extent. In this case, the inference on the $\beta_1$ would be flawed. Previous researchers have used what is called Heteroskedasticity and Autocorrelation-Consistent (HAC) estimators for the variance of the OLS estimator $\beta_1$. Using the Newey-West estimator for this variance from @newey_simple_1987, we use modified standard errors of the $\beta_1$ in our results. If we are wrong in our assumption in some of the news instances, and there is no underlying autocorrelation of the $R_t$ observations, our estimation of $\beta_1$ is less efficient than the original estimator in those cases. Nonetheless, it remains consistent and ensures we avoid type 1 error of rejecting a true null hypothesis suggesting $\beta_1 = 0$.  
   
 ```{r tablereg, echo = FALSE}
 kable(results, booktabs = T, caption ="Results of regressions tests - HAC standard errors ",
@@ -89,14 +87,17 @@ row_spec(c(14,15), color = "black",background = "#c2f0c2") %>%
 row_spec(c(16,17), color = "black",background = "#ffd1b3")
 ```
   
-Table \@ref(tab:tablereg) shows the result of the different $\beta_1$ coefficients for separate news reports. The construction of the truncation parameter in the Newey-West estimator is such that our monthly news reports consider 2 autocorrelation coefficients whereas the quarterly ones only contain 1. This is due to the difference in the number of observations in our data. A higher estimated autocorrelation between the errors of the regression will result in a stronger correction of the variance of $\beta_1$. In all of the news in Table \@ref(tab:tablereg), the higher standard error does not affect the significance of the term. While it is not formal evidence, we suspect that the news for which the HAC standard error is vastly different than its unedited counterpart contains many unknown regressors that come from any of the findings that are summarized in [@goldberg_time_2013] (mentioned in the introduction).
+Table \@ref(tab:tablereg) shows the result of the different $\beta_1$ coefficients for separate news reports. The construction of the truncation parameter in the Newey-West estimator is such that our monthly news reports consider 2 autocorrelation coefficients whereas the quarterly ones only contain 1. This is due to the difference in the number of observations in our data. A higher estimated autocorrelation between the errors of the regression will result in a stronger correction of the variance of $\beta_1$. In all of the news in Table \@ref(tab:tablereg), the higher standard error does not affect the significance of the term. While it is not formal evidence, we suspect that the news for which the HAC standard error is vastly different than its unedited counterpart contains many unknown regressors that come from any of the findings that are summarized in @goldberg_time_2013 (mentioned in the introduction).
 
 \begin{equation}
 R_t = \beta_0 + \beta_{1,t} S_t + \varepsilon_t
 \end{equation}
   
+## Two Directions Considered
 
 # Testing for instability of the news impact parameter
+  
+## The quasi-Local-Level Test
   
 There exists many ways to test whether $\beta_t$ is time dependent or not. We first choose the methodology of the authors of [@elliott_efficient_2006] and briefly replicate their method. The advantage of their test is that it identifies instability no matter whether it comes in the form of a single break, many breaks, or a continuous change (all of which are feasible in our context).  
 The quasi-Local-Level (qLL) test enables one to test for many different types of persistent processes of the $\beta_t$. It is explained that many of these breaking processes can have a "temporary memory" (strictly speaking are strongly mixing) but will be well approximated by a Wiener process.^[Theorem 7.30 of [@white_asymptotic_2001] can be applied since certain assumptions are made about the process]. This is extremely practical in our scenario as there are many possiblities for the possible variation of the $\beta_t$. The Null Hypothesis implies there is a stable parameter as in a familiar OLS regression. We obtain the likelihood under the Null assuming that the $R_t$ observations are independently and identically distributed (and therefore so are their first differences):  
@@ -104,60 +105,79 @@ The quasi-Local-Level (qLL) test enables one to test for many different types of
 \begin{equation}
 L_{H0}(\beta_0, \beta_1, \sigma^2) = log\prod_{t=1}^{T} p(\Delta R_t | S_t ; \beta_0, \beta_1, \sigma^2)
 \end{equation}
-  
+
 \begin{equation}
 = -\frac{T}{2}log(2\pi) - Tlog(\sigma) - \frac{1}{2\sigma^2}\sum_{t=1}^{T}(\Delta R_t - (\Delta\beta_0 + \Delta\beta_1 S_t))^2
 \end{equation}
-  
-Only the last term of (5) is kept as the first constants will cancel out. $\Delta\beta_0 + \Delta\beta_1 S_t$ becomes 0 as the terms do not change with time.  
-  
-\begin{equation} 
+
+Only the last term of (5) is kept as the first constants will cancel out. $\Delta\beta_0 + \Delta\beta_1 S_t$ becomes 0 as the terms do not change with time.
+
+\begin{equation}
 L_{H0} = \frac{1}{2\sigma^2}\sum_{t=1}^{T}(\Delta R_t)^2
 \end{equation}
-  
-This contrasts with the alternative where instability is implied. We assume $\beta_t - \beta_0$ is approximated by the Gaussian random walk and $\Delta R_t$ is therefore a Gaussian moving average of order 1 MA(1) with the specification: $\Delta R_t \sim \eta_t + \psi_\eta \eta_{t-1}$, $\eta_t \sim iidN(0,\sigma^2_\eta)$, constant $\psi_\eta < 1$. Using the same $iid$ assumption we obtain the likelihood of this alternative process:  
-  
-\begin{equation} 
+
+This contrasts with the alternative where instability is implied. We assume $\beta_t - \beta_0$ is approximated by the Gaussian random walk and $\Delta R_t$ is therefore a Gaussian moving average of order 1 MA(1) with the specification: $\Delta R_t \sim \eta_t + \psi_\eta \eta_{t-1}$, $\eta_t \sim iidN(0,\sigma^2_\eta)$, constant $\psi_\eta < 1$. Using the same $iid$ assumption we obtain the likelihood of this alternative process:
+
+\begin{equation}
 L_{HA} = \frac{1}{2\sigma^2}\sum_{t=1}^{T}(\Delta \eta)^2
 \end{equation}
 
-The qLL statistic is obtained by subtracting $L_{HA}$ from $L_{H0}$. The qLL test is therefore a monotone transformation of the Likelihood Ratio Test ($LR_T$), so while it does not follow a chi-square distribution exactly, it does follow a certain related distribution that has its percentiles defined by [@elliott_efficient_2006] and reported in their table, reproduced here as Table \@ref(tab:qLL). The general extension to the $LR_T$ can be made where we can reject the model related to the Null Hypothesis (the stable model) if the critical value is sufficiently negative.
+The qLL statistic is obtained by subtracting $L_{HA}$ from $L_{H0}$. The qLL test is therefore a monotone transformation of the Likelihood Ratio Test ($LR_T$), so while it does not follow a chi-square distribution exactly, it does follow a certain related distribution that has its percentiles defined by @elliott_efficient_2006 and reported in their table, reproduced here as Table \@ref(tab:qLL). The general extension to the $LR_T$ can be made where we can reject the model related to the Null Hypothesis (the stable model) if the critical value is sufficiently negative.
   
-Alternitavely, two tests suggested by [@brown_techniques_1975] named the CUSUM and CUSUM-squared were run. The tests use the successive error terms of predictions of an RLS model that assumes stability of the $\beta$ parameter. By examining the errors in prediction, one can observe whether or not they violate the $N(0,\sigma^2)$ assumptions 
+## CUSUM and CUSUM-squared tests
+
+Separate tests to the one explained previously are considered. We explore the ones elaborated in @brown_techniques_1975 named the CUSUM and CUSUM-squared. These tests use the successive error terms of predictions of a standard Recursive-Least-Squares (RLS) model that assumes stability of the $\beta$ parameter. This model is described in _________. In this specific application, we use the result of the standard OLS as a baseline *prior* or initial value for the algorithm. By examining the prediction errors, one can observe whether or not they violate the $N(0,\sigma^2)$ assumptions. Namely that they are a 1.) zero mean sequence $E(\varepsilon_t) = 0$ and 2.) that they are serially uncorrelated $E(\varepsilon_t \varepsilon_j) = 0$ when $t \neq j$. The first step consists in running a standard RLS algorithm and obtaining one-step-ahead errors from it. These errors are obtained as follows:
   
-  
-\begin{equation} 
-W_t = \frac{1}{\hat{\sigma_cs}\sum_{i=k+1}^{t} u_{n,i} 
+\begin{equation}
+u_t = R_t - \hat{R_t}|R_{t-1}
 \end{equation}
   
+Effectively the realized price shock minus the predicted price shock at each observation.  A transformation of these errors enables us to obtain a homoscedastic series.
+  
+\begin{equation}
+u_{n,t} = \frac{u_t}{(1 + S_t^T P_t S_t)^{0.5}}
+\end{equation}
+  
+Where $P_t$ is the covariance (or variance if there is only one news element at a time) of the $\beta_t$. A new series of summed up and standardized for use in the CUSUM test.  
+
+\begin{equation}
+W_t = \frac{1}{\hat\sigma_{cs}}\sum_{i=k+1}^{t} u_{n,i}
+\end{equation}
+  
+In theory, these successively compounded errors should not stray too far from the zero-line if the true $beta_t$ is constant. We also use the confidence bands suggested by @brown_techniques_1975. They are constructed by constructing pairs of lines starting at time *k*: $\pm a(T-k)^{0.5}$ and ending at time *T*: $\pm 3a(T-k)^{0.5}$
+  
+Insert graph cusum
+  
+The second test, the CUSUM-squared can be run by once more by creating a new series, similar to the $W_t$ from earlier. Here we consider:
+  
+\begin{equation}
+V_t = \frac{\sum_{i=k+1}^{t} u_{n,i}}{\sum_{i=k+1}^{T} u_{n,i}}
+\end{equation}
+  
+With a Null-Hypothesis of a constant parameter(s), these cumulative sum of squares should follow a beta distribution and its mean should be $(k-h)/(N-h)$. As significance levels, we use the bounds set as: $\pm c_o + (k-h)/(N-h)$. The values of $c_0$ depend on the sample size. Our sample sizes are typically larger than the maximum value given in @brown_techniques_1975. For those cases where
+
 ```{r qLL, echo = FALSE}
 kable(qLL_table, booktabs = T, caption ="Asymptotic Critical Values of the qLL Statistic",
       format = "latex") %>%
 kable_styling(latex_options = c("striped"))
 ```
-  
+
 ```{r qLLresults, echo = FALSE}
 kable(qLL_results, booktabs = T, caption ="Instability Test Results",
       format = "latex") %>%
 kable_styling(latex_options = c("striped")) %>%
 row_spec(c(1,10), bold = T, color = "black") %>%
 row_spec(c(11), color = "black",background = "#b3e0ff") %>%
-row_spec(c(17), color = "black",background = "#c2f0c2") %>%  
+row_spec(c(17), color = "black",background = "#c2f0c2") %>%
 row_spec(c(19), color = "black",background = "#ffd1b3")
-```
-
-In order to see this in practice and ensure it works in our case, we create some hypothetical paths and observe the result of the tests.  
-  
-```{r plots1, echo = FALSE}
-plot1
 ```
 
 - Assumptions of the test - appropriate in our case???
 
-# Parameter Path Estimations  
-  
-Having established that there is instability over time in the market reactions to the news, we take on the task of obtaining the parameter paths. 
-  
+# Parameter Path Estimations
+
+Having established that there is instability over time in the market reactions to the news, we take on the task of obtaining the parameter paths.
+
 ```{r, echo = FALSE}
 plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
         read.csv("~/R tests/finance related projects/gbpcpi_magn.csv"),
@@ -165,15 +185,15 @@ plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
 ```
 
 # Stochastic Recursive Linear Least Squares Algorithm
-  
+
 
 
 # Conclusion
 
 # Appendix
-  
-## Parameter Paths  
-  
+
+## Parameter Paths
+
 ```{r cadcrs, echo = FALSE}
 plotpath(read.csv("~/R tests/finance related projects/cadcrs_path.csv"), "Canadian Core Retail Sales")
 plotpath(read.csv("~/R tests/finance related projects/cadcpi_path.csv"), "Canadian Consumer Price Index")
