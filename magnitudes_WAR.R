@@ -61,7 +61,7 @@ plotcusum <- function(cusumpath, cusumpoints){
   cusumpoints$startdate <- as.Date(cusumpoints$startdate)
   cusumpoints$enddate <- as.Date(cusumpoints$enddate)
   ggplot() +
-    geom_line(data = cusumpath, aes(x = date, y = w_t), color = "black", linetype = a) +
+    geom_line(data = cusumpath, aes(x = date, y = w_t), color = "black", linetype = "solid") +
     geom_hline(yintercept = 0, linetype="dashed", color = "steel blue") +
     geom_segment(data = cusumpoints, aes(x = startdate, y = p1, xend = enddate, yend = p2), linetype = "dotted") +
     geom_segment(data = cusumpoints, aes(x = startdate, y = -p1, xend = enddate, yend = -p2), linetype = "dotted") +
@@ -78,7 +78,7 @@ plotcusumsq <- function(cusumsqdf){
   # cusumpoints$startdate <- as.Date(cusumpoints$startdate)
   # cusumpoints$enddate <- as.Date(cusumpoints$enddate)
   ggplot() +
-    geom_line(data = cusumsqdf, aes(x = date, y = w2_t), color = "black", linetype = a) +
+    geom_line(data = cusumsqdf, aes(x = date, y = w2_t), color = "black", linetype = "solid") +
     geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line), color = "steel blue", linetype ="dashed") +
     geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line + 0.144), linetype ="dotted") +
     geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line - 0.144), linetype ="dotted") +
