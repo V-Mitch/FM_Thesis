@@ -6,8 +6,8 @@
 S_t <- t(as.matrix(data_1$std_Difference))
 # 2 Param
 #S_t <- rbind(data_1$std_Difference, data_2$std_Difference)
-# 3 Param
-#S_t <- rbind(data_1$std_Difference, data_2$std_Difference, data_3$std_Difference)
+#3 Param
+S_t <- rbind(data_1$std_Difference, data_2$std_Difference, data_3$std_Difference)
 
 Y_t <- t(as.matrix(data_1$m5))
 icept <- rep(1,T)
@@ -24,7 +24,7 @@ beta_hat[,1] <- as.vector(mod1$coefficients)
 g_t <- matrix(0,nrow = k, ncol = T)
 p_t <- matrix(seq(0,0),nrow = k, ncol = k) # p_t matrix will continuously be replaced
 p_0 <- matrix(seq(0,0),nrow = k, ncol = k)
-diag(p_0) <- c(10^6,10^6)
+diag(p_0) <- rep(10^6, dim(S_t)[1])
 
 sigma <- sqrt(1/(T-dim(S_t)[1] -1) * sum(mod1$residuals^2))
 
@@ -91,7 +91,22 @@ segments(h,-p3,T,-p4, col = "goldenrod2")
 segments(h,p5,T,p6, col = "goldenrod3")
 segments(h,-p5,T,-p6, col = "goldenrod3")
 
+cusum_df <- data.frame(x = as.vector(w_t), as.Date(data_1$Date))
+points_df <- data.frame(x = as.Date(data_1$Date[h]), as.Date(data_1$Date[T]), p1, p2 ,p3 ,p4 ,p5 ,p6)
+colnames(cusum_df) <- c("w_t", "date")
+colnames(points_df) <- c("startdate", "enddate","p1","p2","p3","p4","p5","p6")
 
+ggplot() +
+  geom_line(data = cusum_df, aes(date, w_t), color = "black", linetype = a) +
+  geom_hline(yintercept = 0, linetype="dashed", color = "steel blue") +
+  geom_segment(data = points_df, aes(x = startdate, y = p1, xend = enddate, yend = p2), linetype = "dotted") +
+  geom_segment(data = points_df, aes(x = startdate, y = -p1, xend = enddate, yend = -p2), linetype = "dotted") +
+  geom_segment(data = points_df, aes(x = startdate, y = p3, xend = enddate, yend = p4), linetype = "dotted") +
+  geom_segment(data = points_df, aes(x = startdate, y = -p3, xend = enddate, yend = -p4), linetype = "dotted") +
+  geom_segment(data = points_df, aes(x = startdate, y = p5, xend = enddate, yend = p6), linetype = "dotted") +
+  geom_segment(data = points_df, aes(x = startdate, y = -p5, xend = enddate, yend = -p6), linetype = "dotted") +
+  ggtitle("CUSUM Test") +
+  theme_tufte()
 
 # CUSUM-squared test
 # setup
