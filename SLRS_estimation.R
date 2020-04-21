@@ -121,7 +121,7 @@ lines(as.vector(beta_dist_line) - 0.100, col = "purple", lty=5)
 cusum_sq_df <- data.frame(x = as.vector(w2_t), as.Date(data_1$Date),
                           as.vector(beta_dist_line))
 colnames(cusum_sq_df) <- c("w2_t", "date", "beta_dist_line")
-write.csv(cusum_sq_df, file = "~/R tests/finance related projects/cusum_sq_df.csv")
+#write.csv(cusum_sq_df, file = "~/R tests/finance related projects/cusum_sq_df.csv")
 
 
 
