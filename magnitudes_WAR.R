@@ -73,3 +73,19 @@ plotcusum <- function(cusumpath, cusumpoints){
     theme_tufte()
 }
 
+plotcusumsq <- function(cusumsqdf){
+  cusumsqdf$date <- as.Date(cusumsqdf$date)
+  # cusumpoints$startdate <- as.Date(cusumpoints$startdate)
+  # cusumpoints$enddate <- as.Date(cusumpoints$enddate)
+  ggplot() +
+    geom_line(data = cusumsqdf, aes(x = date, y = w2_t), color = "black", linetype = a) +
+    geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line), color = "steel blue", linetype ="dashed") +
+    geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line + 0.144), linetype ="dotted") +
+    geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line - 0.144), linetype ="dotted") +
+    geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line + 0.114), linetype ="dotted") +
+    geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line - 0.114), linetype ="dotted") +
+    geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line + 0.100), linetype ="dotted") +
+    geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line - 0.100), linetype ="dotted") +
+    ggtitle("CUSUM-squared Test") +
+    theme_tufte()
+}

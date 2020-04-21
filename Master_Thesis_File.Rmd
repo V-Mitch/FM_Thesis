@@ -146,7 +146,11 @@ W_t = \frac{1}{\hat\sigma_{cs}}\sum_{i=k+1}^{t} u_{n,i}
   
 In theory, these successively compounded errors should not stray too far from the zero-line if the true $beta_t$ is constant. We also use the confidence bands suggested by @brown_techniques_1975. They are constructed by constructing pairs of lines starting at time *k*: $\pm a(T-k)^{0.5}$ and ending at time *T*: $\pm 3a(T-k)^{0.5}$
   
-Insert graph cusum
+```{r}
+plotcusum(read.csv("~/R tests/finance related projects/cusum_df.csv"),
+          read.csv("~/R tests/finance related projects/points_df.csv"))
+```
+
   
 The second test, the CUSUM-squared can be run by once more by creating a new series, similar to the $W_t$ from earlier. Here we consider:
   
@@ -155,6 +159,11 @@ V_t = \frac{\sum_{i=k+1}^{t} u_{n,i}}{\sum_{i=k+1}^{T} u_{n,i}}
 \end{equation}
   
 With a Null-Hypothesis of a constant parameter(s), these cumulative sum of squares should follow a beta distribution and its mean should be $(k-h)/(N-h)$. As significance levels, we use the bounds set as: $\pm c_o + (k-h)/(N-h)$. The values of $c_0$ depend on the sample size. Our sample sizes are typically larger than the maximum value given in @brown_techniques_1975. For those cases where
+  
+```{r}
+
+```
+
 
 ```{r qLL, echo = FALSE}
 kable(qLL_table, booktabs = T, caption ="Asymptotic Critical Values of the qLL Statistic",

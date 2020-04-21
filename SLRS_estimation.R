@@ -109,8 +109,6 @@ for(t in 2:T){
   beta_dist_line[t] <- (t-h)/(T-h)
 }
 
-
-
 plot(as.vector(w2_t), type = "l")
 lines(as.vector(beta_dist_line), col = "blue")
 lines(as.vector(beta_dist_line) + 0.144, col = "purple", lty=4)
@@ -119,3 +117,12 @@ lines(as.vector(beta_dist_line) + 0.114, col = "purple", lty=5)
 lines(as.vector(beta_dist_line) - 0.114, col = "purple", lty=5)
 lines(as.vector(beta_dist_line) + 0.100, col = "purple", lty=5)
 lines(as.vector(beta_dist_line) - 0.100, col = "purple", lty=5)
+
+cusum_sq_df <- data.frame(x = as.vector(w2_t), as.Date(data_1$Date),
+                          as.vector(beta_dist_line))
+colnames(cusum_sq_df) <- c("w2_t", "date", "beta_dist_line")
+write.csv(cusum_sq_df, file = "~/R tests/finance related projects/cusum_sq_df.csv")
+
+
+
+
