@@ -56,3 +56,20 @@ plotwar <- function(betapath, beta_weights, title){
     theme_tufte()
 }
 
+plotcusum <- function(cusumpath, cusumpoints){
+  cusumpath$date <- as.Date(cusumpath$date)
+  cusumpoints$startdate <- as.Date(cusumpoints$startdate)
+  cusumpoints$enddate <- as.Date(cusumpoints$enddate)
+  ggplot() +
+    geom_line(data = cusumpath, aes(x = date, y = w_t), color = "black", linetype = a) +
+    geom_hline(yintercept = 0, linetype="dashed", color = "steel blue") +
+    geom_segment(data = cusumpoints, aes(x = startdate, y = p1, xend = enddate, yend = p2), linetype = "dotted") +
+    geom_segment(data = cusumpoints, aes(x = startdate, y = -p1, xend = enddate, yend = -p2), linetype = "dotted") +
+    geom_segment(data = cusumpoints, aes(x = startdate, y = p3, xend = enddate, yend = p4), linetype = "dotted") +
+    geom_segment(data = cusumpoints, aes(x = startdate, y = -p3, xend = enddate, yend = -p4), linetype = "dotted") +
+    geom_segment(data = cusumpoints, aes(x = startdate, y = p5, xend = enddate, yend = p6), linetype = "dotted") +
+    geom_segment(data = cusumpoints, aes(x = startdate, y = -p5, xend = enddate, yend = -p6), linetype = "dotted") +
+    ggtitle("CUSUM Test") +
+    theme_tufte()
+}
+
