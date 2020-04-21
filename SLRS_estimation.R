@@ -95,18 +95,8 @@ cusum_df <- data.frame(x = as.vector(w_t), as.Date(data_1$Date))
 points_df <- data.frame(x = as.Date(data_1$Date[h]), as.Date(data_1$Date[T]), p1, p2 ,p3 ,p4 ,p5 ,p6)
 colnames(cusum_df) <- c("w_t", "date")
 colnames(points_df) <- c("startdate", "enddate","p1","p2","p3","p4","p5","p6")
-
-ggplot() +
-  geom_line(data = cusum_df, aes(date, w_t), color = "black", linetype = a) +
-  geom_hline(yintercept = 0, linetype="dashed", color = "steel blue") +
-  geom_segment(data = points_df, aes(x = startdate, y = p1, xend = enddate, yend = p2), linetype = "dotted") +
-  geom_segment(data = points_df, aes(x = startdate, y = -p1, xend = enddate, yend = -p2), linetype = "dotted") +
-  geom_segment(data = points_df, aes(x = startdate, y = p3, xend = enddate, yend = p4), linetype = "dotted") +
-  geom_segment(data = points_df, aes(x = startdate, y = -p3, xend = enddate, yend = -p4), linetype = "dotted") +
-  geom_segment(data = points_df, aes(x = startdate, y = p5, xend = enddate, yend = p6), linetype = "dotted") +
-  geom_segment(data = points_df, aes(x = startdate, y = -p5, xend = enddate, yend = -p6), linetype = "dotted") +
-  ggtitle("CUSUM Test") +
-  theme_tufte()
+#write.csv(cusum_df, file = "~/R tests/finance related projects/cusum_df.csv")
+#write.csv(points_df, file = "~/R tests/finance related projects/points_df.csv")
 
 # CUSUM-squared test
 # setup
