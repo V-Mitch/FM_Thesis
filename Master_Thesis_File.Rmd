@@ -188,6 +188,10 @@ row_spec(c(19), color = "black",background = "#ffd1b3")
 # Parameter Path Estimations
 
 Having established that there is instability over time in the market reactions to the news, we take on the task of obtaining the parameter paths.
+  
+## Weighted Average Risk Minimization
+  
+The paper 
 
 ```{r, echo = FALSE}
 plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
@@ -197,7 +201,7 @@ plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
 
 # Stochastic Recursive Linear Least Squares Algorithm
 
-
+# Discussion - A comparison of methods
 
 # Conclusion
 
