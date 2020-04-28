@@ -69,7 +69,7 @@ plotcusum <- function(cusumpath, cusumpoints){
     geom_segment(data = cusumpoints, aes(x = startdate, y = -p3, xend = enddate, yend = -p4), linetype = "dotted") +
     geom_segment(data = cusumpoints, aes(x = startdate, y = p5, xend = enddate, yend = p6), linetype = "dotted") +
     geom_segment(data = cusumpoints, aes(x = startdate, y = -p5, xend = enddate, yend = -p6), linetype = "dotted") +
-    ggtitle("CUSUM Test") +
+    ggtitle("CUSUM Test applied on UK CPI") +
     theme_tufte()
 }
 
@@ -86,6 +86,6 @@ plotcusumsq <- function(cusumsqdf){
     geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line - 0.114), linetype ="dotted") +
     geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line + 0.100), linetype ="dotted") +
     geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line - 0.100), linetype ="dotted") +
-    ggtitle("CUSUM-squared Test") +
+    ggtitle("CUSUM-squared Test on UK CPI") +
     theme_tufte()
 }

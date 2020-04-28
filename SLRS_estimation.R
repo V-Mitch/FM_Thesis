@@ -3,9 +3,9 @@
 # RLS method for a stable mean
 
 # 1 Param
-S_t <- t(as.matrix(data_1$std_Difference))
+#S_t <- t(as.matrix(data_1$std_Difference))
 # 2 Param
-#S_t <- rbind(data_1$std_Difference, data_2$std_Difference)
+S_t <- rbind(data_1$std_Difference, data_2$std_Difference)
 #3 Param
 #S_t <- rbind(data_1$std_Difference, data_2$std_Difference, data_3$std_Difference)
 
@@ -48,7 +48,7 @@ for(t in 2:nrow(data_1)){
 }
 
 
-
+par(mfrow=c(1,1))
 #par(mfrow=c(1,2))
 plot(beta_hat[2,] ~ as.Date(data_1$Date), type = "l")
 lines(rep(mod1$coefficients[2],T) ~ as.Date(data_1$Date), lty = "dotdash")

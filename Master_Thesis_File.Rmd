@@ -46,7 +46,7 @@ There exists a number of macroeconomic figures that are released on a predetermi
 Classic economic theory helps us understand that an increase of interest rates is warranted when economies are performing well and prices are generally increasing. Those who decide to increase national interest rates, the central banks, typically refer to measures of inflation in order to make their decisions. Because of this, investors and traders alike pay close attention to news releases (such as inflation, and also the Non-Farm-Payrolls in the case of the United States) and react according to the results. These news releases are not made public until specific times on specific days and since investors and traders react to the same news the moment it is released, the result is often a violent reaction of price in one direction or another. The common discourse is that the direction and the magnitude of the change of price depends on the difference between the expectation of the market (combined expecation of worldwide investors) and the result of the news release.  
 In this paper, we decide to use currency pairs to measure the price shocks. As certain news pertaining to a particular country affects its respective currency more than other ones, it makes sense to observe the currency most relevant to the news announcement. As currency prices are typically measured in pairs, the second chosen currency will be another major currency that is known for its high liquidity (EUR, USD or CHF) and does not have any other news announcements at the same time^[When simultaneous news cannot be avoided, a sequence of  stability tests will be applied to ensure time variation is identified on a specific news release]. As an example, we would use the USD/CAD currency pair to measure the effect of the Canadian Consumer Price Index (CPI).  
 The paper of [@andersen_micro_2003] reveals that over the time period between 1987 and 2002 there has been little time-variation in the reaction to news. Some more recently published literature of [@ben_omrane_time-varying_2019] involving an analysis on euro-dollar contracts has determined that unlike the the decade(s) encompassing the "Great Moderation" where there was lower relative volatility in the financial markets, the time period between 2004 and 2014 is characterized by evolving reactions to macroeconomic news.  
-This paper aims to _________
+This paper aims to detect whether or not there is instability in the reaction to news with the new data at hand with the help of several tests explored in previous literature. Furthermore, we explore methodologies to retrace a "parameter path" to meliorate our understanding of the evolution of the variable through time.
   
 # Data
   
@@ -99,7 +99,13 @@ R_t = \beta_0 + \beta_{1,t} S_t + \varepsilon_t
 
 # Testing for instability of the news impact parameter
   
-## The quasi-Local-Level Test
+## The quasi-Local-Level Test (#qLLtest)
+  
+```{r qLL, echo = FALSE}
+kable(qLL_table, booktabs = T, caption ="Asymptotic Critical Values of the qLL Statistic",
+      format = "latex") %>%
+kable_styling(latex_options = c("striped"))
+```
   
 There exists many ways to test whether $\beta_t$ is time dependent or not. We first choose the methodology of the authors of [@elliott_efficient_2006] and briefly replicate their method. The advantage of their test is that it identifies instability no matter whether it comes in the form of a single break, many breaks, or a continuous change (all of which are feasible in our context).  
 The quasi-Local-Level (qLL) test enables one to test for many different types of persistent processes of the $\beta_t$. It is explained that many of these breaking processes can have a "temporary memory" (strictly speaking are strongly mixing) but will be well approximated by a Wiener process.^[Theorem 7.30 of [@white_asymptotic_2001] can be applied since certain assumptions are made about the process]. This is extremely practical in our scenario as there are many possiblities for the possible variation of the $\beta_t$. The Null Hypothesis implies there is a stable parameter as in a familiar OLS regression. We obtain the likelihood under the Null assuming that the $R_t$ observations are independently and identically distributed (and therefore so are their first differences):  
@@ -125,16 +131,11 @@ L_{HA} = \frac{1}{2\sigma^2}\sum_{t=1}^{T}(\Delta \eta)^2
 \end{equation}
 
 The qLL statistic is obtained by subtracting $L_{HA}$ from $L_{H0}$. The qLL test is therefore a monotone transformation of the Likelihood Ratio Test ($LR_T$), so while it does not follow a chi-square distribution exactly, it does follow a certain related distribution that has its percentiles defined by @elliott_efficient_2006 and reported in their table, reproduced here as Table \@ref(tab:qLL). The general extension to the $LR_T$ can be made where we can reject the model related to the Null Hypothesis (the stable model) if the critical value is sufficiently negative.
-  
-```{r qLL, echo = FALSE}
-kable(qLL_table, booktabs = T, caption ="Asymptotic Critical Values of the qLL Statistic",
-      format = "latex") %>%
-kable_styling(latex_options = c("striped"))
-```
+
   
 ## CUSUM and CUSUM-squared tests
 
-Separate tests to the one explained previously are considered. We explore the ones elaborated in @brown_techniques_1975 named the CUSUM and CUSUM-squared. These tests use the successive error terms of predictions of a standard Recursive-Least-Squares (RLS) model that assumes stability of the $\beta$ parameter. This model is described in _________. In this specific application, we use the result of the standard OLS as a baseline *prior* or initial value for the algorithm (ie. $\beta_0$) and we use an empirical $\hat{\sigma}_\varepsilon$ residual error that is based on the entire sample. By examining the prediction errors, one can observe whether or not they violate the $N(0,\sigma^2)$ assumptions. Namely that they are a 1.) zero mean sequence $E(\varepsilon_t) = 0$ and 2.) that they are serially uncorrelated $E(\varepsilon_t \varepsilon_j) = 0$ when $t \neq j$. The first step consists in running a standard RLS algorithm and obtaining one-step-ahead errors from it. These errors are obtained as follows:
+Separate tests to the one explained previously are considered. We explore the ones elaborated in @brown_techniques_1975 named the CUSUM and CUSUM-squared. These tests use the successive error terms of predictions of a standard Recursive-Least-Squares (RLS) model that assumes stability of the $\beta$ parameter.  In this specific application, we use the result of the standard OLS as a baseline *prior* or initial value for the algorithm (ie. $\beta_0$) and we use an empirical $\hat{\sigma}_\varepsilon$ residual error that is based on the entire sample. By examining the prediction errors, one can observe whether or not they violate the $N(0,\sigma^2)$ assumptions. Namely that they are a 1.) zero mean sequence $E(\varepsilon_t) = 0$ and 2.) that they are serially uncorrelated $E(\varepsilon_t \varepsilon_j) = 0$ when $t \neq j$. The first step consists in running a standard RLS algorithm and obtaining one-step-ahead errors from it. These errors are obtained as follows:
   
 \begin{equation}
 u_t = R_t - \hat{R_t}|R_{t-1}
@@ -187,11 +188,11 @@ row_spec(c(19), color = "black",background = "#ffd1b3")
 
 # Parameter Path Estimations
 
-Having established that there is instability over time in the market reactions to the news, we take on the task of obtaining the parameter paths.
+Having established that there is instability over time in the market reactions to the news, we take on the task of obtaining a time series that conveys the change over the timeframe considered. Specifically, we would like to obtain a visual representation of the change of the parameter such that a researcher or investor is able to easily gather information from.
   
 ## Weighted Average Risk Minimization
   
-The paper 
+Conveniently, there is a natural extension of the use of the qLL test elaborated in [Section 4.1] as it provides a means to obtain an efficient parameter path [@muller_efficient_2010]. 
 
 ```{r, echo = FALSE}
 plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
