@@ -8,7 +8,7 @@ output:
   bookdown::pdf_document2:
     toc: true
     toc_depth: 2
-  
+    fig.caption : yes
 ---
 ```{r loadlib, results = 'hide', echo = F, message = F, warning = F}
 library(bookdown)
@@ -75,6 +75,7 @@ $A_t$ is the actual result of the news at time $t$, $E_t$ is the expected result
 
 \begin{equation}
 R_t = \beta_0 + \beta_1 S_t + \varepsilon_t
+(\#eq:stable)
 \end{equation}  
   
 Moreover, because we are working with a dataset where subsequent observations are suspected to be related to one another, one could expect that the errors of the basic model above be autocorrelated. Specifically, adjacent $R_t$ would be more similar to one another than reactions that are separated in time to a greater extent. In this case, the inference on the $\beta_1$ would be flawed. Previous researchers have used what is called Heteroskedasticity and Autocorrelation-Consistent (HAC) estimators for the variance of the OLS estimator $\beta_1$. Using the Newey-West estimator for this variance from @newey_simple_1987, we use modified standard errors of the $\beta_1$ in our results. If we are wrong in our assumption in some of the news instances, and there is no underlying autocorrelation of the $R_t$ observations, our estimation of $\beta_1$ is less efficient than the original estimator in those cases. Nonetheless, it remains consistent and ensures we avoid type 1 error of rejecting a true null hypothesis suggesting $\beta_1 = 0$.  
@@ -99,7 +100,18 @@ R_t = \beta_0 + \beta_{1,t} S_t + \varepsilon_t
 
 # Testing for instability of the news impact parameter
   
-## The quasi-Local-Level Test (#qLLtest)
+```{r qLLresults, echo = FALSE}
+kable(qLL_results, booktabs = T, caption ="Instability Test Results",
+      format = "latex") %>%
+kable_styling(latex_options = c("striped")) %>%
+row_spec(c(1,10), bold = T, color = "black") %>%
+row_spec(c(11), color = "black",background = "#b3e0ff") %>%
+row_spec(c(17), color = "black",background = "#c2f0c2") %>%
+row_spec(c(19), color = "black",background = "#ffd1b3")
+```
+  
+  
+## The quasi-Local-Level Test {#qLLtest}
   
 ```{r qLL, echo = FALSE}
 kable(qLL_table, booktabs = T, caption ="Asymptotic Critical Values of the qLL Statistic",
@@ -112,6 +124,7 @@ The quasi-Local-Level (qLL) test enables one to test for many different types of
   
 \begin{equation}
 L_{H0}(\beta_0, \beta_1, \sigma^2) = log\prod_{t=1}^{T} p(\Delta R_t | S_t ; \beta_0, \beta_1, \sigma^2)
+(\#eq:LH0)
 \end{equation}
 
 \begin{equation}
@@ -130,7 +143,7 @@ This contrasts with the alternative where instability is implied. We assume $\be
 L_{HA} = \frac{1}{2\sigma^2}\sum_{t=1}^{T}(\Delta \eta)^2
 \end{equation}
 
-The qLL statistic is obtained by subtracting $L_{HA}$ from $L_{H0}$. The qLL test is therefore a monotone transformation of the Likelihood Ratio Test ($LR_T$), so while it does not follow a chi-square distribution exactly, it does follow a certain related distribution that has its percentiles defined by @elliott_efficient_2006 and reported in their table, reproduced here as Table \@ref(tab:qLL). The general extension to the $LR_T$ can be made where we can reject the model related to the Null Hypothesis (the stable model) if the critical value is sufficiently negative.
+The qLL statistic is obtained by subtracting $L_{HA}$ from $L_{H0}$. The qLL test is therefore a variant of the Likelihood Ratio Test ($LR_T$), so while it does not follow a chi-square distribution exactly, it does follow a certain related distribution that has its percentiles defined by @elliott_efficient_2006 and reported in their table, reproduced here as Table \@ref(tab:qLL). The general extension to the $LR_T$ can be made where we can reject the model related to the Null Hypothesis (the stable model) if the critical value is sufficiently negative.
 
   
 ## CUSUM and CUSUM-squared tests
@@ -173,28 +186,23 @@ With a Null-Hypothesis of a constant parameter(s), these cumulative sum of squar
 plotcusumsq(read.csv("~/R tests/finance related projects/cusum_sq_df.csv"))
 ```
 
-
-```{r qLLresults, echo = FALSE}
-kable(qLL_results, booktabs = T, caption ="Instability Test Results",
-      format = "latex") %>%
-kable_styling(latex_options = c("striped")) %>%
-row_spec(c(1,10), bold = T, color = "black") %>%
-row_spec(c(11), color = "black",background = "#b3e0ff") %>%
-row_spec(c(17), color = "black",background = "#c2f0c2") %>%
-row_spec(c(19), color = "black",background = "#ffd1b3")
-```
-
-- Assumptions of the test - appropriate in our case???
-
 # Parameter Path Estimations
 
 Having established that there is instability over time in the market reactions to the news, we take on the task of obtaining a time series that conveys the change over the timeframe considered. Specifically, we would like to obtain a visual representation of the change of the parameter such that a researcher or investor is able to easily gather information from.
   
 ## Weighted Average Risk Minimization
   
-Conveniently, there is a natural extension of the use of the qLL test elaborated in [Section 4.1] as it provides a means to obtain an efficient parameter path [@muller_efficient_2010]. 
+Conveniently, there is a natural extension of the use of the qLL test elaborated in [Section 4.1](#qLLtest) as it provides a means to obtain an efficient parameter path [@muller_efficient_2010]. 
+  
+First, we consider our stable model which is analogous to the linear regression model that is presented in the Equation \@ref(eq:stable). The resulting $\beta$ parameter obtained either through maximum likelihood estimation or minimization of ordinary least squares (depicted as the dot-dashed line in Figure \@ref(fig:warplot)) is representative of a scenario where we assume there is no time-related evolution of market reaction to news. As seen before, the likelihood in this case can be developed as Equation \@ref(eq:LH0).
+  
+We then turn to the case of varying $\beta_t$ where we can no longer use the i.i.d assumption of observations and have to take a step back and consider the general form of the the likelihood: 
+  
+__
 
-```{r, echo = FALSE}
+The weights in step (e) of the Appendix [Section 9.3](#stepswar) depend on the sample size, the standard deviation of one of the 11 alternative paths and the qLL statistic are created using the qLL test statistic from [Section 4.1](#qLLtest). It can be observed that the more negative the statistic becomes, the more importance is placed on that particular weight. 
+
+```{r warplot, echo = FALSE, fig.cap="WAR minimizing over the 11 different randow walk weighting functions"}
 plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
         read.csv("~/R tests/finance related projects/gbpcpi_magn.csv"),
         "WAR minimizing over the 11 different randow walk weighting functions")
@@ -207,6 +215,10 @@ plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
 # Conclusion
 
 # Appendix
+  
+## Steps to obtain qLL statistic {#stepsqLL}
+  
+## Steps to obtain WAR minimization path {#stepswar}
 
 ## Parameter Paths
 
