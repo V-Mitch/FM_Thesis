@@ -148,7 +148,7 @@ The qLL statistic is obtained by subtracting $L_{HA}$ from $L_{H0}$. The qLL tes
   
 ## CUSUM and CUSUM-squared tests
 
-Separate tests to the one explained previously are considered. We explore the ones elaborated in @brown_techniques_1975 named the CUSUM and CUSUM-squared. These tests use the successive error terms of predictions of a standard Recursive-Least-Squares (RLS) model that assumes stability of the $\beta$ parameter.  In this specific application, we use the result of the standard OLS as a baseline *prior* or initial value for the algorithm (ie. $\beta_0$) and we use an empirical $\hat{\sigma}_\varepsilon$ residual error that is based on the entire sample. By examining the prediction errors, one can observe whether or not they violate the $N(0,\sigma^2)$ assumptions. Namely that they are a 1.) zero mean sequence $E(\varepsilon_t) = 0$ and 2.) that they are serially uncorrelated $E(\varepsilon_t \varepsilon_j) = 0$ when $t \neq j$. The first step consists in running a standard RLS algorithm and obtaining one-step-ahead errors from it. These errors are obtained as follows:
+Separate tests to the one explained previously are considered. We explore the ones elaborated in @brown_techniques_1975 named the CUSUM and CUSUM-squared. These tests use the successive error terms of predictions of a standard Recursive-Least-Squares (RLS) model that assumes stability of the $\beta$ parameter [@young_recursive_2011]. In this specific application, we use the result of the standard OLS as a baseline *prior* or initial value for the algorithm (ie. $\beta_0$) and we use an empirical $\hat{\sigma}_\varepsilon$ residual error that is based on the entire sample. By examining the prediction errors, one can observe whether or not they violate the $N(0,\sigma^2)$ assumptions. Namely that they are a 1.) zero mean sequence $E(\varepsilon_t) = 0$ and 2.) that they are serially uncorrelated $E(\varepsilon_t \varepsilon_j) = 0$ when $t \neq j$. The first step consists in running a standard RLS algorithm and obtaining one-step-ahead errors from it. These errors are obtained as follows:
   
 \begin{equation}
 u_t = R_t - \hat{R_t}|R_{t-1}
@@ -192,12 +192,11 @@ Having established that there is instability over time in the market reactions t
   
 ## Weighted Average Risk Minimization
   
-Conveniently, there is a natural extension of the use of the qLL test elaborated in [Section 4.1](#qLLtest) as it provides a means to obtain an efficient parameter path [@muller_efficient_2010]. 
+Conveniently, there is a natural extension of the qLL test elaborated in [Section 4.1](#qLLtest). It provides a herusitic means means to approximate a parameter path [@muller_efficient_2010]. 
   
-First, we consider our stable model which is analogous to the linear regression model that is presented in the Equation \@ref(eq:stable). The resulting $\beta$ parameter obtained either through maximum likelihood estimation or minimization of ordinary least squares (depicted as the dot-dashed line in Figure \@ref(fig:warplot)) is representative of a scenario where we assume there is no time-related evolution of market reaction to news. As seen before, the likelihood in this case can be developed as Equation \@ref(eq:LH0).
+First, we consider our stable model which is analogous to the linear regression model that is presented in the Equation \@ref(eq:stable). The resulting $\beta$ parameter obtained either through maximum likelihood estimation or minimization of ordinary least squares (depicted as the dot-dashed line in Figure \@ref(fig:warplot)) is representative of a scenario where it is assumed there is no time-related evolution of market reaction to news. As seen before, the likelihood in this case can be developed as Equation \@ref(eq:LH0) or also written more generally as $\sum_{t=1}^{T}l_t (\theta)$ with $\theta$ containing the constant parameters.
   
-We then turn to the case of varying $\beta_t$ where we can no longer use the i.i.d assumption of observations and have to take a step back and consider the general form of the the likelihood: 
-  
+We then turn to the case of varying $\beta_t$. Here, the general likelihood is the same but with time varying parameter(s) contained in $\theta_t$ = $\theta + \delta_t$ in $t = 1,...,T$. The $\delta_t$ can be imagined as the vertical distances in Figure \@ref(fig:warplot)) between the constant $\theta$ case and the *true* parameter path that is unknown and that we are attempting to approximate. A second-order Taylor expansion of the likelihood function 
 __
 
 The weights in step (e) of the Appendix [Section 9.3](#stepswar) depend on the sample size, the standard deviation of one of the 11 alternative paths and the qLL statistic are created using the qLL test statistic from [Section 4.1](#qLLtest). It can be observed that the more negative the statistic becomes, the more importance is placed on that particular weight. 
