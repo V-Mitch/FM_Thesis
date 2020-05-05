@@ -227,6 +227,17 @@ plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
 ## Steps to obtain qLL statistic {#stepsqLL}
   
 ## Steps to obtain WAR minimization path {#stepswar}
+  
+1. For t = 1,...,T, let $a_t$ and $b_t$ be the first $p$ elements of $\hat{H}^{-1}s_t(\hat{\theta})$ and $\hat{H}\hat{V}^{-1}s_t(\hat{\theta})$ respectively.  
+2. For $c_i \in C = {0, 5, 10,...,50}, i = 1,...,11$ compute
+  (a) $r_i = 1-c_i/T$, $z_{i,1} = x_1$ and $z_{i,t} = r_{i}z_{i,t-1} + x_t - x_{t-1}, t = 2,...,T$;  
+  (b) the residuals $\{\tilde{z}_{i,t}\}_{t=1}^T$ of a linear regression of $\{{z}_{i,t}\}_{t=1}^T$ on $\{r_i^{t-1}I_p\}_{t=1}^T$  
+  (c) $\bar{z}_{i,T} = \tilde{z}_{i,T}$, and $\bar{z}_{i,t} = r_i\bar{z}_{i,t+1} + \tilde{z}_{i,t} - \tilde{z}_{i,t+1}, t = 1,...,T-1$;  
+  (d) $\{\hat{\beta}_{i,t}\}_{t=1}^T = \{\hat{\theta}\ + a_t - r_i \bar{z}_{i,t}\}_{t=1}^T$;  
+  (e) $qLL(c_i) = \sum_{t=1}^T(r_i)\bar{z}_{i,t} - a_t)'\tilde{b}_{t}$ and $\tilde{w}_{i} = \sqrt{T(1-r_i^2)r_i^{T-1}/(1-r_i^{2T})}e^{-\frac{1}{2}qLL(c_i)}$ (set $\tilde{w}_{0} = 1$)
+3. Compute $w_i = \tilde{w_i}/ \sum_{j=1}^{11}\tilde{w_j}$.  
+4. The parameter path estimator is given by ${\{\hat{\beta}_{t}\}_{t=1}^T} = \{\sum_{i=1}^{11}w_i\hat{\beta}_{i,t}\}_{t=1}^T$.  
+5. The statistic qLL(10) tests the null hypothesis of stability of $\beta$ and rejects for small values. Critical values depend on $p$ and are tabulated in Table 1 of @elliott_efficient_2006.
 
 ## Parameter Paths
 
