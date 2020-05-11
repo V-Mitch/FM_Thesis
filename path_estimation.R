@@ -100,8 +100,8 @@ for (i in 1:length(c)){
   z_resid <- lm(z_t ~ r_pow)$residuals
   # (c)
   z_b[T] <- z_resid[T] 
-  for (t in (T-1):1){
-    z_b[t] <- r * z_b[t+1] + z_resid[t] - z_resid[t+1]
+  for (j in (T-1):1){
+    z_b[j] <- r * z_b[j+1] + z_resid[j] - z_resid[j+1]
   }
   # (d)
   B1_t[i,] <- B1 + a_t - r*z_b
@@ -153,7 +153,7 @@ var_final <- apply(temp_var, 2, sum)
 upper <- B1_final + 1.96 * sqrt(var_final)
 lower <- B1_final - 1.96 * sqrt(var_final)
 B1_ols <- rep(B1, T)
-
+par(mfrow=c(1,1))
 plot(B1_final ~ as.Date(data_1$Date), type = "l", main = paste("coefficient path"))
 lines(upper ~ as.Date(data_1$Date), lty = 3, col = "dark gray")
 lines(lower ~ as.Date(data_1$Date), lty = 3, col = "dark gray")

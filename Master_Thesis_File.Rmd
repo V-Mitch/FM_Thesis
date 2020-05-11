@@ -206,7 +206,7 @@ We then turn to the case of varying $\beta_t$. Here, the general likelihood is t
 s_t(\beta) = \hat{H}\delta_t + v_t, t = 1,...,T
 \end{equation}
 
-$\hat{H}$ is the Hessian of the Taylor approximation divided by the sample size T, $s_t$ is the score function for the stable model. The exact derivations are elaborated in @muller_efficient_2010. 
+$\hat{H}$ is the Hessian of the Taylor approximation divided by the sample size T, $s_t$ is the score function for the stable model. The exact derivations are elaborated in @muller_efficient_2010 and in [Section 9.3](#stepswar). 
   
 The weights in step (e) of the Appendix [Section 9.3](#stepswar) depend on the sample size and the qLL statistic that are obtained using the qLL test statistic from [Section 4.1](#qLLtest). It can be observed that the more negative the statistic becomes for the associated random walk function, the more importance is placed on that particular weight. The random walk that contributes the most weight for the UK CPI case is the 4th one in our example case. 
 
@@ -224,21 +224,6 @@ plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
 
 # Appendix
   
-## Steps to obtain qLL statistic {#stepsqLL}
-  
-## Steps to obtain WAR minimization path {#stepswar}
-  
-1. For t = 1,...,T, let $a_t$ and $b_t$ be the first $p$ elements of $\hat{H}^{-1}s_t(\hat{\theta})$ and $\hat{H}\hat{V}^{-1}s_t(\hat{\theta})$ respectively.  
-2. For $c_i \in C = {0, 5, 10,...,50}, i = 1,...,11$ compute
-  (a) $r_i = 1-c_i/T$, $z_{i,1} = x_1$ and $z_{i,t} = r_{i}z_{i,t-1} + x_t - x_{t-1}, t = 2,...,T$;  
-  (b) the residuals $\{\tilde{z}_{i,t}\}_{t=1}^T$ of a linear regression of $\{{z}_{i,t}\}_{t=1}^T$ on $\{r_i^{t-1}I_p\}_{t=1}^T$  
-  (c) $\bar{z}_{i,T} = \tilde{z}_{i,T}$, and $\bar{z}_{i,t} = r_i\bar{z}_{i,t+1} + \tilde{z}_{i,t} - \tilde{z}_{i,t+1}, t = 1,...,T-1$;  
-  (d) $\{\hat{\beta}_{i,t}\}_{t=1}^T = \{\hat{\theta}\ + a_t - r_i \bar{z}_{i,t}\}_{t=1}^T$;  
-  (e) $qLL(c_i) = \sum_{t=1}^T(r_i)\bar{z}_{i,t} - a_t)'\tilde{b}_{t}$ and $\tilde{w}_{i} = \sqrt{T(1-r_i^2)r_i^{T-1}/(1-r_i^{2T})}e^{-\frac{1}{2}qLL(c_i)}$ (set $\tilde{w}_{0} = 1$)
-3. Compute $w_i = \tilde{w_i}/ \sum_{j=1}^{11}\tilde{w_j}$.  
-4. The parameter path estimator is given by ${\{\hat{\beta}_{t}\}_{t=1}^T} = \{\sum_{i=1}^{11}w_i\hat{\beta}_{i,t}\}_{t=1}^T$.  
-5. The statistic qLL(10) tests the null hypothesis of stability of $\beta$ and rejects for small values. Critical values depend on $p$ and are tabulated in Table 1 of @elliott_efficient_2006.
-
 ## Parameter Paths
 
 ```{r cadcrs, echo = FALSE}
@@ -251,3 +236,28 @@ plotpath(read.csv("~/R tests/finance related projects/usdcpi_path.csv"), "US Con
 plotpath(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"), "UK Consumer Price Index")
 plotpath(read.csv("~/R tests/finance related projects/nzdcpi_path.csv"), "New Zealand Consumer Price Index")
 ```
+  
+## Recursive-Least-Squares Algorithm
+
+## Steps to obtain qLL statistic {#stepsqLL}
+  
+1. Compute  the OLS residuals $\hat{varepsilon_t}$ by regressing $R_t$ on ${S_t, Z_t}$;  
+2. Construct a consistent estimator $\hat{V}_X$ of the $k*k$ long-run covariance matrix of $S_t\varepsilon_t$. When $\varepsilon_t$ can be assumed uncorrelated, a natural choice is the heteroscedasticity robust estimator $\hat{V}_X = T^{-1}\sum_{t=1}^TX_tX_t'\varepsilon_t^2$  
+3. Compute $\hat{U}_t = \hat{V}_X^{-1/2}X_t\hat{\varepsilon}_t$ and denote the k elements of $\hat{U}_t$ by $\hat{U}_{t,i}$, $i = 1,...,k$.  
+4. For each series $\hat{U}_{t,i}$, compute a new series, $\hat{w}_{t,i}$ via ${w}_{t,i} = \bar{r}\hat{w}_{t-1,i} + \Delta\hat{U}_{t,i}$, and $\hat{w}_{1,i} = \hat{U}_{1,i}$, where $\bar{r} = 1 - 10/T$.  
+5. Compute the squared residuals from OLS regressions of $\hat{w}_{t,i}$ on $\bar{r}^t$ individually, and sum all of those over $i = 1,...,k$.  
+6. Multiply this sum of sum of squared residuals by $\bar{r}$, and subtract $\sum_{i=1}^k \sum_{t=1}^T (\hat{U}_{t,i})^2$
+  
+## Steps to obtain WAR minimization path {#stepswar}
+  
+1. For t = 1,...,T, let $a_t$ and $b_t$ be the first $p$ elements of $\hat{H}^{-1}s_t(\hat{\theta})$ and $\hat{H}\hat{V}^{-1}s_t(\hat{\theta})$ respectively.  
+2. For $c_i \in C = {0, 5, 10,...,50}, i = 1,...,11$ compute
+  (a) $r_i = 1-c_i/T$, $z_{i,1} = x_1$ and $z_{i,t} = r_{i}z_{i,t-1} + x_t - x_{t-1}, t = 2,...,T$;  
+  (b) the residuals $\{\tilde{z}_{i,t}\}_{t=1}^T$ of a linear regression of $\{{z}_{i,t}\}_{t=1}^T$ on $\{r_i^{t-1}I_p\}_{t=1}^T$  
+  (c) $\bar{z}_{i,T} = \tilde{z}_{i,T}$, and $\bar{z}_{i,t} = r_i\bar{z}_{i,t+1} + \tilde{z}_{i,t} - \tilde{z}_{i,t+1}, t = 1,...,T-1$;  
+  (d) $\{\hat{\beta}_{i,t}\}_{t=1}^T = \{\hat{\theta}\ + a_t - r_i \bar{z}_{i,t}\}_{t=1}^T$;  
+  (e) $qLL(c_i) = \sum_{t=1}^T(r_i)\bar{z}_{i,t} - a_t)'\tilde{b}_{t}$ and $\tilde{w}_{i} = \sqrt{T(1-r_i^2)r_i^{T-1}/(1-r_i^{2T})}e^{-\frac{1}{2}qLL(c_i)}$ (set $\tilde{w}_{0} = 1$)
+3. Compute $w_i = \tilde{w_i}/ \sum_{j=1}^{11}\tilde{w_j}$.  
+4. The parameter path estimator is given by ${\{\hat{\beta}_{t}\}_{t=1}^T} = \{\sum_{i=1}^{11}w_i\hat{\beta}_{i,t}\}_{t=1}^T$.  
+5. The statistic qLL(10) tests the null hypothesis of stability of $\beta$ and rejects for small values. Critical values depend on $p$ and are tabulated in Table 1 of @elliott_efficient_2006 and \@ref(tab:qLL).
+

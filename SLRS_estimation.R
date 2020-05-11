@@ -3,9 +3,9 @@
 # RLS method for a stable mean
 
 # 1 Param
-#S_t <- t(as.matrix(data_1$std_Difference))
+S_t <- t(as.matrix(data_1$std_Difference))
 # 2 Param
-S_t <- rbind(data_1$std_Difference, data_2$std_Difference)
+#S_t <- rbind(data_1$std_Difference, data_2$std_Difference)
 #3 Param
 #S_t <- rbind(data_1$std_Difference, data_2$std_Difference, data_3$std_Difference)
 
