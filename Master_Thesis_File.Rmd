@@ -42,11 +42,12 @@ abstract here when I'm done with the writing and have all results
 
 # Introduction
 
-There exists a number of macroeconomic figures that are released on a predetermined schedule for certain countries. These include for example the Non-Farm Employment change that is released on the first friday of every month informing economists and investors alike of the status of employment in the United States.  
-Classic economic theory helps us understand that an increase of interest rates is warranted when economies are performing well and prices are generally increasing. Those who decide to increase national interest rates, the central banks, typically refer to measures of inflation in order to make their decisions. Because of this, investors and traders alike pay close attention to news releases (such as inflation, and also the Non-Farm-Payrolls in the case of the United States) and react according to the results. These news releases are not made public until specific times on specific days and since investors and traders react to the same news the moment it is released, the result is often a violent reaction of price in one direction or another. The common discourse is that the direction and the magnitude of the change of price depends on the difference between the expectation of the market (combined expecation of worldwide investors) and the result of the news release.  
+Some macroeconomic figures used to gauge the health of a nation's economy are released to the public on a predetermined schedule. These include for example the Non-Farm Employment change that is released on the first friday of every month informing economists and investors alike of the status of employment in the United States.  
+Standard economic theory helps us understand that an increase of interest rates is warranted when economies are performing well and prices are generally increasing. Those who decide to increase national interest rates, the central banks, typically refer to measures of inflation in order to make their decisions. Because of this, investors and traders alike pay close attention to news releases (such as inflation, and also the Non-Farm-Payrolls in the case of the United States) and react according to the results. These news releases are not made public until specific times on specific days and since investors and traders react to the same news the moment it is released, the result is often a violent reaction of price in one direction or another. The common discourse is that the direction and the magnitude of the change of price depends on the difference between the expectation of the market (combined expecation of worldwide investors) and the result of the news release.  
 In this paper, we decide to use currency pairs to measure the price shocks. As certain news pertaining to a particular country affects its respective currency more than other ones, it makes sense to observe the currency most relevant to the news announcement. As currency prices are typically measured in pairs, the second chosen currency will be another major currency that is known for its high liquidity (EUR, USD or CHF) and does not have any other news announcements at the same time^[When simultaneous news cannot be avoided, a sequence of  stability tests will be applied to ensure time variation is identified on a specific news release]. As an example, we would use the USD/CAD currency pair to measure the effect of the Canadian Consumer Price Index (CPI).  
 The paper of [@andersen_micro_2003] reveals that over the time period between 1987 and 2002 there has been little time-variation in the reaction to news. Some more recently published literature of [@ben_omrane_time-varying_2019] involving an analysis on euro-dollar contracts has determined that unlike the the decade(s) encompassing the "Great Moderation" where there was lower relative volatility in the financial markets, the time period between 2004 and 2014 is characterized by evolving reactions to macroeconomic news.  
-This paper aims to detect whether or not there is instability in the reaction to news with the new data at hand with the help of several tests explored in previous literature. Furthermore, we explore methodologies to retrace a "parameter path" to meliorate our understanding of the evolution of the variable through time.
+The objective of this paper is two-fold. Firstly, we aim to employ existing methodologies on new data to identify whether or not instability of market reaction is present. When reactions do change over time, we attempt to estimate the path that it takes using different procedures suggested by the literature given that the instability has been identified. 
+
   
 # Data
   
@@ -63,7 +64,9 @@ row_spec(c(16,17), color = "black",background = "#ffd1b3")
 ```
 
   
-# Construction of the model
+# Building blocks of our models
+  
+## The Stable Model
   
 Being consistent with previous literature on the subject, the first step involves estimating the impact that each piece of news has on its respective currency assuming 1.) That the news effects are constant over time. 2.) The surprise element $S_t$ of the regression is evaluated as:  
 
@@ -78,7 +81,7 @@ R_t = \beta_0 + \beta_1 S_t + \varepsilon_t
 (\#eq:stable)
 \end{equation}  
   
-Moreover, because we are working with a dataset where subsequent observations are suspected to be related to one another, one could expect that the errors of the basic model above be autocorrelated. Specifically, adjacent $R_t$ would be more similar to one another than reactions that are separated in time to a greater extent. In this case, the inference on the $\beta_1$ would be flawed. Previous researchers have used what is called Heteroskedasticity and Autocorrelation-Consistent (HAC) estimators for the variance of the OLS estimator $\beta_1$. Using the Newey-West estimator for this variance from @newey_simple_1987, we use modified standard errors of the $\beta_1$ in our results. If we are wrong in our assumption in some of the news instances, and there is no underlying autocorrelation of the $R_t$ observations, our estimation of $\beta_1$ is less efficient than the original estimator in those cases. Nonetheless, it remains consistent and ensures we avoid type 1 error of rejecting a true null hypothesis suggesting $\beta_1 = 0$.  
+Moreover, because we are working with a dataset where subsequent observations are suspected to be related to one another, one could expect that the errors of the basic model above be autocorrelated.  Specifically, adjacent $R_t$ would be more similar to one another than reactions that are separated in time to a greater extent. In this case, the inference on the $\beta_1$ would be flawed. Previous researchers have used what is called Heteroskedasticity and Autocorrelation-Consistent (HAC) estimators for the variance of the OLS estimator $\beta_1$. Using the Newey-West estimator for this variance from @newey_simple_1987, we use modified standard errors of the $\beta_1$ in our results. If we are wrong in our assumption in some of the news instances, and there is no underlying autocorrelation of the $R_t$ observations, our estimation of $\beta_1$ is less efficient than the original estimator in those cases. Nonetheless, it remains consistent and ensures we avoid type 1 error of rejecting a true null hypothesis suggesting $\beta_1 = 0$.  
   
 ```{r tablereg, echo = FALSE}
 kable(results, booktabs = T, caption ="Results of regressions tests - HAC standard errors ",
@@ -90,13 +93,17 @@ row_spec(c(14,15), color = "black",background = "#c2f0c2") %>%
 row_spec(c(16,17), color = "black",background = "#ffd1b3")
 ```
   
-Table \@ref(tab:tablereg) shows the result of the different $\beta_1$ coefficients for separate news reports. The construction of the truncation parameter in the Newey-West estimator is such that our monthly news reports consider 2 autocorrelation coefficients whereas the quarterly ones only contain 1. This is due to the difference in the number of observations in our data. A higher estimated autocorrelation between the errors of the regression will result in a stronger correction of the variance of $\beta_1$. In all of the news in Table \@ref(tab:tablereg), the higher standard error does not affect the significance of the term. While it is not formal evidence, we suspect that the news for which the HAC standard error is vastly different than its unedited counterpart contains many unknown regressors that come from any of the findings that are summarized in @goldberg_time_2013 (mentioned in the introduction).
+Table \@ref(tab:tablereg) shows the result of the different $\beta_1$ coefficients for separate news reports. The construction of the truncation parameter in the Newey-West estimator is such that our monthly news reports consider 2 autocorrelation coefficients whereas the quarterly ones only contain 1. This is due to the difference in the number of observations in our data. A higher estimated autocorrelation between the errors of the regression will result in a stronger correction of the variance of $\beta_1$. In all of the news in Table \@ref(tab:tablereg), the higher standard error does not affect the significance of the term. While it is not formal evidence, we suspect that the regressions where the HAC standard error is larger than its unedited counterpart contain unknown regressors that may come from any of the findings that are well elaborated in other literature such as in @goldberg_time_2013. Overall, these results and that of the Durbin-Watson test show that there is little evidence for significant autocorrelation in the residuals.
 
 \begin{equation}
 R_t = \beta_0 + \beta_{1,t} S_t + \varepsilon_t
 \end{equation}
   
-## Two Directions Considered
+## The Gaussian Random Walk
+  
+The Gaussian Random Walk will be 
+  
+
 
 # Testing for instability of the news impact parameter
   
@@ -192,7 +199,7 @@ Having established that there is instability over time in the market reactions t
   
 ## Weighted Average Risk Minimization
   
-Conveniently, there is a natural extension of the qLL test elaborated in [Section 4.1](#qLLtest). It provides a herusitic means means to approximate a parameter path [@muller_efficient_2010]. 
+Conveniently, there is a natural extension of the qLL test elaborated in [Section 4.1](#qLLtest). It provides a heuristic means means to approximate a parameter path [@muller_efficient_2010]. 
   
 First, we consider our stable model which is analogous to the linear regression model that is presented in the Equation \@ref(eq:stable). The resulting $\beta_{MLE/OLS}$ parameter obtained either through maximum likelihood estimation or minimization of ordinary least squares (depicted as the dot-dashed line in Figure \@ref(fig:warplot)) is representative of a scenario where it is assumed there is no time-related evolution of market reaction to news. As seen before, the likelihood in this case can be developed as Equation \@ref(eq:LH0) or also written more generally as $\sum_{t=1}^{T}l_t (\theta)$ with $\theta$ containing the constant parameters.
   
@@ -259,5 +266,6 @@ plotpath(read.csv("~/R tests/finance related projects/nzdcpi_path.csv"), "New Ze
   (e) $qLL(c_i) = \sum_{t=1}^T(r_i)\bar{z}_{i,t} - a_t)'\tilde{b}_{t}$ and $\tilde{w}_{i} = \sqrt{T(1-r_i^2)r_i^{T-1}/(1-r_i^{2T})}e^{-\frac{1}{2}qLL(c_i)}$ (set $\tilde{w}_{0} = 1$)
 3. Compute $w_i = \tilde{w_i}/ \sum_{j=1}^{11}\tilde{w_j}$.  
 4. The parameter path estimator is given by ${\{\hat{\beta}_{t}\}_{t=1}^T} = \{\sum_{i=1}^{11}w_i\hat{\beta}_{i,t}\}_{t=1}^T$.  
-5. The statistic qLL(10) tests the null hypothesis of stability of $\beta$ and rejects for small values. Critical values depend on $p$ and are tabulated in Table 1 of @elliott_efficient_2006 and \@ref(tab:qLL).
+5. The statistic qLL(10) tests the null hypothesis of stability of $\beta$ and rejects for small values. Critical values depend on $p$ and are tabulated in Table 1 of @elliott_efficient_2006 and \@ref(tab:qLL).  
+
 

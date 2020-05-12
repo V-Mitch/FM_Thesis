@@ -34,16 +34,17 @@ R_t <- data_1$m5
 A1 <- matrix(c(0,0,0,0), nrow = 2)
 D1 <- matrix(c(0,0,0,0), nrow = 2)
 A2 <- matrix(c(1,0,1,1), nrow = 2)
-D2 <- matrix(c(1,0,1,1), nrow = 2)
-A <- matrix( ncol = k, nrow = k)
+D2 <- matrix(c(1,0,0,1), nrow = 2)
+A <- as.matrix(bdiag(A1,A2))
+D <- as.matrix(bdiag(D1,D2))
 # Assuming constant parameter variation, the variations are not correlated to one another
 Qa <-  diag(summary(mod1)$coefficients[,2]) 
 Qeta <- diag(c(Qa[1,1], Qa[1,1], Qa[2,2], Qa[2,2]))
 Qnvr <- Qeta/sigma
 
 # Initialization
-g_t[,1] <- p_0 %*% S_t[,1] %*% (sigma^2 + t(S_t[,1]) %*% p_0 %*% S_t[,1]) ^ -1
-p_t <- p_0 - g_t[,1] %*% t(S_t[,1]) %*% p_0
+g_t[,1] <- p_0 %*% S_t[,1] %*% (1 + t(S_t[,1]) %*% p_0 %*% S_t[,1]) ^ -1
+p_t <- A %*% p_t %*% t(A) + D %*% Qnvr %*% t(D)
 
 # nrow(data_1
 for(t in 2:nrow(data_1)){
