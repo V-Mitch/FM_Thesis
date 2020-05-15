@@ -28,6 +28,7 @@ setwd("~/R tests/finance related projects")
 # usdcad_ticks <- read.delim("~/R tests/finance related projects/USDCAD_201906191500_201906191559_ticks.csv")
 source("brownian_plot.R")
 source("magnitudes_WAR.R")
+source("random_walks.R")
 newsintro <- read.delim("~/R tests/finance related projects/newsintro.txt")
 results <- read.delim("~/R tests/finance related projects/result_table_1.txt")
 results_sim <- read.delim("~/R tests/finance related projects/result_table_sim.txt")
@@ -64,9 +65,9 @@ row_spec(c(16,17), color = "black",background = "#ffd1b3")
 ```
 
   
-# Building blocks of our models
+# Building blocks of the models
   
-## The Stable Model
+## The Stable Linear Model that is Time Invariant
   
 Being consistent with previous literature on the subject, the first step involves estimating the impact that each piece of news has on its respective currency assuming 1.) That the news effects are constant over time. 2.) The surprise element $S_t$ of the regression is evaluated as:  
 
@@ -101,9 +102,26 @@ R_t = \beta_0 + \beta_{1,t} S_t + \varepsilon_t
   
 ## The Gaussian Random Walk
   
-The Gaussian Random Walk will be 
+The methods discussed in this paper use random walks extensively. This section serves to underline the features of these processes which will later be essential to the understanding of tests and path estimations. Furthermore, it hopefully helps one fully appreciate the assumptions that will be made when using them and how these processes can be used to help decipher the variation of the $\beta$.
   
-
+The Gaussian Random Walk is a sequence of $i.i.d$ random variables where one realization at time $t$ follows the distribution:
+  
+\begin{equation}
+X_t \sim \mathcal{N}(\mu_t,\sigma_t^2)
+\end{equation}
+  
+Using the independence assumption of normally distributed random variables, their sum and the distribution of their sum is then given by \@ref(fig:warplot)
+  
+\begin{equation}
+U = \sum_{t=1}^{T}X_t  
+U \sim \mathcal{N}(\mu_tT,\sigma_t^2T)
+\end{equation}
+  
+```{r randomwalk, echo = FALSE, fig.cap="Hypothetical Paths of the Beta"}
+plotrw()
+```
+   
+In theory the path that the $\beta$ could take could resemble any of the paths in Figure \@ref(fig:randomwalk). The process depicted by the Y2 is a baseline case where the parameter would not vary in time. The Y3 process is a random walk with a $\mu$ of 0 and a fixed $\sigma$ which is in reality the same as white noise. The Y1 is a random walk with a constant negative $\mu$. Finally, the Y4 process depicts a scenario with one significant break in the path of $\beta$ and is the combination of 2 separate random walks with separate constant $\mu$ and $\sigma$.
 
 # Testing for instability of the news impact parameter
   

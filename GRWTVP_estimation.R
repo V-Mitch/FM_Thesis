@@ -31,20 +31,20 @@ sigma <- sqrt(1/(T-dim(S_t)[1] -1) * sum(mod1$residuals^2))
 R_t <- data_1$m5
 
 # 
-A1 <- matrix(c(0,0,0,0), nrow = 2)
-D1 <- matrix(c(0,0,0,0), nrow = 2)
+A1 <- matrix(c(1,0,1,1), nrow = 2)
+D1 <- matrix(c(0,0,0,1), nrow = 2)
 A2 <- matrix(c(1,0,1,1), nrow = 2)
-D2 <- matrix(c(1,0,0,1), nrow = 2)
+D2 <- matrix(c(0,0,0,1), nrow = 2)
 A <- as.matrix(bdiag(A1,A2))
 D <- as.matrix(bdiag(D1,D2))
 # Assuming constant parameter variation, the variations are not correlated to one another
 Qa <-  diag(summary(mod1)$coefficients[,2]) 
-Qeta <- diag(c(Qa[1,1], Qa[1,1], Qa[2,2], Qa[2,2]))
+Qeta <- diag(c(0, 0, Qa[2,2], 0))
 Qnvr <- Qeta/sigma
 
 # Initialization
 g_t[,1] <- p_0 %*% S_t[,1] %*% (1 + t(S_t[,1]) %*% p_0 %*% S_t[,1]) ^ -1
-p_t <- A %*% p_t %*% t(A) + D %*% Qnvr %*% t(D)
+p_t <- A %*% p_0 %*% t(A) + D %*% Qnvr %*% t(D)
 
 # nrow(data_1
 for(t in 2:nrow(data_1)){
@@ -65,8 +65,8 @@ for(t in 2:nrow(data_1)){
 
 par(mfrow=c(1,1))
 #par(mfrow=c(1,2))
-plot(beta_hat[2,] ~ as.Date(data_1$Date), type = "l")
+plot(beta_hat[3,] ~ as.Date(data_1$Date), type = "l")
 lines(rep(mod1$coefficients[2],T) ~ as.Date(data_1$Date), lty = "dotdash")
-lines(upper[2,]~ as.Date(data_1$Date), type = "l", lty = 3)
-lines(lower[2,]~ as.Date(data_1$Date), type = "l", lty = 3)
+lines(upper[3,]~ as.Date(data_1$Date), type = "l", lty = 3)
+lines(lower[3,]~ as.Date(data_1$Date), type = "l", lty = 3)
 
