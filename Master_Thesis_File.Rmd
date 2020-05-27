@@ -96,10 +96,6 @@ row_spec(c(16,17), color = "black",background = "#ffd1b3")
   
 Table \@ref(tab:tablereg) shows the result of the different $\beta_1$ coefficients for separate news reports. The construction of the truncation parameter in the Newey-West estimator is such that our monthly news reports consider 2 autocorrelation coefficients whereas the quarterly ones only contain 1. This is due to the difference in the number of observations in our data. A higher estimated autocorrelation between the errors of the regression will result in a stronger correction of the variance of $\beta_1$. In all of the news in Table \@ref(tab:tablereg), the higher standard error does not affect the significance of the term. While it is not formal evidence, we suspect that the regressions where the HAC standard error is larger than its unedited counterpart contain unknown regressors that may come from any of the findings that are well elaborated in other literature such as in @goldberg_time_2013. Overall, these results and that of the Durbin-Watson test show that there is little evidence for significant autocorrelation in the residuals.
 
-\begin{equation}
-R_t = \beta_0 + \beta_{1,t} S_t + \varepsilon_t
-\end{equation}
-  
 ## The Gaussian Random Walk
   
 The methods discussed in this paper use random walks extensively. This section serves to underline the features of these processes which will later be essential to the understanding of tests and path estimations. Furthermore, it hopefully helps one fully appreciate the assumptions that will be made when using them and how these processes can be used to help decipher the variation of the $\beta$.
@@ -110,11 +106,13 @@ The Gaussian Random Walk is a sequence of $i.i.d$ random variables where one rea
 X_t \sim \mathcal{N}(\mu_t,\sigma_t^2)
 \end{equation}
   
-Using the independence assumption of normally distributed random variables, their sum and the distribution of their sum is then given by \@ref(fig:warplot)
+Using the independence assumption of normally distributed random variables, their sum and the distribution of their sum is then given by Figure \@ref(fig:randomwalk)
   
 \begin{equation}
-U = \sum_{t=1}^{T}X_t  
+\begin{aligned}
+U = \sum_{t=1}^{T}X_t \\
 U \sim \mathcal{N}(\mu_tT,\sigma_t^2T)
+\end{aligned}
 \end{equation}
   
 ```{r randomwalk, echo = FALSE, fig.cap="Hypothetical Paths of the Beta"}
@@ -173,7 +171,7 @@ The qLL statistic is obtained by subtracting $L_{HA}$ from $L_{H0}$: $\frac{\sig
   
 ## CUSUM and CUSUM-squared tests
 
-Separate tests to the one explained previously are considered. We explore the ones elaborated in @brown_techniques_1975 named the CUSUM and CUSUM-squared. These tests use the successive error terms of predictions of a standard Recursive-Least-Squares (RLS) model that assumes stability of the $\beta$ parameter [@young_recursive_2011]. In this specific application, we use the result of the standard OLS as a baseline *prior* or initial value for the algorithm (ie. $\beta_0$) and we use an empirical $\hat{\sigma}_\varepsilon$ residual error that is based on the entire sample. By examining the prediction errors, one can observe whether or not they violate the $N(0,\sigma^2)$ assumptions. Namely that they are a 1.) zero mean sequence $E(\varepsilon_t) = 0$ and 2.) that they are serially uncorrelated $E(\varepsilon_t \varepsilon_j) = 0$ when $t \neq j$. The first step consists in running a standard RLS algorithm and obtaining one-step-ahead errors from it. These errors are obtained as follows:
+Separate tests to the one explained previously are considered. We explore the ones elaborated in @brown_techniques_1975 named the CUSUM and CUSUM-squared. These tests use the successive error terms of predictions of a standard Recursive-Least-Squares (RLS) model ([Section 9.1](#stepsRLS)) that assumes stability of the $\beta$ parameter [@young_recursive_2011]. In this specific application, we use the result of the standard OLS as a baseline *prior* or initial value for the algorithm (ie. $\beta_0$) and we use an empirical $\hat{\sigma}_\varepsilon$ residual error that is based on the entire sample. By examining the prediction errors, one can observe whether or not they violate the $N(0,\sigma^2)$ assumptions. Namely that they are a 1.) zero mean sequence $E(\varepsilon_t) = 0$ and 2.) that they are serially uncorrelated $E(\varepsilon_t \varepsilon_j) = 0$ when $t \neq j$. The first step consists in running a standard RLS algorithm and obtaining one-step-ahead errors from it. These errors are obtained as follows:
   
 \begin{equation}
 u_t = R_t - \hat{R_t}|R_{t-1}
@@ -214,6 +212,10 @@ plotcusumsq(read.csv("~/R tests/finance related projects/cusum_sq_df.csv"))
 # Parameter Path Estimations
 
 Having established that there is instability over time in the market reactions to at least some of the news, we take on the task of obtaining a time series that conveys the change over the timeframe considered. Specifically, we would like to obtain a visual representation of the change of the parameter such that a researcher or investor is able to easily gather information from.
+
+\begin{equation}
+R_t = \beta_0 + \beta_{1,t} S_t + \varepsilon_t
+\end{equation}
   
 ## Weighted Average Risk Minimization
   
@@ -221,17 +223,27 @@ Conveniently, there is a natural extension of the qLL test elaborated in [Sectio
   
 First, we consider our stable model which is analogous to the linear regression model that is presented in the Equation \@ref(eq:stable). The resulting $\beta_{MLE/OLS}$ parameter obtained either through maximum likelihood estimation or minimization of ordinary least squares (depicted as the dot-dashed line in Figure \@ref(fig:warplot)) is representative of a scenario where it is assumed there is no time-related evolution of market reaction to news. As seen before, the likelihood in this case can be developed as Equation \@ref(eq:LH0) or also written more generally as $\sum_{t=1}^{T}l_t (\theta)$ with $\theta$ containing the constant parameters.
   
-We then turn to the case of varying $\beta_t$. Here, the general likelihood is the same but with time varying parameter(s) contained in $\theta_t$ = $\theta + \delta_t$ in $t = 1,...,T$. The $\delta_t$ can be imagined as the vertical distances in Figure \@ref(fig:warplot)) between the constant $\beta$ case and the *true* parameter path at time *t* that is unknown and that we are attempting to approximate. The main argument for the method is that this general likelihood function can be approximated by a second-order Taylor expansion of the likelihood function around $\beta_{MLE}$ and as a result an approximate estimate of the $\delta_t$ term mentioned earlier is obtainable. Effectively, the approximation of the log-likelihood function of the parameter path is re-arranged until a log-likelihood function of a gaussian random variable is recognizable and results in a "pseudo model" as:  
+We then turn to the case of varying $\beta_t$. Here, the general likelihood is the same but with time varying parameter(s) contained in $\theta_t$ = $\theta + \delta_t$ in $t = 1,...,T$. The $\delta_t$ can be imagined as the vertical distances in Figure \@ref(fig:warplot)) between the constant $\beta$ case and the *true* parameter path at time *t* that is unknown and that we are attempting to approximate. The main argument for their method is that this general likelihood function can be approximated by a second-order Taylor expansion around $\beta_{MLE}$ and this is used to obtain information about the $\delta_t$. Effectively, the approximation of the log-likelihood function of the parameter path resembles one of a gaussian random variable. The pseudo-model \@ref(eq:pseudo1).
+  
+For a normal random variable $X_i \sim \mathcal{N}(\mu,\sigma^2)$, we can recall that:
   
 \begin{equation}
-\beta_{MLE} = \beta_t + T^{-1/2}\hat{H}^{-1}v_0
+X = \mu + e \text{ with } e \sim \mathcal{N}(0,\sigma^2)
 \end{equation}
   
+The result of @muller_efficient_2010 is comparable where the scores are asymptotically normally distributed as $s_t(\hat{\theta}) \sim \mathcal{N}(\hat{H}\delta_t,\hat{H})$ and the resulting model is:
+  
 \begin{equation}
-s_t(\beta) = \hat{H}\delta_t + v_t, t = 1,...,T
+s_t(\theta) = \hat{H}\delta_t + v_t, t = 1,...,T
+(\#eq:pseudo1)
 \end{equation}
 
-$\hat{H}$ is the Hessian of the Taylor approximation divided by the sample size T, $s_t$ is the score function for the stable model. The exact derivations are elaborated in @muller_efficient_2010 and in [Section 9.3](#stepswar). 
+
+\begin{equation}
+\theta_{MLE} = \theta_t + T^{-1/2}\hat{H}^{-1}v_0
+\end{equation}
+
+$\h at{H}$ is the Hessian of the Taylor approximation divided by the sample size T, $s_t$ is the score function for the stable model. The exact derivations are elaborated in @muller_efficient_2010 and in [Section 9.3](#stepswar). 
   
 The weights in step (e) of the Appendix [Section 9.3](#stepswar) depend on the sample size and the qLL statistic that are obtained using the qLL test statistic from [Section 4.1](#qLLtest). It can be observed that the more negative the statistic becomes for the associated random walk function, the more importance is placed on that particular weight. The random walk that contributes the most weight for the UK CPI case is the 4th one in our example case. 
 
@@ -262,9 +274,11 @@ plotpath(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"), "UK Con
 plotpath(read.csv("~/R tests/finance related projects/nzdcpi_path.csv"), "New Zealand Consumer Price Index")
 ```
   
-## Recursive-Least-Squares Algorithm
+## Recursive-Least-Squares Algorithm {#stepsRLS} 
 
-## Steps to obtain qLL statistic {#stepsqLL}
+## Steps to obtain qLL statistic {#stepsqLL} 
+
+[@elliott_efficient_2006]
   
 1. Compute  the OLS residuals $\hat{varepsilon_t}$ by regressing $R_t$ on ${S_t, Z_t}$;  
 2. Construct a consistent estimator $\hat{V}_X$ of the $k*k$ long-run covariance matrix of $S_t\varepsilon_t$. When $\varepsilon_t$ can be assumed uncorrelated, a natural choice is the heteroscedasticity robust estimator $\hat{V}_X = T^{-1}\sum_{t=1}^TX_tX_t'\varepsilon_t^2$  
@@ -274,6 +288,8 @@ plotpath(read.csv("~/R tests/finance related projects/nzdcpi_path.csv"), "New Ze
 6. Multiply this sum of sum of squared residuals by $\bar{r}$, and subtract $\sum_{i=1}^k \sum_{t=1}^T (\hat{U}_{t,i})^2$
   
 ## Steps to obtain WAR minimization path {#stepswar}
+  
+[@muller_efficient_2010]
   
 1. For t = 1,...,T, let $a_t$ and $b_t$ be the first $p$ elements of $\hat{H}^{-1}s_t(\hat{\theta})$ and $\hat{H}\hat{V}^{-1}s_t(\hat{\theta})$ respectively.  
 2. For $c_i \in C = {0, 5, 10,...,50}, i = 1,...,11$ compute

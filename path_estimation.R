@@ -9,9 +9,17 @@
 #### SETUP ####
 # Some fixed parameters
 
+# number of coefficients that vary over time
+kk <- 1
+kl <- kk + 1
+
 B0 <- mod1$coefficients[1]
 B1 <- mod1$coefficients[2]
-sig_sqr <- var(mod1$residuals) 
+
+sig_sqr <- 1/(T - kl) * sum(mod1$residuals^2)
+sig_beta <- summary(mod1)$coefficients[2,2]
+
+#sig_sqr <- var(mod1$residuals) 
 
 T <- nrow(data_1)
 
