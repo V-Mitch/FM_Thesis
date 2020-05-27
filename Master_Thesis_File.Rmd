@@ -38,7 +38,7 @@ colnames(qLL_table) <- c("k",seq(from = 1,to = 5, by = 1))
 ```
 
 \begin{center}
-abstract here when I'm done with the writing and have all results
+abstract here when I'm done with the writing and have all results.
 \end{center}
 
 # Introduction
