@@ -9,9 +9,17 @@
 #### SETUP ####
 # Some fixed parameters
 
+# number of coefficients that vary over time
+kk <- 1
+kl <- kk + 1
+
 B0 <- mod1$coefficients[1]
 B1 <- mod1$coefficients[2]
-sig_sqr <- var(mod1$residuals) 
+
+sig_sqr <- 1/(T - kl) * sum(mod1$residuals^2)
+sig_beta <- summary(mod1)$coefficients[2,2]
+
+#sig_sqr <- var(mod1$residuals) 
 
 T <- nrow(data_1)
 
@@ -48,7 +56,7 @@ V <- T^-1 * s_t %*% t(s_t)
 # For loop for the calculation of the Path
 
 # We take only the parameter that is changing in time
-H <- H[1,1]
+H <- -H[1,1]
 
 Hinv <- solve(H)
 
@@ -56,6 +64,7 @@ c <- seq(from = 0, to = 50, by = 5)
 qLL <- rep(0,11)
 w <- rep(0,11)
 B1_t <- matrix(ncol = T, nrow = 11)
+prwidk <- matrix(ncol = T, nrow = 11)
 Path_Matrix <- matrix(ncol = T, nrow = 11)
 a_t <- rep(0,T)
 b_t <- rep(0,T)
@@ -105,6 +114,7 @@ for (i in 1:length(c)){
   }
   # (d)
   B1_t[i,] <- B1 + a_t - r*z_b
+  prwidk[i,] <- r*z_b
   # (e)
   if(r < 0){
     r = 0
