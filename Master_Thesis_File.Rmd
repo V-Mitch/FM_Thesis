@@ -52,7 +52,7 @@ The objective of this paper is two-fold. Firstly, we aim to employ existing meth
   
 # Data
   
-The minute-by-minute OHLC Data of 7 currency pairs were collected from the Metatrader5 platform. This represents over 4 million data points for each pair. Only a small fraction of this data is actually used since we consider only the 5 time frame from when each piece of monthly or quarterly news is released until 5 minutSes afterwards.  
+The minute-by-minute OHLC Data of 7 currency pairs were collected from the Metatrader5 platform. This represents over 4 million data points for each pair. Only a small fraction of this data is actually used since we consider only the 5 time frame from when each piece of monthly or quarterly news is released until 5 minutes afterwards.  
   
 ```{r newintro, echo = FALSE}
 kable(newsintro, booktabs = T, caption ="Summary of the news figures considered in the study",
@@ -100,7 +100,7 @@ Table \@ref(tab:tablereg) shows the result of the different $\beta_1$ coefficien
 R_t = \beta_0 + \beta_{1,t} S_t + \varepsilon_t
 \end{equation}
   
-## The Gaussian Random Walk
+## The Gaussian Random Walk {#grw}
   
 The methods discussed in this paper use random walks extensively. This section serves to underline the features of these processes which will later be essential to the understanding of tests and path estimations. Furthermore, it hopefully helps one fully appreciate the assumptions that will be made when using them and how these processes can be used to help decipher the variation of the $\beta$.
   
@@ -233,7 +233,7 @@ s_t(\beta) = \hat{H}\delta_t + v_t, t = 1,...,T
 
 $\hat{H}$ is the Hessian of the Taylor approximation divided by the sample size T, $s_t$ is the score function for the stable model. The exact derivations are elaborated in @muller_efficient_2010 and in [Section 9.3](#stepswar). 
   
-The weights in step (e) of the Appendix [Section 9.3](#stepswar) depend on the sample size and the qLL statistic that are obtained using the qLL test statistic from [Section 4.1](#qLLtest). It can be observed that the more negative the statistic becomes for the associated random walk function, the more importance is placed on that particular weight. The random walk that contributes the most weight for the UK CPI case is the 4th one in our example case. 
+The weights in step (e) of the Appendix [Section 9.3](#stepswar) depend on the sample size and the qLL statistic that are obtained using the qLL test statistic from [Section 4.1](#qLLtest). It can be observed that the more negative the statistic becomes for the associated random walk function, the more importance is placed on that particular weight. The random walk that contributes the most weight for the UK CPI case is the 4th one in our example. 
 
 ```{r warplot, echo = FALSE, fig.cap="WAR minimizing over the 11 different randow walk weighting functions"}
 plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
@@ -241,15 +241,43 @@ plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
         "WAR minimizing over the 11 different randow walk weighting functions")
 ```
 
-# Stochastic Recursive Linear Least Squares Algorithm
+## Standard Recursive Time Variable Parameter Algorithm (STVP)
+  
+Until now, the WAR minimization method provided a means to analyze the price reactions to the news over an entire sample period. In practice, it may be more useful to have a self-updating method that iteratively uses every new observation to improve the estimation progressively. It can also be argued that more importance can be placed on gauging the shock that could occur today rather than conducting an analysis of reactions years ago. This is why this particular method is also included.  
+  
+To obtain the STVP algorithm presented in [Section 9.3](#stepsstvp) the first step consists of replacing the OLS equations by their recursive counterparts and achieve the intermediate SLRS algorithm. The following equations are the familiar OLS equations setup with general terms:
+
+\begin{equation}
+y_i = X_i^{T}\beta + e_i
+\end{equation}
+  
+Where $y_i$ are the observations, $X_i$ a vector of covariates and $\beta$ is the vector of coefficients attributed to each covatriate. The error vector $e_i$ is assumed to be normally distributed with 0 mean.
+  
+\begin{equation}
+\hat{\beta}_{OLS} = (X^{T}X)^{-1}X^{T}y 
+\end{equation}
+  
+When an observation $y_j$ is added to the samples $i = 1,...,N$, an update to the $\hat{\beta}$ is the same as re-estimating the entire sample with the new observation. Effectively, the Stochastic Recursive Least Squares Algorithm (SLRS) is obtained if only this is used [Section 9.3](#stepsslrs). While this is a powerful tool, it does not necessarily help estimate $y_j$ effectively. It is giving just as much weight to realizations of $y$ early in the sample than those that immediately precede the new extra observation $j$. The contribution of every marginal observation is smaller and smaller as the sample grows. The $\hat{\beta}$ converges to the full sample parameter estimator $\hat{\beta}_{OLS}$ \@ref(fig:slrsplot)
+  
+```{r slrsplot, echo = FALSE, fig.cap="SLRS applied to the UK CPI"}
+plotslrs(read.csv("~/R tests/finance related projects/slrs_df.csv"))
+```
+  
+Additional data points in the aformentioned methodology add information to the model and improve the accuracy of the $\hat{\beta}$ estimator but it is always assumed that there is only one true $\beta$ regardless of time $t$. In order to attenuate this assumption and include the flexibility that allows for a time dependence in a $\beta_t$, we introduce the random walk disturbance term mentioned in [Section 2](#grw). 
+  
+```{r stvpplot, echo = FALSE, fig.cap="STVP applied to the UK CPI"}
+plotslrs(read.csv("~/R tests/finance related projects/stvp_df.csv"))
+```
 
 # Discussion - A comparison of methods
 
 # Conclusion
 
 # Appendix
-  
+
 ## Parameter Paths
+  
+The following path estimations should be interpreted as follows: a one standard deviation unanticipated positive change in the economic variable $S_t$ results in an appreciation or depreciation in the exchange rate of the relevant currency pair by $R_t$ amount of pips or basis points. 
 
 ```{r cadcrs, echo = FALSE}
 plotpath(read.csv("~/R tests/finance related projects/cadcrs_path.csv"), "Canadian Core Retail Sales")
@@ -262,13 +290,22 @@ plotpath(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"), "UK Con
 plotpath(read.csv("~/R tests/finance related projects/nzdcpi_path.csv"), "New Zealand Consumer Price Index")
 ```
   
-## Recursive Least Squares Algorithm
+## Stochastic Recursive Least Squares Algorithm (SLRS) {#stepsslrs}
   
-1. $\hat{\alpha}_t = \hat{\alpha}_{t-1} + g_t(R_t - S^T_t\hat{\alpha}_{t-1})$  
+1. $\hat{\alpha}_t = \hat{\alpha}_{t-1} + g_t(R_t - S^T_t\hat{\alpha}_{t-1})$
 2. $g_t = P^*_{t-1}S_t(\hat{\sigma}^2 + S^T_tP^*_{t-1}S_t)^{-1}$
 3. $P^*_t = P^*_{t-1} - g_tS^T_tP^*_{t-1}$
   
-## Standard Recursive Time Variable Parameter Algorithm
+## Standard Recursive Time Variable Parameter Algorithm (STVP) {#stepsstvp}
+  
+Prediction (Prior)  
+1. $\hat{\alpha}_t|\hat{\alpha}_{t-1} = A\alpha_{t-1}$  
+2. $P^*_t|P^*_{t-1} = AP^*_{t-1}A^T+DQ_aD^T$
+  
+Correction (Posterior)  
+3. $\hat{\alpha}_t = \hat{\alpha}_t|\hat{\alpha}_{t-1} + g_t(R_t - S^T_t(\hat{\alpha}_t|\hat{\alpha}_{t-1}))$  
+4. $g_t = (P^*_t|P^*_{t-1})S_t(\hat{\sigma}^2 + S^T_t(P^*_t|P^*_{t-1})$
+5. $P^*_t = P^*_t|P^*_{t-1} - g_tS^T_t(P^*_t|P^*_{t-1})$
   
 ## Steps to obtain qLL statistic {#stepsqLL}
   

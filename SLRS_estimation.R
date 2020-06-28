@@ -20,7 +20,8 @@ upper <- matrix(0,nrow = k, ncol = T)
 lower <- matrix(0,nrow = k, ncol = T)
 epsilon <- matrix(0,nrow = 1, ncol = T)
 epsilon_nd <- matrix(0,nrow = 1, ncol = T)
-beta_hat[,1] <- as.vector(mod1$coefficients)
+beta_hat[,1] <- c(0,0)
+#beta_hat[,1] <- as.vector(mod1$coefficients)
 g_t <- matrix(0,nrow = k, ncol = T)
 p_t <- matrix(seq(0,0),nrow = k, ncol = k) # p_t matrix will continuously be replaced
 p_0 <- matrix(seq(0,0),nrow = k, ncol = k)
@@ -43,7 +44,8 @@ for(t in 2:nrow(data_1)){
   #upper[,t] <- sqrt(1/T*(dim(X_t[1])-1)*mod1$residuals^2)
   upper[,t] <- beta_hat[,t] + 1.96 * sqrt(diag(p_t)/sqrt(t))
   lower[,t] <- beta_hat[,t] - 1.96 * sqrt(diag(p_t)/sqrt(t))
-  epsilon[t] <- t(S_t[,t]) %*% beta_hat[,t]
+  epsilon[t] <- R_t[t] - S_t[2,t] * beta_hat[2,t-1]
+  #epsilon[t] <- t(S_t[,t]) %*% beta_hat[,t]
   epsilon_nd[t] <- epsilon[t] / (1 + t(S_t[,t]) %*% (p_t/sigma) %*% S_t[,t] ) ^ 0.5
 }
 
@@ -55,6 +57,11 @@ lines(rep(mod1$coefficients[2],T) ~ as.Date(data_1$Date), lty = "dotdash")
 lines(upper[2,]~ as.Date(data_1$Date), type = "l", lty = 3)
 lines(lower[2,]~ as.Date(data_1$Date), type = "l", lty = 3)
 
+slrs_df <- data.frame(x = as.vector(beta_hat[2,]), as.vector(upper[2,]), as.vector(lower[2,]), 
+                      rep(mod1$coefficients[2],T), as.Date(data_1$Date))
+colnames(slrs_df) <- c("beta_hat", "upper","lower", "beta_ols","date")
+
+#write.csv(slrs_df, file = "~/R tests/finance related projects/slrs_df.csv")
 
 # rls_mod <- RLS(data_1$m5, data_1$std_Difference, ist = 30)
 # plot(rls_mod$beta, type = "l")

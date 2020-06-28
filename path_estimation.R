@@ -56,7 +56,7 @@ V <- T^-1 * s_t %*% t(s_t)
 # For loop for the calculation of the Path
 
 # We take only the parameter that is changing in time
-H <- -H[1,1]
+H <- H[1,1]
 
 Hinv <- solve(H)
 

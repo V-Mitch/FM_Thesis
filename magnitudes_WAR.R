@@ -89,3 +89,14 @@ plotcusumsq <- function(cusumsqdf){
     ggtitle("CUSUM-squared Test on UK CPI") +
     theme_tufte()
 }
+
+plotslrs <- function(slrsdata){
+  slrsdata$date <- as.Date(slrsdata$date)
+  #c("beta_hat", "beta_ols","upper","lower", "date")
+  ggplot()+
+    geom_line(data = slrsdata, aes(x = date, y = beta_hat), color = "black", linetype = "solid") +
+    geom_line(data = slrsdata, aes(x = date, y = beta_ols), color = "steel blue", linetype ="dashed") +
+    geom_line(data = slrsdata, aes(x = date, y = upper ), linetype ="dotted") +
+    geom_line(data = slrsdata, aes(x = date, y = lower), linetype ="dotted") +
+    theme_tufte()
+}
