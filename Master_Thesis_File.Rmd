@@ -113,7 +113,7 @@ X_t \sim \mathcal{N}(\mu_t,\sigma_t^2)
 Using the independence assumption of normally distributed random variables, their sum and the distribution of their sum is then given by \@ref(fig:warplot)
   
 \begin{equation}
-U = \sum_{t=1}^{T}X_t  
+U = \sum_{t=1}^{T}X_t  \quad 
 U \sim \mathcal{N}(\mu_tT,\sigma_t^2T)
 \end{equation}
   
@@ -251,20 +251,36 @@ To obtain the STVP algorithm presented in [Section 9.3](#stepsstvp) the first st
 y_i = X_i^{T}\beta + e_i
 \end{equation}
   
-Where $y_i$ are the observations, $X_i$ a vector of covariates and $\beta$ is the vector of coefficients attributed to each covatriate. The error vector $e_i$ is assumed to be normally distributed with 0 mean.
+Where $y_i$ are the observations, $X_i$ a vector of covariates and $\beta$ is the vector of coefficients attributed to each covatriate. The error vector contains a series of random variables $e_i$ that are assumed to be normally distributed with 0 mean and serially uncorrelated.
   
 \begin{equation}
-\hat{\beta}_{OLS} = (X^{T}X)^{-1}X^{T}y 
+\hat{\beta}_{OLS} = (X^{T}X)^{-1}X^{T}y \hat{\beta}^{OLS}_t = \hat{\beta}^{OLS}_{t-1} \forall t
 \end{equation}
   
-When an observation $y_j$ is added to the samples $i = 1,...,N$, an update to the $\hat{\beta}$ is the same as re-estimating the entire sample with the new observation. Effectively, the Stochastic Recursive Least Squares Algorithm (SLRS) is obtained if only this is used [Section 9.3](#stepsslrs). While this is a powerful tool, it does not necessarily help estimate $y_j$ effectively. It is giving just as much weight to realizations of $y$ early in the sample than those that immediately precede the new extra observation $j$. The contribution of every marginal observation is smaller and smaller as the sample grows. The $\hat{\beta}$ converges to the full sample parameter estimator $\hat{\beta}_{OLS}$ \@ref(fig:slrsplot)
+\begin{equation}
+\hat{\beta}^{OLS}_t = \hat{\beta}^{OLS}_{t-1} \forall t
+\end{equation}
+  
+When an observation $y_j$ is added to the samples $i = 1,...,N$, an update to the $\hat{\beta}$ is the same as re-estimating the entire sample with the new observation. Effectively, the "intermediate model" or Stochastic Recursive Least Squares Algorithm (SLRS) is thereafter obtained (the exact ste-by-step is in [Section 9.3](#stepsslrs)). While this is a powerful tool, it does not necessarily help estimate $y_j$ effectively. It is giving just as much weight to realizations of $y$ early in the sample than those that immediately precede the new extra observation $j$. The contribution of every marginal observation is smaller and smaller as the sample grows. The $\hat{\beta}$ converges to the full sample parameter estimator $\hat{\beta}_{OLS}$ as seen in Figure  \@ref(fig:slrsplot).
   
 ```{r slrsplot, echo = FALSE, fig.cap="SLRS applied to the UK CPI"}
 plotslrs(read.csv("~/R tests/finance related projects/slrs_df.csv"))
 ```
   
-Additional data points in the aformentioned methodology add information to the model and improve the accuracy of the $\hat{\beta}$ estimator but it is always assumed that there is only one true $\beta$ regardless of time $t$. In order to attenuate this assumption and include the flexibility that allows for a time dependence in a $\beta_t$, we introduce the random walk disturbance term mentioned in [Section 2](#grw). 
+Additional data points in the aformentioned methodology add information to the model and improve the accuracy of the $\hat{\beta}$ estimator but it is always assumed that there is only one true $\beta$ regardless of time $t$. In order to attenuate this assumption and include the flexibility that allows for a time dependence in a $\beta_t$, we introduce the random walk disturbance term mentioned in [Section 2](#grw). This possible when the error term becomes the incremental steps of the random walk.  
   
+\begin{equation}
+y_i = X_i^{T}\beta + e_i \quad e_i \sim \mathcal{N}(0,\sigma^2)
+\end{equation}
+  
+\begin{equation}
+\hat{\beta}_{OLS} = (X^{T}X)^{-1}X^{T}y \hat{\beta}^{OLS}_t = \hat{\beta}^{OLS}_{t-1} \forall t
+\end{equation}
+  
+\begin{equation}
+\hat{\beta}^{OLS}_t = \hat{\beta}^{OLS}_{t-1} \forall t
+\end{equation}
+    
 ```{r stvpplot, echo = FALSE, fig.cap="STVP applied to the UK CPI"}
 plotslrs(read.csv("~/R tests/finance related projects/stvp_df.csv"))
 ```

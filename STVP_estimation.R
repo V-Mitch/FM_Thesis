@@ -74,8 +74,8 @@ for(t in 2:nrow(data_1)){
   
   # upper[,t] <- beta_hat[,t] + 1.96 * sqrt(diag(p_t)*sigma^2/sqrt(t))
   # lower[,t] <- beta_hat[,t] - 1.96 * sqrt(diag(p_t)*sigma^2/sqrt(t))
-  upper[,t] <- beta_hat[,t] + 1.96 * sqrt(diag(p_t))
-  lower[,t] <- beta_hat[,t] - 1.96 * sqrt(diag(p_t))
+  upper[,t] <- beta_hat[,t] + 1.96 * sqrt(diag(p_t)*sigma_temp^2/sqrt(t))
+  lower[,t] <- beta_hat[,t] - 1.96 * sqrt(diag(p_t)*sigma_temp^2/sqrt(t))
   
   # sigma ML
   #sigma_ML_secondpart[t] <- epsilon[t]^2 / (1 + t(S_t[,t]) %*% p_t %*% S_t[,t])

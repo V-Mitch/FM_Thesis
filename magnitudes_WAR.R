@@ -98,5 +98,7 @@ plotslrs <- function(slrsdata){
     geom_line(data = slrsdata, aes(x = date, y = beta_ols), color = "steel blue", linetype ="dashed") +
     geom_line(data = slrsdata, aes(x = date, y = upper ), linetype ="dotted") +
     geom_line(data = slrsdata, aes(x = date, y = lower), linetype ="dotted") +
+    coord_cartesian(ylim = c(-10, 30)) +
+    #ylim(min(slrsdata$beta_ols)-3,max(slrsdata$beta_ols)-3) +
     theme_tufte()
 }
