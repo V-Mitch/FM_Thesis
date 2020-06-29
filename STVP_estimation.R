@@ -98,4 +98,4 @@ stvp_df <- data.frame(x = as.vector(beta_hat[2,]), as.vector(upper[2,]), as.vect
                       rep(mod1$coefficients[2],T), as.Date(data_1$Date))
 colnames(stvp_df) <- c("beta_hat", "upper","lower", "beta_ols","date")
 
-#write.csv(stvp_df, file = "~/R tests/finance related projects/stvp_df.csv")
+##write.csv(stvp_df, file = "~/R tests/finance related projects/stvp_df.csv")

@@ -274,7 +274,7 @@ y_i = X_i^{T}\beta + e_i \quad e_i \sim \mathcal{N}(0,\sigma^2)
 \end{equation}
   
 \begin{equation}
-\hat{\beta}_t = 
+\hat{\beta}_t = ch
 \end{equation}
   
 \begin{equation}
