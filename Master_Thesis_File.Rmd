@@ -274,7 +274,7 @@ y_i = X_i^{T}\beta + e_i \quad e_i \sim \mathcal{N}(0,\sigma^2)
 \end{equation}
   
 \begin{equation}
-\hat{\beta}_{OLS} = (X^{T}X)^{-1}X^{T}y \hat{\beta}^{OLS}_t = \hat{\beta}^{OLS}_{t-1} \forall t
+\hat{\beta}_t = 
 \end{equation}
   
 \begin{equation}
