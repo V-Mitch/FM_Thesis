@@ -65,7 +65,7 @@ row_spec(c(16,17), color = "black",background = "#ffd1b3")
 ```
 
   
-# Building blocks of the models
+# Building blocks of the models {#bb}
   
 ## The Stable Linear Model that is Time Invariant
   
@@ -82,7 +82,7 @@ R_t = \beta_0 + \beta_1 S_t + \varepsilon_t
 (\#eq:stable)
 \end{equation}  
   
-Moreover, because we are working with a dataset where subsequent observations are suspected to be related to one another, one could expect that the errors of the basic model above be autocorrelated.  Specifically, adjacent $R_t$ would be more similar to one another than reactions that are separated in time to a greater extent. In this case, the inference on the $\beta_1$ would be flawed. Previous researchers have used what is called Heteroskedasticity and Autocorrelation-Consistent (HAC) estimators for the variance of the OLS estimator $\beta_1$. Using the Newey-West estimator for this variance from @newey_simple_1987, we use modified standard errors of the $\beta_1$ in our results. If we are wrong in our assumption in some of the news instances, and there is no underlying autocorrelation of the $R_t$ observations, our estimation of $\beta_1$ is less efficient than the original estimator in those cases. Nonetheless, it remains consistent and ensures we avoid type 1 error of rejecting a true null hypothesis suggesting $\beta_1 = 0$.  
+With $R_t$ as the 5-minute currency return result and $\varepsilon_t$ is the usual assumed normally distributed error. Moreover, because we are working with a dataset where subsequent observations are suspected to be related to one another, one could expect that the errors of the basic model above be autocorrelated.  Specifically, adjacent $R_t$ would be more similar to one another than reactions that are separated in time to a greater extent. In this case, the inference on the $\beta_1$ would be flawed. Previous researchers have used what is called Heteroskedasticity and Autocorrelation-Consistent (HAC) estimators for the variance of the OLS estimator $\beta_1$. Using the Newey-West estimator for this variance from @newey_simple_1987, we use modified standard errors of the $\beta_1$ in our results. If we are wrong in our assumption in some of the news instances, and there is no underlying autocorrelation of the $R_t$ observations, our estimation of $\beta_1$ is less efficient than the original estimator in those cases. Nonetheless, it remains consistent and ensures we avoid type 1 error of rejecting a true null hypothesis suggesting $\beta_1 = 0$.  
   
 ```{r tablereg, echo = FALSE}
 kable(results, booktabs = T, caption ="Results of regressions tests - HAC standard errors ",
@@ -231,7 +231,18 @@ We then turn to the case of varying $\beta_t$. Here, the general likelihood is t
 s_t(\beta) = \hat{H}\delta_t + v_t, t = 1,...,T
 \end{equation}
 
-$\hat{H}$ is the Hessian of the Taylor approximation divided by the sample size T, $s_t$ is the score function for the stable model. The exact derivations are elaborated in @muller_efficient_2010 and in [Section 9.3](#stepswar). 
+$\hat{H}$ is the Hessian of the Taylor approximation divided by the sample size T, $s_t$ is the score function for the stable model. The exact derivations to obtain (15) are elaborated in @muller_efficient_2010 and in [Section 9.3](#stepswar).  
+  
+Essentially, the score function $s_t$ and Hessian $\hat{H}$ can be extracted from the stable linear regression from section [Section 2](#bb) and when the likelihood function is therefore the one seen in equation (7). 
+  
+\begin{equation}
+s_t = \frac{dl}{d\beta_1} = -\sigma^{-2} \sum_{t=1}^T (R_t - \hat{\beta}_0 - \hat{\beta}_{1}S_t)S_t
+\end{equation}
+  
+\begin{equation}
+\hat{H} = \frac{dl^2}{d^2\beta_1^T} = -\sigma^{-2}\sum_{t=1}^T S_t^2
+\end{equation}
+  
   
 The weights in step (e) of the Appendix [Section 9.3](#stepswar) depend on the sample size and the qLL statistic that are obtained using the qLL test statistic from [Section 4.1](#qLLtest). It can be observed that the more negative the statistic becomes for the associated random walk function, the more importance is placed on that particular weight. The random walk that contributes the most weight for the UK CPI case is the 4th one in our example. 
 
@@ -243,42 +254,42 @@ plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
 
 ## Standard Recursive Time Variable Parameter Algorithm (STVP)
   
-Until now, the WAR minimization method provided a means to analyze the price reactions to the news over an entire sample period. In practice, it may be more useful to have a self-updating method that iteratively uses every new observation to improve the estimation progressively. It can also be argued that more importance can be placed on gauging the shock that could occur today rather than conducting an analysis of reactions years ago. This is why this particular method is also included.  
+Until now, the WAR minimization method provided a means to analyze the price reactions to the news over an entire sample period. In practice, it may be more useful to have a self-updating method that iteratively uses every new observation to improve the estimation progressively. It can also be argued that more importance can be placed on gauging the shock that could occur today rather than conducting an analysis of reactions years ago. This is why this particular method is also included. Starting once more from the baseline case introduced in section [Section 2](#bb), a time-dependent measure of market reaction to news $\beta_t$ can be constructed by 1.) Transforming the problem of Ordinary Least Squares so that it can be recursively solved and 2.) Allowing for the parameter(s) to change over time sequentially.
   
-To obtain the STVP algorithm presented in [Section 9.3](#stepsstvp) the first step consists of replacing the OLS equations by their recursive counterparts and achieve the intermediate SLRS algorithm. The following equations are the familiar OLS equations setup with general terms:
+To obtain the STVP algorithm presented in [Section 9.3](#stepsstvp) the first step consists of replacing the OLS equations by their recursive counterparts and achieve the intermediate SLRS algorithm. The following equations are similar to the familiar OLS equations setup.
 
 \begin{equation}
-y_i = X_i^{T}\beta + e_i
+R_t = S_t^{T}\beta_1 + e_t
 \end{equation}
   
-Where $y_i$ are the observations, $X_i$ a vector of covariates and $\beta$ is the vector of coefficients attributed to each covatriate. The error vector contains a series of random variables $e_i$ that are assumed to be normally distributed with 0 mean and serially uncorrelated.
+The error vector contains a series of random variables $e_t$ that are assumed to be normally distributed with 0 mean and serially uncorrelated. We omit the constant intercept; the reasoning is elaborated in [Section 9.3](#stepswar).
   
 \begin{equation}
-\hat{\beta}_{OLS} = (X^{T}X)^{-1}X^{T}y \hat{\beta}^{OLS}_t = \hat{\beta}^{OLS}_{t-1} \forall t
+\hat{\beta}_{OLS} = (S^{T}S)^{-1}S^{T}R 
 \end{equation}
   
 \begin{equation}
-\hat{\beta}^{OLS}_t = \hat{\beta}^{OLS}_{t-1} \forall t
+\beta^{OLS}_t = \beta^{OLS}_{t-1} \forall t
 \end{equation}
   
-When an observation $y_j$ is added to the samples $i = 1,...,N$, an update to the $\hat{\beta}$ is the same as re-estimating the entire sample with the new observation. Effectively, the "intermediate model" or Stochastic Recursive Least Squares Algorithm (SLRS) is thereafter obtained (the exact ste-by-step is in [Section 9.3](#stepsslrs)). While this is a powerful tool, it does not necessarily help estimate $y_j$ effectively. It is giving just as much weight to realizations of $y$ early in the sample than those that immediately precede the new extra observation $j$. The contribution of every marginal observation is smaller and smaller as the sample grows. The $\hat{\beta}$ converges to the full sample parameter estimator $\hat{\beta}_{OLS}$ as seen in Figure  \@ref(fig:slrsplot).
+When an observation $y_j$ is added to the samples $i = 1,...,N$, an update to the $\hat{\beta}$ is the same as re-estimating the entire sample with the new observation. Effectively, the "intermediate model" or Stochastic Recursive Least Squares Algorithm (SLRS) is thereafter obtained (the exact step-by-step is in [Section 9.3](#stepsslrs)). While this is a powerful tool, it does not necessarily help estimate $y_j$ effectively. It is giving just as much weight to realizations of $y$ early in the sample than those that immediately precede the new extra observation $j$. The contribution of every marginal observation is smaller and smaller as the sample grows. The $\hat{\beta}$ converges to the full sample parameter estimator $\hat{\beta}_{OLS}$ as seen in Figure  \@ref(fig:slrsplot).
   
 ```{r slrsplot, echo = FALSE, fig.cap="SLRS applied to the UK CPI"}
 plotslrs(read.csv("~/R tests/finance related projects/slrs_df.csv"))
 ```
   
-Additional data points in the aformentioned methodology add information to the model and improve the accuracy of the $\hat{\beta}$ estimator but it is always assumed that there is only one true $\beta$ regardless of time $t$. In order to attenuate this assumption and include the flexibility that allows for a time dependence in a $\beta_t$, we introduce the random walk disturbance term mentioned in [Section 2](#grw). This possible when the error term becomes the incremental steps of the random walk.  
+Additional data points in the aformentioned methodology add information to the model and improve the accuracy of the $\hat{\beta}$ estimator but it is always assumed that there is only one true $\beta$ regardless of time $t$. In order to attenuate this assumption and include the flexibility that allows for a time dependence in a $\beta_t$, we introduce the random walk disturbance term mentioned in [Section 2](#grw). The error term is now characterized by the incremental steps of a random walk. In bayesian terms, the initial estimation of $\beta_t$ using the random walk becomes the *prior*. 
   
 \begin{equation}
-y_i = X_i^{T}\beta + e_i \quad e_i \sim \mathcal{N}(0,\sigma^2)
+R_t = S_t^{T}\beta_t + e_t \quad e_t \sim \mathcal{N}(0,\sigma^2)
 \end{equation}
   
 \begin{equation}
-\hat{\beta}_t = ch
+\hat{\beta}_t = \breve{\beta}_t|\hat{\beta}_{t-1}
 \end{equation}
   
 \begin{equation}
-\hat{\beta}^{OLS}_t = \hat{\beta}^{OLS}_{t-1} \forall t
+\beta_t = \beta_{t-1} + \eta_{t-1} \quad \eta_t \sim \mathcal{N}(0,\sigma^2_{\beta})
 \end{equation}
     
 ```{r stvpplot, echo = FALSE, fig.cap="STVP applied to the UK CPI"}
@@ -296,12 +307,19 @@ plotslrs(read.csv("~/R tests/finance related projects/stvp_df.csv"))
 The following path estimations should be interpreted as follows: a one standard deviation unanticipated positive change in the economic variable $S_t$ results in an appreciation or depreciation in the exchange rate of the relevant currency pair by $R_t$ amount of pips or basis points. 
 
 ```{r cadcrs, echo = FALSE}
-plotpath(read.csv("~/R tests/finance related projects/cadcrs_path.csv"), "Canadian Core Retail Sales")
-plotpath(read.csv("~/R tests/finance related projects/cadcpi_path.csv"), "Canadian Consumer Price Index")
-plotpath(read.csv("~/R tests/finance related projects/audret_path.csv"), "Australian Retail Sales")
+plotpath2(read.csv("~/R tests/finance related projects/cadcrs_path.csv", row.names = 1),
+          read.csv("~/R tests/finance related projects/cadcrs_path_stvp.csv", row.names = 1),
+          "Canadian Core Retail Sales")
+plotpath2(read.csv("~/R tests/finance related projects/cadcpi_path.csv", row.names = 1),
+         read.csv("~/R tests/finance related projects/cadcpi_path_stvp.csv", row.names = 1),"Canadian             Consumer Price Index")
+plotpath2(read.csv("~/R tests/finance related projects/audret_path.csv", row.names = 1),
+          read.csv("~/R tests/finance related projects/audret_path_stvp.csv", row.names = 1),
+          "Australian Retail Sales")
 plotpath(read.csv("~/R tests/finance related projects/audcpi_path.csv"), "Australian Consumer Price Index")
 #plotpath(read.csv("~/R tests/finance related projects/usdnfp_path.csv"), "US NonFarm Employment Change")
-plotpath(read.csv("~/R tests/finance related projects/usdcpi_path.csv"), "US Consumer Price Index")
+plotpath2(read.csv("~/R tests/finance related projects/usdcpi_path.csv", row.names = 1),
+          read.csv("~/R tests/finance related projects/usdcpi_path_stvp.csv", row.names = 1),
+          "US Consumer Price Index")
 plotpath(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"), "UK Consumer Price Index")
 plotpath(read.csv("~/R tests/finance related projects/nzdcpi_path.csv"), "New Zealand Consumer Price Index")
 ```

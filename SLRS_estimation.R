@@ -46,7 +46,7 @@ for(t in 2:nrow(data_1)){
   lower[,t] <- beta_hat[,t] - 1.96 * sqrt(diag(p_t)/sqrt(t))
   epsilon[t] <- R_t[t] - S_t[2,t] * beta_hat[2,t-1]
   #epsilon[t] <- t(S_t[,t]) %*% beta_hat[,t]
-  epsilon_nd[t] <- epsilon[t] / (1 + t(S_t[,t]) %*% (p_t/sigma) %*% S_t[,t] ) ^ 0.5
+  epsilon_nd[t] <- epsilon[t] / (1 + t(S_t[,t]) %*% (p_t/sigma^2) %*% S_t[,t] ) ^ 0.5
 }
 
 
