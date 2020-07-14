@@ -11,7 +11,7 @@ S_t <- t(as.matrix(data_1$std_Difference))
 
 Y_t <- t(as.matrix(data_1$m5))
 icept <- rep(1,T)
-S_t <- rbind(icept, S_t) 
+#S_t <- rbind(icept, S_t) 
 
 k <- dim(S_t)[1]
 T <- nrow(data_1)
@@ -44,14 +44,20 @@ for(t in 2:nrow(data_1)){
   #upper[,t] <- sqrt(1/T*(dim(X_t[1])-1)*mod1$residuals^2)
   upper[,t] <- beta_hat[,t] + 1.96 * sqrt(diag(p_t)/sqrt(t))
   lower[,t] <- beta_hat[,t] - 1.96 * sqrt(diag(p_t)/sqrt(t))
-  epsilon[t] <- R_t[t] - S_t[2,t] * beta_hat[2,t-1]
+  epsilon[t] <- R_t[t] - t(S_t[,t]) %*% beta_hat[,t-1]
   #epsilon[t] <- t(S_t[,t]) %*% beta_hat[,t]
   epsilon_nd[t] <- epsilon[t] / (1 + t(S_t[,t]) %*% (p_t/sigma^2) %*% S_t[,t] ) ^ 0.5
 }
 
 
-par(mfrow=c(1,1))
-#par(mfrow=c(1,2))
+#par(mfrow=c(1,1))
+par(mfrow=c(1,2))
+
+plot(beta_hat[1,] ~ as.Date(data_1$Date), type = "l")
+lines(rep(mod1$coefficients[1],T) ~ as.Date(data_1$Date), lty = "dotdash")
+lines(upper[1,]~ as.Date(data_1$Date), type = "l", lty = 3)
+lines(lower[1,]~ as.Date(data_1$Date), type = "l", lty = 3)
+
 plot(beta_hat[2,] ~ as.Date(data_1$Date), type = "l")
 lines(rep(mod1$coefficients[2],T) ~ as.Date(data_1$Date), lty = "dotdash")
 lines(upper[2,]~ as.Date(data_1$Date), type = "l", lty = 3)

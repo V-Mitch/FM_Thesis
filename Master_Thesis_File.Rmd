@@ -52,7 +52,8 @@ The objective of this paper is two-fold. Firstly, we aim to employ existing meth
   
 # Data
   
-The minute-by-minute OHLC Data of 7 currency pairs were collected from the Metatrader5 platform. This represents over 4 million data points for each pair. Only a small fraction of this data is actually used since we consider only the 5 time frame from when each piece of monthly or quarterly news is released until 5 minutes afterwards.  
+The minute-by-minute OHLC Data of 7 currency pairs were collected from the Metatrader5 platform. This represents over 4 million data points for each pair. Only a small fraction of this data is actually used since we consider only the 5 time frame from when each piece of monthly or quarterly news is released until 5 minutes afterwards. In regards to the collection of macroeconomic figures data, the expectation numbers from the ForexFactory website were used^[The expectations of most online sources such as "Investing.com" or "DailyFX" are very similar. Unfortunately, the aggregation methods are not disclosed to the public.] The process of combining of the two separate datasets was complex and involved careful consideration of erratic scheduling changes of the organizations releasing the figures as well as the daylight savings and timezones of all considered data. 
+  
   
 ```{r newintro, echo = FALSE}
 kable(newsintro, booktabs = T, caption ="Summary of the news figures considered in the study",
@@ -61,7 +62,8 @@ kable_styling(latex_options = c("striped", "scale_down")) %>%
 row_spec(c(1,10), bold = T, color = "black") %>%
 row_spec(c(11,12,13), color = "black",background = "#b3e0ff") %>%
 row_spec(c(14,15), color = "black",background = "#c2f0c2") %>%  
-row_spec(c(16,17), color = "black",background = "#ffd1b3")
+row_spec(c(16,17), color = "black",background = "#ffd1b3") 
+
 ```
 
   
@@ -75,7 +77,7 @@ Being consistent with previous literature on the subject, the first step involve
 S_t = \frac{A_t - E_t}{\sigma_d}
 \end{equation}
   
-$A_t$ is the actual result of the news at time $t$, $E_t$ is the expected result aggregated from experts and $\sigma_d$ is the empirical standard deviation of this difference over the entire sample. We use the expectation numbers from the ForexFactory website^[The expectations of most online sources such as "Investing.com" or "DailyFX" are very similar. The aggregation methods are not disclosed to the public.] Thereafter, we use this surprise element in a first simple OLS model.  
+$A_t$ is the actual result of the news at time $t$, $E_t$ is the expected result aggregated from experts and $\sigma_d$ is the empirical standard deviation of this difference over the entire sample.  Thereafter, we use this surprise element in a first simple OLS model.  
 
 \begin{equation}
 R_t = \beta_0 + \beta_1 S_t + \varepsilon_t
@@ -91,7 +93,10 @@ kable_styling(latex_options = c("striped")) %>%
 row_spec(c(1,10), bold = T, color = "black") %>%
 row_spec(c(11,12,13), color = "black",background = "#b3e0ff") %>%
 row_spec(c(14,15), color = "black",background = "#c2f0c2") %>%  
-row_spec(c(16,17), color = "black",background = "#ffd1b3")
+row_spec(c(16,17), color = "black",background = "#ffd1b3") %>% 
+footnote(general = "The result of OLS estimation, referred to as the 'time invariant' or 'stable' case is presented in this table. The standard errors of the estimator as well as the Newey-West corrected standard errors are also included. The *,**,*** are for 10%, 5% and 1% significance levels respectively."
+         ,footnote_as_chunk = T
+         ,threeparttable = T)
 ```
   
 Table \@ref(tab:tablereg) shows the result of the different $\beta_1$ coefficients for separate news reports. The construction of the truncation parameter in the Newey-West estimator is such that our monthly news reports consider 2 autocorrelation coefficients whereas the quarterly ones only contain 1. This is due to the difference in the number of observations in our data. A higher estimated autocorrelation between the errors of the regression will result in a stronger correction of the variance of $\beta_1$. In all of the news in Table \@ref(tab:tablereg), the higher standard error does not affect the significance of the term. While it is not formal evidence, we suspect that the regressions where the HAC standard error is larger than its unedited counterpart contain unknown regressors that may come from any of the findings that are well elaborated in other literature such as in @goldberg_time_2013. Overall, these results and that of the Durbin-Watson test show that there is little evidence for significant autocorrelation in the residuals.
@@ -102,15 +107,15 @@ R_t = \beta_0 + \beta_{1,t} S_t + \varepsilon_t
   
 ## The Gaussian Random Walk {#grw}
   
-The methods discussed in this paper use random walks extensively. This section serves to underline the features of these processes which will later be essential to the understanding of tests and path estimations. Furthermore, it hopefully helps one fully appreciate the assumptions that will be made when using them and how these processes can be used to help decipher the variation of the $\beta$.
+The methods discussed in this paper use Gaussian Random Walks (GRW) extensively. This section serves to underline the features of these processes which will later be essential to the understanding of tests and path estimations. Furthermore, it hopefully helps one fully appreciate the assumptions that will be made when using them and how these processes can be used to help decipher the variation of the $\beta$.
   
-The Gaussian Random Walk is a sequence of $i.i.d$ random variables where one realization at time $t$ follows the distribution:
+The GRW is a sequence of $i.i.d$ random variables where one realization at time $t$ follows the distribution:
   
 \begin{equation}
 X_t \sim \mathcal{N}(\mu_t,\sigma_t^2)
 \end{equation}
   
-Using the independence assumption of normally distributed random variables, their sum and the distribution of their sum is then given by \@ref(fig:warplot)
+Using the independence assumption of normally distributed random variables, their sum and the distribution of their sum is then given by \@ref(fig:warplot). The variance of this sum can also be referred to as the variance of the end point of the random walk. 
   
 \begin{equation}
 U = \sum_{t=1}^{T}X_t  \quad 
@@ -121,7 +126,7 @@ U \sim \mathcal{N}(\mu_tT,\sigma_t^2T)
 plotrw()
 ```
    
-In theory the path that the $\beta$ could take could resemble any of the paths in Figure \@ref(fig:randomwalk). The process depicted by the Y2 is a baseline case where the parameter would not vary in time. The Y3 process is a random walk with a $\mu$ of 0 and a fixed $\sigma$ which is in reality the same as white noise. The Y1 is a random walk with a constant negative $\mu$. Finally, the Y4 process depicts a scenario with one significant break in the path of $\beta$ and is the combination of 2 separate random walks with separate constant $\mu$ and $\sigma$.
+In theory the path that the $\beta$ could take could resemble any of the paths in Figure \@ref(fig:randomwalk). The process depicted by the Y2 is a baseline case where the parameter would not vary in time. The Y3 process is a random walk with a $\mu$ of 0 and a fixed $\sigma$ which is in reality the same as white noise. The Y1 is a random walk with a constant negative $\mu$. Finally, the Y4 process depicts a scenario with one significant break in the path of $\beta$ and is the combination of 2 separate random walks with separate constant $\mu$ and $\sigma$. Within the context of our problem, it is important to consider all of these possibilities as the potential evolution in the reactions could be erratic in nature (frequent and haphazard change), or gradual (slow and constant change) over time. We would like to detect the changes regardless of the scenario. 
 
 # Testing for instability of the news impact parameter
   
@@ -132,7 +137,10 @@ kable_styling(latex_options = c("striped")) %>%
 row_spec(c(1,10), bold = T, color = "black") %>%
 row_spec(c(11), color = "black",background = "#b3e0ff") %>%
 row_spec(c(17), color = "black",background = "#c2f0c2") %>%
-row_spec(c(19), color = "black",background = "#ffd1b3")
+row_spec(c(19), color = "black",background = "#ffd1b3") %>%
+footnote(general = "Results of the three instability tests performed for each piece of macroeconomic news. Multiple tests were performed for some news that occured simultaneously because the tests are able to detect instability but not pin-point the exact source of instability for more than 1 figure. The n.s,*,**,*** are for non-significant, 10%, 5% and 1% levels of significance respecively."
+         ,footnote_as_chunk = T
+         ,threeparttable = T) 
 ```
   
   
@@ -141,7 +149,10 @@ row_spec(c(19), color = "black",background = "#ffd1b3")
 ```{r qLL, echo = FALSE}
 kable(qLL_table, booktabs = T, caption ="Asymptotic Critical Values of the qLL Statistic",
       format = "latex") %>%
-kable_styling(latex_options = c("striped"))
+kable_styling(latex_options = c("striped")) %>%
+footnote(general = "Extract of the critical values of the qLL Statistic. k represents the number of potential unstable coefficients (number of parameters in the model) whereas 1%, 5% and 10% are the significance levels where a lower value is stronger evidence that instability is present."
+         ,footnote_as_chunk = T
+         ,threeparttable = T) 
 ```
   
 There exists many ways to test whether $\beta_t$ is time dependent or not. We first choose the methodology of the authors of [@elliott_efficient_2006] and briefly replicate their method. The advantage of their test is that it identifies instability no matter whether it comes in the form of a single break, many breaks, or a continuous change (all of which are feasible in our context).  
@@ -169,6 +180,7 @@ L_{HA} = \frac{1}{2\sigma^2}\sum_{t=1}^{T}\eta^2
 \end{equation}
 
 The qLL statistic is obtained by subtracting $L_{HA}$ from $L_{H0}$: $\frac{\sigma^2}{\sigma^2}\sum_{t=1}^{T}\eta^2 - \sum_{t=1}^{T}(\Delta R_t)^2$. The test is therefore a variant of the Likelihood Ratio Test ($LR_T$), so while it does not follow a chi-square distribution exactly, it does follow a certain related distribution that has its percentiles defined by @elliott_efficient_2006 and reported in their table, reproduced here as Table \@ref(tab:qLL). The general extension to the $LR_T$ can be made where we can reject the model related to the Null Hypothesis (the stable model) if the critical value is sufficiently negative. To obtain the $\eta$ term it is necessary to follow additional matrix algebra and use the result of regressions [@elliott_efficient_2006]. The appropriate steps are available in Appendix [Section 9.2](#stepsqLL).
+  
 
   
 ## CUSUM and CUSUM-squared tests
@@ -221,7 +233,7 @@ Conveniently, there is a natural extension of the qLL test elaborated in [Sectio
   
 First, we consider our stable model which is analogous to the linear regression model that is presented in the Equation \@ref(eq:stable). The resulting $\beta_{MLE/OLS}$ parameter obtained either through maximum likelihood estimation or minimization of ordinary least squares (depicted as the dot-dashed line in Figure \@ref(fig:warplot)) is representative of a scenario where it is assumed there is no time-related evolution of market reaction to news. As seen before, the likelihood in this case can be developed as Equation \@ref(eq:LH0) or also written more generally as $\sum_{t=1}^{T}l_t (\theta)$ with $\theta$ containing the constant parameters.
   
-We then turn to the case of varying $\beta_t$. Here, the general likelihood is the same but with time varying parameter(s) contained in $\theta_t$ = $\theta + \delta_t$ in $t = 1,...,T$. The $\delta_t$ can be imagined as the vertical distances in Figure \@ref(fig:warplot)) between the constant $\beta$ case and the *true* parameter path at time *t* that is unknown and that we are attempting to approximate. The main argument for the method is that this general likelihood function can be approximated by a second-order Taylor expansion of the likelihood function around $\beta_{MLE}$ and as a result an approximate estimate of the $\delta_t$ term mentioned earlier is obtainable. Effectively, the approximation of the log-likelihood function of the parameter path is re-arranged until a log-likelihood function of a gaussian random variable is recognizable and results in a "pseudo model" as:  
+We then turn to the case of varying $\beta_t$. Here, the general likelihood is the same but with time varying parameter(s) contained in $\theta_t$ = $\theta + \delta_t$ in $t = 1,...,T$. The $\delta_t$ can be imagined as the vertical distances in Figure \@ref(fig:warplot)) between the constant $\beta$ case and the *true* parameter path at time *t* that is unknown and that we are attempting to approximate. The main argument for the method is that this general likelihood function for a time varying model can be approximated by a second-order Taylor expansion of the likelihood function around $\beta_{MLE}$ and as a result an approximate estimate of the $\delta_t$ term mentioned earlier is obtainable. Effectively, the approximation of the log-likelihood function of the parameter path can be restructured such that a log-likelihood function of a gaussian random variable is recognizable and results in a "pseudo model" as:  
   
 \begin{equation}
 \beta_{MLE} = \beta_t + T^{-1/2}\hat{H}^{-1}v_0
@@ -231,9 +243,9 @@ We then turn to the case of varying $\beta_t$. Here, the general likelihood is t
 s_t(\beta) = \hat{H}\delta_t + v_t, t = 1,...,T
 \end{equation}
 
-$\hat{H}$ is the Hessian of the Taylor approximation divided by the sample size T, $s_t$ is the score function for the stable model. The exact derivations to obtain (15) are elaborated in @muller_efficient_2010 and in [Section 9.3](#stepswar).  
+$\hat{H}$ is the Hessian of the Taylor approximation divided by the sample size T, $s_t$ is the score function for the stable model. The exact derivations to obtain (15) are elaborated in @muller_efficient_2010.  
   
-Essentially, the score function $s_t$ and Hessian $\hat{H}$ can be extracted from the stable linear regression from section [Section 2](#bb) and when the likelihood function is therefore the one seen in equation (7). 
+Essentially, the score function $s_t$ and Hessian $\hat{H}$ can be extracted from the stable linear regression from section [Section 2](#bb) and the likelihood function is therefore the one seen in equation (7). Deriving once and then twice with respect to $\beta_1$ yields the following respectively:
   
 \begin{equation}
 s_t = \frac{dl}{d\beta_1} = -\sigma^{-2} \sum_{t=1}^T (R_t - \hat{\beta}_0 - \hat{\beta}_{1}S_t)S_t
@@ -243,8 +255,9 @@ s_t = \frac{dl}{d\beta_1} = -\sigma^{-2} \sum_{t=1}^T (R_t - \hat{\beta}_0 - \ha
 \hat{H} = \frac{dl^2}{d^2\beta_1^T} = -\sigma^{-2}\sum_{t=1}^T S_t^2
 \end{equation}
   
+These two estimations, alongside the original $\beta_1$ and $\sigma^2$ from the time-invariant model are all that is needed to apply the entire WAR algorithm. The $s_t$ and $\hat{H}$ provide a direction that the parameter can take. However, the magnitude of these changes from one step to the next still needs to be explained.  
   
-The weights in step (e) of the Appendix [Section 9.3](#stepswar) depend on the sample size and the qLL statistic that are obtained using the qLL test statistic from [Section 4.1](#qLLtest). It can be observed that the more negative the statistic becomes for the associated random walk function, the more importance is placed on that particular weight. The random walk that contributes the most weight for the UK CPI case is the 4th one in our example. 
+In Figure \@ref(fig:warplot), one can observe 11 different random walk weighting functions as well as the final estimated path for the UK CPI example. While they are all constructed using the score and Hessian shown earlier, they each have a unique end point standard deviation. The weights in step (e) of the Appendix [Section 9.3](#stepswar) depend on the sample size and the qLL statistic that are obtained using the qLL test statistic from [Section 4.1](#qLLtest). It can be observed that the more negative the statistic becomes for the associated random walk function, the more importance is placed on that particular weight. The random walk that contributes the most weight for the UK CPI case is the 4th one in our example. 
 
 ```{r warplot, echo = FALSE, fig.cap="WAR minimizing over the 11 different randow walk weighting functions"}
 plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
@@ -254,7 +267,9 @@ plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
 
 ## Standard Recursive Time Variable Parameter Algorithm (STVP)
   
-Until now, the WAR minimization method provided a means to analyze the price reactions to the news over an entire sample period. In practice, it may be more useful to have a self-updating method that iteratively uses every new observation to improve the estimation progressively. It can also be argued that more importance can be placed on gauging the shock that could occur today rather than conducting an analysis of reactions years ago. This is why this particular method is also included. Starting once more from the baseline case introduced in section [Section 2](#bb), a time-dependent measure of market reaction to news $\beta_t$ can be constructed by 1.) Transforming the problem of Ordinary Least Squares so that it can be recursively solved and 2.) Allowing for the parameter(s) to change over time sequentially.
+Until now, the WAR minimization method provided a means to analyze the price reactions to the news over an entire sample period. In practice, it may be more useful to have a self-updating method that iteratively uses every new observation to improve the estimation progressively. It can also be argued that more importance can be placed on gauging the shock that could occur today rather than conducting an analysis of reactions years ago. When building this model, the assumption is that information available at time $t$ includes everything before that moment, specifically information set $\Omega_{t-1}$ This is in contrast with the WAR minimization and is why this particular method is also included.
+  
+Starting once more from the baseline case introduced in section [Section 2](#bb), a time-dependent measure of market reaction to news $\beta_t$ can be constructed by 1.) Transforming the problem of Ordinary Least Squares so that it can be recursively solved and 2.) Allowing for the parameter(s) to change over time sequentially.
   
 To obtain the STVP algorithm presented in [Section 9.3](#stepsstvp) the first step consists of replacing the OLS equations by their recursive counterparts and achieve the intermediate SLRS algorithm. The following equations are similar to the familiar OLS equations setup.
 
@@ -296,9 +311,18 @@ R_t = S_t^{T}\beta_t + e_t \quad e_t \sim \mathcal{N}(0,\sigma^2)
 plotslrs(read.csv("~/R tests/finance related projects/stvp_df.csv"))
 ```
 
-# Discussion - A comparison of methods
+# Comparison of methods and Discussion
+  
+The WAR Estimation method is especially useful when trying to analyze the evolution of the parameter over the entire sample period. Because of the "forward and backward passes" in the algorithm seen in steps (b) and (c) of section [Section 9.4](#stepswar), the beginning of the sample period is analyzed with as much precision as its ending. The addition of a reverse order filter means that the resulting estimate is "smoothed over" twice. This is a positive feature because there may be occasionally be "noisy" price shocks that take place in an unexpected direction that are "smoothed" out by the dictating trend and nearby observations both before and after their occurence. This is quite obvious for example for the Canadian Core Retail Sales where 
+  
+There are several explanations for these exceptions. One example in particular would be market interventions of the central banks which have been proven to occur during or in time proximity to figure releases as shown in studies such as that of @dominguez_market_2003. Similarly, there is evidence of insider trading preceding news announcements. Assets traded in such as the E-mini S&P 500 futures where exact order imbalance can be measured. It is perfectly possible that the same kind of activity is taking place in the decentralized currency exchange (or FX) markets [@bernile_can_2016]. It is impossible (or extremely difficult) to detect these external reasons for price shocks and the WAR conveniently "smooths" them over.
+  
+From a bayesian perspective, the accuracy of the WAR line is measured using 95% posterior probability intervals (with priors being the weighting function compromise with the different end-point variances.) [@muller_efficient_2010]. Therefore, given that the prior is correct and representative of the stable scenario case, the $\beta_t$ lies within the interval zone with a 95% probability.
 
-# Conclusion
+Moreover, there is an inherent restriction of $\sum^T_t \delta_t = 0$, meaning that the positive $\delta_t$ deviations from the average parameter value or$\beta_OLS$ are exactly counterpoised by the negative ones. The path will always have the original, stable, time-invariant estimator as an average. 
+
+
+
 
 # Appendix
 
@@ -315,13 +339,22 @@ plotpath2(read.csv("~/R tests/finance related projects/cadcpi_path.csv", row.nam
 plotpath2(read.csv("~/R tests/finance related projects/audret_path.csv", row.names = 1),
           read.csv("~/R tests/finance related projects/audret_path_stvp.csv", row.names = 1),
           "Australian Retail Sales")
-plotpath(read.csv("~/R tests/finance related projects/audcpi_path.csv"), "Australian Consumer Price Index")
+plotpath2(read.csv("~/R tests/finance related projects/audcpi_path.csv", row.names = 1), 
+          read.csv("~/R tests/finance related projects/audcpi_path_stvp.csv", row.names = 1), 
+          "Australian Consumer Price Index")
 #plotpath(read.csv("~/R tests/finance related projects/usdnfp_path.csv"), "US NonFarm Employment Change")
 plotpath2(read.csv("~/R tests/finance related projects/usdcpi_path.csv", row.names = 1),
           read.csv("~/R tests/finance related projects/usdcpi_path_stvp.csv", row.names = 1),
           "US Consumer Price Index")
-plotpath(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"), "UK Consumer Price Index")
-plotpath(read.csv("~/R tests/finance related projects/nzdcpi_path.csv"), "New Zealand Consumer Price Index")
+plotpath2(read.csv("~/R tests/finance related projects/gbpcpi_path.csv", row.names = 1),
+          read.csv("~/R tests/finance related projects/gbpcpi_path_stvp.csv",row.names = 1),
+          "UK Consumer Price Index")
+plotpath2(read.csv("~/R tests/finance related projects/nzdcpi_path.csv", row.names = 1),
+          read.csv("~/R tests/finance related projects/nzdcpi_path_stvp.csv", row.names = 1),
+          "New Zealand Consumer Price Index")
+plotpath2(read.csv("~/R tests/finance related projects/usdnfp_path.csv", row.names = 1),
+          read.csv("~/R tests/finance related projects/usdnfp_path_stvp.csv", row.names = 1),
+          "US Non-Farm Payrolls")
 ```
   
 ## Stochastic Recursive Least Squares Algorithm (SLRS) {#stepsslrs}
@@ -332,11 +365,13 @@ plotpath(read.csv("~/R tests/finance related projects/nzdcpi_path.csv"), "New Ze
   
 ## Standard Recursive Time Variable Parameter Algorithm (STVP) {#stepsstvp}
   
-Prediction (Prior)  
+Prediction (Prior)
+   
 1. $\hat{\alpha}_t|\hat{\alpha}_{t-1} = A\alpha_{t-1}$  
 2. $P^*_t|P^*_{t-1} = AP^*_{t-1}A^T+DQ_aD^T$
   
-Correction (Posterior)  
+Correction (Posterior)
+  
 3. $\hat{\alpha}_t = \hat{\alpha}_t|\hat{\alpha}_{t-1} + g_t(R_t - S^T_t(\hat{\alpha}_t|\hat{\alpha}_{t-1}))$  
 4. $g_t = (P^*_t|P^*_{t-1})S_t(\hat{\sigma}^2 + S^T_t(P^*_t|P^*_{t-1})$
 5. $P^*_t = P^*_t|P^*_{t-1} - g_tS^T_t(P^*_t|P^*_{t-1})$

@@ -37,9 +37,11 @@ R_t <- data_1$m5
 # Assuming Random Walk 4.21 is used to describe parameter variations
 I <- diag(k) # identity matrix instead of A
 I[1,1] <- 0 # assume the intercept is 0.
+#I[2,2] <- 0
 # Assuming constant parameter variation, the variations are not correlated to one another
 Qa <-  diag(summary(mod1)$coefficients[,2])^2 
 Qa[1,1] <- 0
+#Qa[2,2] <- 0
 Qnvr <- Qa / sigma^2
 
 # Initialization
@@ -94,9 +96,19 @@ lines(rep(mod1$coefficients[2],T) ~ as.Date(data_1$Date), lty = "dotdash")
 lines(upper[2,]~ as.Date(data_1$Date), type = "l", lty = 3)
 lines(lower[2,]~ as.Date(data_1$Date), type = "l", lty = 3)
 
+# plot(beta_hat[3,] ~ as.Date(data_1$Date), type = "l")
+# lines(rep(mod1$coefficients[3],T) ~ as.Date(data_1$Date), lty = "dotdash")
+# lines(upper[3,]~ as.Date(data_1$Date), type = "l", lty = 3)
+# lines(lower[3,]~ as.Date(data_1$Date), type = "l", lty = 3)
+
+
 stvp_df <- data.frame(x = as.vector(beta_hat[2,]), as.vector(upper[2,]), as.vector(lower[2,]), 
                       rep(mod1$coefficients[2],T), as.Date(data_1$Date))
 colnames(stvp_df) <- c("beta_hat", "upper","lower", "beta_ols","date")
 
+# stvp_df <- data.frame(x = as.vector(beta_hat[3,]), as.vector(upper[3,]), as.vector(lower[3,]),
+#                       rep(mod1$coefficients[3],T), as.Date(data_1$Date))
+# colnames(stvp_df) <- c("beta_hat", "upper","lower", "beta_ols","date")
+
 ##write.csv(stvp_df, file = "~/R tests/finance related projects/stvp_df.csv")
-##write.csv(stvp_df, file = "~/R tests/finance related projects/audret_path_stvp.csv")
+##write.csv(stvp_df, file = "~/R tests/finance related projects/cadcrs_path_stvp.csv")

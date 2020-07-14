@@ -8,6 +8,7 @@
 
 #### SETUP ####
 # Some fixed parameters
+#data_1 <- data_1_o
 
 # number of coefficients that vary over time
 kk <- 1
@@ -15,6 +16,10 @@ kl <- kk + 1
 
 B0 <- mod1$coefficients[1]
 B1 <- mod1$coefficients[2]
+
+### nfp case denoted by triple ###
+#B1 <- mod1$coefficients[3]
+#B2 <- mod1$coefficients[2]
 
 sig_sqr <- 1/(T - kl) * sum(mod1$residuals^2)
 sig_beta <- summary(mod1)$coefficients[2,2]
@@ -28,15 +33,17 @@ T <- nrow(data_1)
 X_t <- X_t
 Y_t <- data_1$m5
 d_t <- (Y_t - B0 - B1 * X_t)
+### d_t <- (Y_t - B0 - B2 - B1 * X_t)
 
 # Partial First derivatives and Score
-dl_B1 <- -1/sig_sqr * sum(d_t*X_t) 
+#dl_B1 <- -1/sig_sqr * sum(d_t*X_t) 
+dl_B1 <- - 1/sig_sqr * sum(d_t*X_t) 
 dl_sig_sqr <- -T + 1/sig_sqr * sum(d_t)^2
 dl_B0 <- -1/sig_sqr * sum(d_t)
 s_t <- c(dl_B1, dl_sig_sqr, dl_B0)
 
 # Partial Second derivatives and Hessian
-dl_B1B1 <- sum(X_t^2) / sig_sqr
+dl_B1B1 <-   sum( -X_t^2) / sig_sqr
 dl_B1sig_sqr <- 1/sig_sqr^2 * sum(d_t*X_t)
 dl_B1B0 <- sum(X_t) / sig_sqr
 dl_sig_sqrB1 <- -2/sig_sqr * sum(d_t*X_t)
@@ -76,19 +83,20 @@ dl_B1 <- rep(0,T)
   
 # Step 1
 for (t in 1:T){
-temp_frame <- data_1[t,]
-
-# Main elements of regression and abbreviation of Sum of Errors for simplification
-X_t <- temp_frame$std_Difference
-Y_t <- temp_frame$m5
-d_t <- (Y_t - B0 - B1 * X_t)
-
-# First derivatives and Score
-dl_B1[t] <- -1/sig_sqr * sum(d_t*X_t) 
-# dl_sig_sqr <- -t + 1/sig_sqr * sum(d_t)^2
-# dl_B0 <- -1/sig_sqr * sum(d_t)
-# s_t <- c(dl_B1, dl_sig_sqr, dl_B0)
-s_t <- dl_B1
+  temp_frame <- data_1[t,]
+  
+  # Main elements of regression and abbreviation of Sum of Errors for simplification
+  X_t <- temp_frame$std_Difference
+  Y_t <- temp_frame$m5
+  d_t <- (Y_t - B0 - B1 * X_t)
+  ### d_t <- (Y_t - B0 - B2 - B1 * X_t)
+  
+  # First derivatives and Score
+  dl_B1[t] <- - 1/sig_sqr * sum(d_t*X_t) 
+  # dl_sig_sqr <- -t + 1/sig_sqr * sum(d_t)^2
+  # dl_B0 <- -1/sig_sqr * sum(d_t)
+  # s_t <- c(dl_B1, dl_sig_sqr, dl_B0)
+  s_t <- dl_B1
 }
 
 V <- 1/T * sum(dl_B1^2)
