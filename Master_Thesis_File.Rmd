@@ -52,8 +52,9 @@ The objective of this paper is two-fold. Firstly, we aim to employ existing meth
   
 # Data
   
-The minute-by-minute OHLC Data of 7 currency pairs were collected from the Metatrader5 platform. This represents over 4 million data points for each pair. Only a small fraction of this data is actually used since we consider only the 5 time frame from when each piece of monthly or quarterly news is released until 5 minutes afterwards. In regards to the collection of macroeconomic figures data, the expectation numbers from the ForexFactory website were used^[The expectations of most online sources such as "Investing.com" or "DailyFX" are very similar. Unfortunately, the aggregation methods are not disclosed to the public.] The process of combining of the two separate datasets was complex and involved careful consideration of erratic scheduling changes of the organizations releasing the figures as well as the daylight savings and timezones of all considered data. 
+The minute-by-minute OHLC Data of 7 currency pairs were collected from the Metatrader5 platform between 2008 and the end of 2019. This represents over 4 million data points for each currency pair cosnsidered in the study. Only a small fraction of this data is actually used since we consider only the 5 time frame from when each piece of monthly or quarterly news is released until 5 minutes afterwards. In regards to the collection of macroeconomic figures data, the expectation numbers from the ForexFactory website were used^[The expectations of most online sources such as "Investing.com" or "DailyFX" are very similar. Unfortunately, the aggregation methods are not disclosed to the public.] The process of combining of the two separate datasets was complex and involved careful consideration of erratic scheduling changes of the organizations releasing the figures as well as the daylight savings and timezones of all considered data. 
   
+![Minute-by-minute candlechart of the USD/CAD asset on the 19th of June between 15h00 and 16h00 GMT+2. An example of of the sudden price change that can occur during one of the news releases. Green/Red candles represent an increase/decrease in price. The gray indicator is amount of "tick activity" available on the standard MetaTrader5 trading platform.](candlestick2.png)
   
 ```{r newintro, echo = FALSE}
 kable(newsintro, booktabs = T, caption ="Summary of the news figures considered in the study",
@@ -115,7 +116,7 @@ The GRW is a sequence of $i.i.d$ random variables where one realization at time 
 X_t \sim \mathcal{N}(\mu_t,\sigma_t^2)
 \end{equation}
   
-Using the independence assumption of normally distributed random variables, their sum and the distribution of their sum is then given by \@ref(fig:warplot). The variance of this sum can also be referred to as the variance of the end point of the random walk. 
+Using the independence assumption of normally distributed random variables, their sum and the distribution of their sum is then given by \@ref(fig:warplot). 
   
 \begin{equation}
 U = \sum_{t=1}^{T}X_t  \quad 
@@ -229,7 +230,7 @@ Having established that there is instability over time in the market reactions t
   
 ## Weighted Average Risk Minimization
   
-Conveniently, there is a natural extension of the qLL test elaborated in [Section 4.1](#qLLtest). It provides a heuristic means means to approximate a parameter path [@muller_efficient_2010]. 
+Conveniently, there is a natural extended use of the qLL test elaborated in [Section 4.1](#qLLtest). It provides a heuristic means means to approximate a parameter path [@muller_efficient_2010]. 
   
 First, we consider our stable model which is analogous to the linear regression model that is presented in the Equation \@ref(eq:stable). The resulting $\beta_{MLE/OLS}$ parameter obtained either through maximum likelihood estimation or minimization of ordinary least squares (depicted as the dot-dashed line in Figure \@ref(fig:warplot)) is representative of a scenario where it is assumed there is no time-related evolution of market reaction to news. As seen before, the likelihood in this case can be developed as Equation \@ref(eq:LH0) or also written more generally as $\sum_{t=1}^{T}l_t (\theta)$ with $\theta$ containing the constant parameters.
   
@@ -317,9 +318,9 @@ The WAR Estimation method is especially useful when trying to analyze the evolut
   
 There are several explanations for these exceptions. One example in particular would be market interventions of the central banks which have been proven to occur during or in time proximity to figure releases as shown in studies such as that of @dominguez_market_2003. Similarly, there is evidence of insider trading preceding news announcements. Assets traded in such as the E-mini S&P 500 futures where exact order imbalance can be measured. It is perfectly possible that the same kind of activity is taking place in the decentralized currency exchange (or FX) markets [@bernile_can_2016]. It is impossible (or extremely difficult) to detect these external reasons for price shocks and the WAR conveniently "smooths" them over.
   
-From a bayesian perspective, the accuracy of the WAR line is measured using 95% posterior probability intervals (with priors being the weighting function compromise with the different end-point variances.) [@muller_efficient_2010]. Therefore, given that the prior is correct and representative of the stable scenario case, the $\beta_t$ lies within the interval zone with a 95% probability.
+From a bayesian perspective, the accuracy of the WAR line is measured using 95% posterior probability intervals (with priors being the weighting function of the random walks each having one of the 11 end-point variances.) [@muller_efficient_2010]. Therefore, given that the prior is correct and representative of the stable scenario case, the $\beta_t$ lies within the interval zone with a 95% probability. The posterior distribution at each time $t$, is a weighted compromise of the different random walks. 
 
-Moreover, there is an inherent restriction of $\sum^T_t \delta_t = 0$, meaning that the positive $\delta_t$ deviations from the average parameter value or$\beta_OLS$ are exactly counterpoised by the negative ones. The path will always have the original, stable, time-invariant estimator as an average. 
+Moreover, there is an inherent restriction of $\sum^T_t \delta_t = 0$, meaning that the positive $\delta_t$ deviations from the average parameter value or$\beta_{OLS}$ are exactly counterpoised by the negative ones. The path will always have the original, stable, time-invariant estimator as an average. 
 
 
 
@@ -398,4 +399,6 @@ Correction (Posterior)
 4. The parameter path estimator is given by ${\{\hat{\beta}_{t}\}_{t=1}^T} = \{\sum_{i=1}^{11}w_i\hat{\beta}_{i,t}\}_{t=1}^T$.  
 5. The statistic qLL(10) tests the null hypothesis of stability of $\beta$ and rejects for small values. Critical values depend on $p$ and are tabulated in Table 1 of @elliott_efficient_2006 and \@ref(tab:qLL).  
 
-
+## Variance for credible intervals of the WAR path
+  
+$\Sigma$
