@@ -24,6 +24,7 @@ V_x <- 1/n * ans
 
 # Step 3
 V_x_ns <- sqrt(solve(V_x))
+V_x_ns <- V_x ^ (-1/2)
 U_t <- matrix(ncol = n, nrow = k)
 for (t in 1:n){
   U_t[,t] <- V_x_ns %*% X_t[,t] * Eps_t[,t]

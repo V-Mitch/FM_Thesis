@@ -21,7 +21,7 @@ lower <- matrix(0,nrow = k, ncol = T)
 epsilon <- matrix(0,nrow = 1, ncol = T)
 epsilon_nd <- matrix(0,nrow = 1, ncol = T)
 sigma_ML_secondpart <- rep(1,T)
-#beta_hat[,1] <- as.vector(mod1$coefficients)
+beta_OLS <- as.vector(mod1$coefficients)
 beta_hat[,1] <- c(0,0)
 g_t <- matrix(0,nrow = k, ncol = T)
 residual_error <- matrix(0,nrow = k, ncol = T)
@@ -39,15 +39,17 @@ I <- diag(k) # identity matrix instead of A
 I[1,1] <- 0 # assume the intercept is 0.
 #I[2,2] <- 0
 # Assuming constant parameter variation, the variations are not correlated to one another
-Qa <-  diag(summary(mod1)$coefficients[,2])^2 
+#Qa <-  diag(summary(mod1)$coefficients[,2])^2 
+Qa <-  diag((beta_OLS - beta_OLS + beta_OLS/4)^2, nrow = k)
 Qa[1,1] <- 0
 #Qa[2,2] <- 0
 Qnvr <- Qa / sigma^2
 
 # Initialization
-g_t[,1] <- p_0 %*% S_t[,1] %*% (1 + t(S_t[,1]) %*% p_0 %*% S_t[,1]) ^ -1
-p_t <- p_0 - g_t[,1] %*% t(S_t[,1]) %*% p_0
 sigma_temp <- 999
+g_t[,1] <- p_0 %*% S_t[,1] %*% (sigma_temp^2 + t(S_t[,1]) %*% p_0 %*% S_t[,1]) ^ -1
+p_t <- p_0 - g_t[,1] %*% t(S_t[,1]) %*% p_0
+
 
 # nrow(data_1
 for(t in 2:nrow(data_1)){
@@ -59,14 +61,14 @@ for(t in 2:nrow(data_1)){
   #sigma_temp <- sqrt(1/(t-dim(S_t)[1] -1) * sum( lm(m5 ~ std_Difference, data = data_1[1:t,])$residuals^2))
   }
   
-  Qnvr <- Qa / sigma_temp^2
+  #nvr <- Qa / sigma_temp^2
   
   #priori
   beta_hat[,t] <- I %*% beta_hat[,t-1]
-  p_t <- I %*% p_t %*% t(I) + I %*% Qnvr %*% t(I)
+  p_t <- I %*% p_t %*% t(I) + I %*% Qa %*% t(I)
   
   # correction
-  g_t[,t] <- p_t %*% S_t[,t] %*% (1 + t(S_t[,t]) %*% p_t %*% S_t[,t]) ^ -1
+  g_t[,t] <- p_t %*% S_t[,t] %*% (sigma_temp^2 + t(S_t[,t]) %*% p_t %*% S_t[,t]) ^ -1
   beta_hat[,t] <- beta_hat[,t-1] + g_t[,t] %*% (R_t[t] - S_t[,t] %*% beta_hat[,t-1])
   
   p_t <-  p_t - g_t[,t] %*% t(S_t[,t]) %*% p_t
@@ -76,8 +78,8 @@ for(t in 2:nrow(data_1)){
   
   # upper[,t] <- beta_hat[,t] + 1.96 * sqrt(diag(p_t)*sigma^2/sqrt(t))
   # lower[,t] <- beta_hat[,t] - 1.96 * sqrt(diag(p_t)*sigma^2/sqrt(t))
-  upper[,t] <- beta_hat[,t] + 1.96 * sqrt(diag(p_t)*sigma_temp^2/sqrt(t))
-  lower[,t] <- beta_hat[,t] - 1.96 * sqrt(diag(p_t)*sigma_temp^2/sqrt(t))
+  upper[,t] <- beta_hat[,t] + 1.96 * sqrt(diag(p_t)/sqrt(t))
+  lower[,t] <- beta_hat[,t] - 1.96 * sqrt(diag(p_t)/sqrt(t))
   
   # sigma ML
   #sigma_ML_secondpart[t] <- epsilon[t]^2 / (1 + t(S_t[,t]) %*% p_t %*% S_t[,t])
@@ -111,4 +113,4 @@ colnames(stvp_df) <- c("beta_hat", "upper","lower", "beta_ols","date")
 # colnames(stvp_df) <- c("beta_hat", "upper","lower", "beta_ols","date")
 
 ##write.csv(stvp_df, file = "~/R tests/finance related projects/stvp_df.csv")
-##write.csv(stvp_df, file = "~/R tests/finance related projects/cadcrs_path_stvp.csv")
+##write.csv(stvp_df, file = "~/R tests/finance related projects/cadcpi_path_stvp.csv")

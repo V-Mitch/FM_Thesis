@@ -49,7 +49,7 @@ cadfinal <- rbind(firstcad,secondcad2)
 mod1 <- lm(m5 ~ dif_cpi + dif_crs, data = cadfinal)
 X_t <- rbind(cadfinal$dif_cpi, cadfinal$dif_crs)
 
-data_1_o <- read.csv("~/R tests/finance related projects/cadcrs_dataframe.csv")
+data_1_o <- read.csv("~/R tests/finance related projects/cadcpi_dataframe.csv")
 data_1 <- data_1_o[nrow(data_1_o):1,]
 
 removals <- match(as.Date(duplicates$Date), as.Date(data_1$Date))[c(TRUE,FALSE)]
