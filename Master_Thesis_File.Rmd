@@ -156,7 +156,8 @@ footnote(general = "Extract of the critical values of the qLL Statistic. k repre
          ,threeparttable = T) 
 ```
   
-There exists many ways to test whether $\beta_t$ is time dependent or not. We first choose the methodology of the authors of [@elliott_efficient_2006] and briefly replicate their method. The advantage of their test is that it identifies instability no matter whether it comes in the form of a single break, many breaks, or a continuous change (all of which are feasible in our context).  
+There exists many ways to test whether $\beta_t$ is time dependent or not. We first choose the methodology of the authors of [@elliott_efficient_2006] and replicate their method. The advantage of their test is that it identifies instability no matter whether it comes in the form of a single break, many breaks, or a continuous change (all of which are feasibly possible in the context of our investigation). Furthermore, the result of the Monte Carlo simulations over different processes also showed that compared to  other tests that exist, the qLL test has the most power in smaller samples.
+
 The quasi-Local-Level (qLL) test enables one to test for many different types of persistent processes of the $\beta_t$. It is explained that many of these breaking processes can have a "temporary memory" (strictly speaking are strongly mixing) but will be well approximated by a Wiener process.^[Theorem 7.30 of [@white_asymptotic_2001] can be applied since certain assumptions are made about the process]. This is extremely practical in our scenario as there are many possiblities for the possible variation of the $\beta_t$. The Null Hypothesis implies there is a stable parameter as in a familiar OLS regression. We obtain the likelihood under the Null assuming that the $R_t$ observations are independently and identically distributed (and therefore so are their first differences):  
   
 \begin{equation}
@@ -180,7 +181,7 @@ This contrasts with the alternative where instability is implied. We assume $\be
 L_{HA} = \frac{1}{2\sigma^2}\sum_{t=1}^{T}\eta^2
 \end{equation}
 
-The qLL statistic is obtained by subtracting $L_{HA}$ from $L_{H0}$: $\frac{\sigma^2}{\sigma^2}\sum_{t=1}^{T}\eta^2 - \sum_{t=1}^{T}(\Delta R_t)^2$. The test is therefore a variant of the Likelihood Ratio Test ($LR_T$), so while it does not follow a chi-square distribution exactly, it does follow a certain related distribution that has its percentiles defined by @elliott_efficient_2006 and reported in their table, reproduced here as Table \@ref(tab:qLL). The general extension to the $LR_T$ can be made where we can reject the model related to the Null Hypothesis (the stable model) if the critical value is sufficiently negative. To obtain the $\eta$ term it is necessary to follow additional matrix algebra and use the result of regressions [@elliott_efficient_2006]. The appropriate steps are available in Appendix [Section 9.2](#stepsqLL).
+The qLL statistic is obtained by subtracting $L_{HA}$ from $L_{H0}$: $\frac{\sigma^2}{\sigma^2}\sum_{t=1}^{T}\eta^2 - \sum_{t=1}^{T}(\Delta R_t)^2$. The test is therefore a variant of the Likelihood Ratio Test ($LR_T$), so while it does not follow a chi-square distribution exactly, it does follow a certain related distribution that has its percentiles defined by @elliott_efficient_2006 and reported in their table, reproduced here as Table \@ref(tab:qLL). The general extension to the $LR_T$ can be made where we can reject the model related to the Null Hypothesis (the stable model) if the critical value is sufficiently negative. To obtain the $\eta$ term it is necessary to follow additional matrix algebra and use the result of regressions [@elliott_efficient_2006]. The appropriate steps are available in Appendix [Section 9.2](#stepsqLL). While it is true that the underlying process can follow many different kinds of processes that could be very complex, we can detect their presence if we allow for their path to be approximated by a GRW (equivalent to having their first difference that follows an MA(1)).
   
 
   
@@ -333,9 +334,10 @@ One can observe that the estimation can "stray away from the dictating trend" to
 
 ## Accuracy of the Estimations
 
-From a bayesian perspective, the accuracy of the WAR line is measured using 95% posterior probability intervals (with priors being the weighting function of the random walks each having one of the 11 end-point variances.) [@muller_efficient_2010]. Therefore, given that the prior is correct and representative of the stable scenario case, the $\beta_t$ lies within the interval zone with a 95% probability. The posterior distribution at each time $t$, is a weighted compromise of the different random walks.  
-Conversely, the STVP estimation at time $t$ is achieved using a prior always being the previous observation at $t-1$. One can observe that the STVP estimation bounds are typically much more narrow than that of the WAR. 
-Not only does the STVP parameter vary in variance because of the error in prediction $e_t$, but also because the number of observations increases sequentially for every additional step. 
+From a bayesian perspective, the accuracy of the WAR line is measured using 95% posterior probability intervals (with priors being the weighting function of the random walks each having one of the 11 end-point variances.) [@muller_efficient_2010]. Therefore, given that the prior is correct and representative of the stable scenario case, the $\beta_t$ lies within the interval zone with a 95% probability. The posterior distribution at each time $t$, is a weighted compromise of the different random walks and is the variance of this distribution that is used for the credible intervals.
+  
+Conversely, the STVP estimation at time $t$ is achieved using a prior of the previous observation at $t-1$. One can observe that the STVP estimation bounds are typically much more narrow than that of the WAR. The posterior distribution that is used involves the error in prediction $e_t$ 
+
 
 # Appendix
 
@@ -416,3 +418,5 @@ Correction (Posterior)
 ## Variance for credible intervals of the WAR path
   
 $\Sigma$
+  
+# References
