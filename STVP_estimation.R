@@ -113,4 +113,4 @@ colnames(stvp_df) <- c("beta_hat", "upper","lower", "beta_ols","date")
 # colnames(stvp_df) <- c("beta_hat", "upper","lower", "beta_ols","date")
 
 ##write.csv(stvp_df, file = "~/R tests/finance related projects/stvp_df.csv")
-##write.csv(stvp_df, file = "~/R tests/finance related projects/cadcpi_path_stvp.csv")
+##write.csv(stvp_df, file = "~/R tests/finance related projects/usdnfp_path_stvp.csv")

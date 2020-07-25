@@ -187,7 +187,7 @@ The qLL statistic is obtained by subtracting $L_{HA}$ from $L_{H0}$: $\frac{\sig
   
 ## CUSUM and CUSUM-squared tests
 
-Separate tests to the one explained previously are considered. We explore the ones elaborated in @brown_techniques_1975 named the CUSUM and CUSUM-squared. These tests use the successive error terms of predictions of a standard Recursive-Least-Squares (RLS) model that assumes stability of the $\beta$ parameter [@young_recursive_2011]. In this specific application, we use the result of the standard OLS as a baseline *prior* or initial value for the algorithm (ie. $\beta_0$) and we use an empirical $\hat{\sigma}_\varepsilon$ residual error that is based on the entire sample. By examining the prediction errors, one can observe whether or not they violate the $N(0,\sigma^2)$ assumptions. Namely that they are a 1.) zero mean sequence $E(\varepsilon_t) = 0$ and 2.) that they are serially uncorrelated $E(\varepsilon_t \varepsilon_j) = 0$ when $t \neq j$. The first step consists in running a standard RLS algorithm and obtaining one-step-ahead errors from it. These errors are obtained as follows:
+Separate tests to the one explained previously are considered. We explore the ones elaborated in @brown_techniques_1975 named the CUSUM and CUSUM-squared. These tests use the successive error terms of predictions of a standard Recursive-Least-Squares (RLS) model (details for this model in [Section 9.2](#stepsslrs)) that assumes stability of the $\beta$ parameter [@young_recursive_2011]. In this specific application, we use the result of the standard OLS as a baseline *prior* or initial value for the algorithm (ie. $\beta_0$) and we use an empirical $\hat{\sigma}_\varepsilon$ residual error that is based on the entire sample. By examining the prediction errors, one can observe whether or not they violate the $N(0,\sigma^2)$ assumptions. Namely that they are a 1.) zero mean sequence $E(\varepsilon_t) = 0$ and 2.) that they are serially uncorrelated $E(\varepsilon_t \varepsilon_j) = 0$ when $t \neq j$. The first step consists in running a standard RLS algorithm and obtaining one-step-ahead errors from it. These errors are obtained as follows:
   
 \begin{equation}
 u_t = R_t - \hat{R_t}|R_{t-1}
@@ -205,7 +205,7 @@ Where $P_t$ is the covariance (or variance if there is only one news element at 
 W_t = \frac{1}{\hat\sigma_{cs}}\sum_{i=k+1}^{t} u_{n,i}
 \end{equation}
   
-In theory, these successively compounded errors should not stray too far from the zero-line if the true $beta_t$ is constant. We also use the confidence bands suggested by @brown_techniques_1975. They are constructed by constructing pairs of lines starting at time *k*: $\pm a(T-k)^{0.5}$ and ending at time *T*: $\pm 3a(T-k)^{0.5}$
+In theory, these successively compounded errors should not stray too far from the zero-line if the true $\beta_t$ is constant. We also use the confidence bands suggested by @brown_techniques_1975. They are constructed by constructing pairs of lines starting at time *k*: $\pm a(T-k)^{0.5}$ and ending at time *T*: $\pm 3a(T-k)^{0.5}$
   
 ```{r, echo = FALSE}
 plotcusum(read.csv("~/R tests/finance related projects/cusum_df.csv"),
@@ -344,29 +344,49 @@ Conversely, the STVP estimation at time $t$ is achieved using a prior of the pre
 ## Parameter Paths
   
 The following path estimations should be interpreted as follows: a one standard deviation unanticipated positive change in the economic variable $S_t$ results in an appreciation or depreciation in the exchange rate of the relevant currency pair by $R_t$ amount of pips or basis points. 
-
-```{r cadcrs, echo = FALSE}
+  
+```{r cadcrspath, echo = FALSE, fig.cap = "Note: 1 Std Dev is +0.605% greater than expected. Currency pair: USD/CAD."}
 plotpath2(read.csv("~/R tests/finance related projects/cadcrs_path.csv", row.names = 1),
           read.csv("~/R tests/finance related projects/cadcrs_path_stvp.csv", row.names = 1),
           "Canadian Core Retail Sales")
+```
+  
+```{r cadcpipath, echo = FALSE, fig.cap = "Note: 1 Std Dev is +0.229% greater than expected. Currency pair: USD/CAD."}
 plotpath2(read.csv("~/R tests/finance related projects/cadcpi_path.csv", row.names = 1),
-         read.csv("~/R tests/finance related projects/cadcpi_path_stvp.csv", row.names = 1),"Canadian             Consumer Price Index")
+         read.csv("~/R tests/finance related projects/cadcpi_path_stvp.csv", row.names = 1),"Canadian Consumer Price Index")
+```
+  
+```{r audretpath, echo = FALSE, fig.cap = "Note: 1 Std Dev is +0.569% greater than expected. Currency pair: AUD/USD."}
 plotpath2(read.csv("~/R tests/finance related projects/audret_path.csv", row.names = 1),
           read.csv("~/R tests/finance related projects/audret_path_stvp.csv", row.names = 1),
           "Australian Retail Sales")
+```
+  
+```{r audcpipath, echo = FALSE, fig.cap = "Note: 1 Std Dev is +0.229% greater than expected. Currency pair: AUD/USD."}
 plotpath2(read.csv("~/R tests/finance related projects/audcpi_path.csv", row.names = 1), 
           read.csv("~/R tests/finance related projects/audcpi_path_stvp.csv", row.names = 1), 
           "Australian Consumer Price Index")
-#plotpath(read.csv("~/R tests/finance related projects/usdnfp_path.csv"), "US NonFarm Employment Change")
+```
+  
+```{r usdcpipath, echo = FALSE, fig.cap = "Note: 1 Std Dev is +0.117% greater than expected. Currency pair: USD/CHF."}
 plotpath2(read.csv("~/R tests/finance related projects/usdcpi_path.csv", row.names = 1),
           read.csv("~/R tests/finance related projects/usdcpi_path_stvp.csv", row.names = 1),
           "US Consumer Price Index")
+```
+  
+```{r gbpcpipath, echo = FALSE, fig.cap = "Note: 1 Std Dev is +0.173% greater than expected. Currency pair: GBP/USD."}
 plotpath2(read.csv("~/R tests/finance related projects/gbpcpi_path.csv", row.names = 1),
           read.csv("~/R tests/finance related projects/gbpcpi_path_stvp.csv",row.names = 1),
           "UK Consumer Price Index")
+```
+  
+```{r nzdcpipath, echo = FALSE, fig.cap = "Note: 1 Std Dev is +0.206% greater than expected. Currency pair: NZD/USD."}
 plotpath2(read.csv("~/R tests/finance related projects/nzdcpi_path.csv", row.names = 1),
           read.csv("~/R tests/finance related projects/nzdcpi_path_stvp.csv", row.names = 1),
           "New Zealand Consumer Price Index")
+```
+  
+```{r usdnfppath, echo = FALSE, fig.cap = "Note: 1 Std Dev is +66.5 thousand more people than expected. Currency pair: USDCHF."}
 plotpath2(read.csv("~/R tests/finance related projects/usdnfp_path.csv", row.names = 1),
           read.csv("~/R tests/finance related projects/usdnfp_path_stvp.csv", row.names = 1),
           "US Non-Farm Payrolls")
@@ -417,6 +437,6 @@ Correction (Posterior)
 
 ## Variance for credible intervals of the WAR path
   
-$\Sigma$
+$\Omega_t = \sum^{10}_{i=1}w_i(T^{-1}\hat{S_\beta}\kappa_t(c_i) + (\hat{\beta}_{i,t} - \hat{\beta_t})(\hat{\beta}_{i,t} - \hat{\beta_t})')$, $\kappa_t(c) = \frac{c(1 + e^{2c} + e^{2ct/T} + e^2c(1-t/T))}{2e^{2c} - 2}$
   
 # References
