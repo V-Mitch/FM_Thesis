@@ -40,10 +40,12 @@ I[1,1] <- 0 # assume the intercept is 0.
 #I[2,2] <- 0
 # Assuming constant parameter variation, the variations are not correlated to one another
 #Qa <-  diag(summary(mod1)$coefficients[,2])^2 
-Qa <-  diag((beta_OLS - beta_OLS + beta_OLS/4)^2, nrow = k)
+Qa <-  diag((1.25*beta_OLS - beta_OLS)^2, nrow = k)
 Qa[1,1] <- 0
 #Qa[2,2] <- 0
 Qnvr <- Qa / sigma^2
+p_ttrack <- rep(0,T)
+p_tpriors <- rep(0,T)
 
 # Initialization
 sigma_temp <- 999
@@ -66,6 +68,7 @@ for(t in 2:nrow(data_1)){
   #priori
   beta_hat[,t] <- I %*% beta_hat[,t-1]
   p_t <- I %*% p_t %*% t(I) + I %*% Qa %*% t(I)
+  p_tpriors[t] <- p_t[2,2]
   
   # correction
   g_t[,t] <- p_t %*% S_t[,t] %*% (sigma_temp^2 + t(S_t[,t]) %*% p_t %*% S_t[,t]) ^ -1
@@ -78,11 +81,12 @@ for(t in 2:nrow(data_1)){
   
   # upper[,t] <- beta_hat[,t] + 1.96 * sqrt(diag(p_t)*sigma^2/sqrt(t))
   # lower[,t] <- beta_hat[,t] - 1.96 * sqrt(diag(p_t)*sigma^2/sqrt(t))
-  upper[,t] <- beta_hat[,t] + 1.96 * sqrt(diag(p_t)/sqrt(t))
-  lower[,t] <- beta_hat[,t] - 1.96 * sqrt(diag(p_t)/sqrt(t))
+  upper[,t] <- beta_hat[,t] + 1.96 * sqrt(diag(p_t))#/sqrt(t))
+  lower[,t] <- beta_hat[,t] - 1.96 * sqrt(diag(p_t))#/sqrt(t))
   
   # sigma ML
   #sigma_ML_secondpart[t] <- epsilon[t]^2 / (1 + t(S_t[,t]) %*% p_t %*% S_t[,t])
+  p_ttrack[t] <- p_t[2,2]
 }
 
 sigma_ML_sqr <- 1 / (T-k) * sum(sigma_ML_secondpart[(k+1):T])
@@ -93,7 +97,7 @@ lines(rep(mod1$coefficients[1],T) ~ as.Date(data_1$Date), lty = "dotdash")
 lines(upper[1,]~ as.Date(data_1$Date), type = "l", lty = 3)
 lines(lower[1,]~ as.Date(data_1$Date), type = "l", lty = 3)
 
-plot(beta_hat[2,] ~ as.Date(data_1$Date), type = "l")
+plot(beta_hat[2,] ~ as.Date(data_1$Date), type = "l", ylim=range(-100,100))
 lines(rep(mod1$coefficients[2],T) ~ as.Date(data_1$Date), lty = "dotdash")
 lines(upper[2,]~ as.Date(data_1$Date), type = "l", lty = 3)
 lines(lower[2,]~ as.Date(data_1$Date), type = "l", lty = 3)
@@ -113,4 +117,4 @@ colnames(stvp_df) <- c("beta_hat", "upper","lower", "beta_ols","date")
 # colnames(stvp_df) <- c("beta_hat", "upper","lower", "beta_ols","date")
 
 ##write.csv(stvp_df, file = "~/R tests/finance related projects/stvp_df.csv")
-##write.csv(stvp_df, file = "~/R tests/finance related projects/usdnfp_path_stvp.csv")
+##write.csv(stvp_df, file = "~/R tests/finance related projects/cadcpi_path_stvp.csv")

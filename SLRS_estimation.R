@@ -26,6 +26,7 @@ g_t <- matrix(0,nrow = k, ncol = T)
 p_t <- matrix(seq(0,0),nrow = k, ncol = k) # p_t matrix will continuously be replaced
 p_0 <- matrix(seq(0,0),nrow = k, ncol = k)
 diag(p_0) <- rep(10^6, dim(S_t)[1])
+p_ttrack <- rep(0,T)
 
 sigma <- sqrt(1/(T-dim(S_t)[1] -1) * sum(mod1$residuals^2))
 
@@ -42,11 +43,12 @@ for(t in 2:nrow(data_1)){
   p_t <- p_t - g_t[,t] %*% t(S_t[,t]) %*% p_t
   beta_hat[,t] <- beta_hat[,t-1] + g_t[,t] %*% (R_t[t] - S_t[,t] %*% beta_hat[,t-1])
   #upper[,t] <- sqrt(1/T*(dim(X_t[1])-1)*mod1$residuals^2)
-  upper[,t] <- beta_hat[,t] + 1.96 * sqrt(diag(p_t)/sqrt(t))
-  lower[,t] <- beta_hat[,t] - 1.96 * sqrt(diag(p_t)/sqrt(t))
+  upper[,t] <- beta_hat[,t] + 1.96 * sqrt(diag(p_t))#/sqrt(t))
+  lower[,t] <- beta_hat[,t] - 1.96 * sqrt(diag(p_t))#/sqrt(t))
   epsilon[t] <- R_t[t] - t(S_t[,t]) %*% beta_hat[,t-1]
   #epsilon[t] <- t(S_t[,t]) %*% beta_hat[,t]
   epsilon_nd[t] <- epsilon[t] / (1 + t(S_t[,t]) %*% (p_t/sigma^2) %*% S_t[,t] ) ^ 0.5
+  p_ttrack[t] <- p_t
 }
 
 
