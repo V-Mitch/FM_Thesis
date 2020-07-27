@@ -229,9 +229,11 @@ plotcusumsq(read.csv("~/R tests/finance related projects/cusum_sq_df.csv"))
 
 Having established that there is instability over time in the market reactions to at least some of the news, we take on the task of obtaining a time series that conveys the change over the timeframe considered. Specifically, we would like to obtain a visual representation of the change of the parameter such that a researcher or investor is able to easily gather information from.
   
+Two different algorithms from literature are utilized and both make different assumptions. Both are useful to help understand the possible sources of instability, to compare the different announcements and to make short-term forecasts. However, the main fundamental difference is that the WAR estimation uses the entire sample while the "simpler" STVP will only use outcomes that occured in the past for its estimation.
+  
 ## Weighted Average Risk Minimization
   
-Conveniently, there is a natural extended use of the qLL test elaborated in [Section 4.1](#qLLtest). It provides a heuristic means means to approximate a parameter path [@muller_efficient_2010]. 
+Conveniently, this method is somewhat of a natural extended use of the qLL test elaborated in [Section 4.1](#qLLtest). It provides a heuristic means means to approximate a parameter path [@muller_efficient_2010]. 
   
 First, we consider our stable model which is analogous to the linear regression model that is presented in the Equation \@ref(eq:stable). The resulting $\beta_{MLE/OLS}$ parameter obtained either through maximum likelihood estimation or minimization of ordinary least squares (depicted as the dot-dashed line in Figure \@ref(fig:warplot)) is representative of a scenario where it is assumed there is no time-related evolution of market reaction to news. As seen before, the likelihood in this case can be developed as Equation \@ref(eq:LH0) or also written more generally as $\sum_{t=1}^{T}l_t (\theta)$ with $\theta$ containing the constant parameters.
   
@@ -271,11 +273,11 @@ plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
 
 ## Standard Recursive Time Variable Parameter Algorithm (STVP)
   
-Until now, the WAR minimization method provided a means to analyze the price reactions to the news over an entire sample period. In practice, it may be more useful to have a self-updating method that iteratively uses every new observation to improve the estimation progressively. It can also be argued that more importance can be placed on gauging the shock that could occur today rather than conducting an analysis of reactions years ago. When building this model, the assumption is that information available at time $t$ includes everything before that moment, specifically information set $\Omega_{t-1}$ This is in contrast with the WAR minimization and is why this particular method is also included.
+Until now, the WAR minimization method provided a means to analyze the price reactions to the news over an entire sample period. In practice, it may be more useful to have a self-updating method that iteratively uses every new observation to improve the estimation progressively. It can also be argued that the emphasis of the prediction should be placed in gauging the shock that could occur in the present. When building this model, the assumption is that information available at time $t$ includes everything before that moment, specifically information set $\Omega_{t-1}$ This is in contrast with the WAR minimization and is why this particular method is also included.
   
-Starting once more from the baseline case introduced in section [Section 2](#bb), a time-dependent measure of market reaction to news $\beta_t$ can be constructed by 1.) Transforming the problem of Ordinary Least Squares so that it can be recursively solved and 2.) Allowing for the parameter(s) to change over time sequentially.
+Starting once more from the baseline case introduced in section [Section 2](#bb), a time-dependent measure of market reaction to news $\beta_t$ can be constructed by 1.) Transforming the problem of Ordinary Least Squares so that it can be recursively solved and 2.) Allowing for the parameter(s) to change over time sequentially. Therefore, in sequence the
   
-To obtain the STVP algorithm presented in [Section 9.3](#stepsstvp) the first step consists of replacing the OLS equations by their recursive counterparts and achieve the intermediate SLRS algorithm. The following equations are similar to the familiar OLS equations setup.
+To obtain the STVP algorithm presented in [Section 9.3](#stepsstvp) the first step consists of replacing the OLS equations by their recursive counterparts and achieve the intermediate SRLS algorithm. The following equations are similar to the familiar OLS equations setup.
 
 \begin{equation}
 R_t = S_t^{T}\beta_1 + e_t
@@ -291,9 +293,9 @@ The error vector contains a series of random variables $e_t$ that are assumed to
 \beta^{OLS}_t = \beta^{OLS}_{t-1} \forall t
 \end{equation}
   
-When an observation $y_j$ is added to the samples $i = 1,...,N$, an update to the $\hat{\beta}$ is the same as re-estimating the entire sample with the new observation. Effectively, the "intermediate model" or Stochastic Recursive Least Squares Algorithm (SLRS) is thereafter obtained (the exact step-by-step is in [Section 9.3](#stepsslrs)). While this is a powerful tool, it does not necessarily help estimate $y_j$ effectively. It is giving just as much weight to realizations of $y$ early in the sample than those that immediately precede the new extra observation $j$. The contribution of every marginal observation is smaller and smaller as the sample grows. The $\hat{\beta}$ converges to the full sample parameter estimator $\hat{\beta}_{OLS}$ as seen in Figure  \@ref(fig:slrsplot).
+When an observation $y_j$ is added to the samples $i = 1,...,N$, an update to the $\hat{\beta}$ is the same as re-estimating the entire sample with the new observation. Effectively, the "intermediate model" or Stochastic Recursive Least Squares Algorithm (SRLS) is thereafter obtained (the exact step-by-step is in [Section 9.3](#stepsslrs)). While this is a powerful tool, it does not necessarily help estimate $y_j$ effectively. It is giving just as much weight to realizations of $y$ early in the sample than those that immediately precede the new extra observation $j$. The contribution of every marginal observation is smaller and smaller as the sample grows. The $\hat{\beta}$ converges to the full sample parameter estimator $\hat{\beta}_{OLS}$ as seen in Figure  \@ref(fig:slrsplot).
   
-```{r slrsplot, echo = FALSE, fig.cap="SLRS applied to the UK CPI"}
+```{r slrsplot, echo = FALSE, fig.cap="SRLS applied to the UK CPI"}
 plotslrs(read.csv("~/R tests/finance related projects/slrs_df.csv"))
 ```
   
@@ -311,7 +313,7 @@ R_t = S_t^{T}\beta_t + e_t \quad e_t \sim \mathcal{N}(0,\sigma^2)
 \beta_t = \beta_{t-1} + \eta_{t-1} \quad \eta_t \sim \mathcal{N}(0,\sigma^2_{\beta})
 \end{equation}
   
-The equations above are thus the foundation for the construction of the algorithm that is implemented for use and shown in [Section 9.3](#stepsstvp). 
+The equations above are thus the foundation for the construction of the algorithm that is implemented for use and shown in [Section 9.3](#stepsstvp). When initializing the first values, we set the variance of the estimator $P^*_t$ to be very large and the $\beta_t$ parameter to be 0 to reflect 0 knowledge of the nature of the estimation at the beginning of the sample. 
     
 ```{r stvpplot, echo = FALSE, fig.cap="STVP applied to the UK CPI"}
 plotslrs(read.csv("~/R tests/finance related projects/stvp_df.csv"))
@@ -321,25 +323,30 @@ plotslrs(read.csv("~/R tests/finance related projects/stvp_df.csv"))
   
 ## Differences and Irregularities of Two Paths
   
+It is quite evident the STVP path is "slower to react" to the changes of its parameter. Informally, the reason for the lag is simply that the method does not benefit from retrospective analysis and is using only previous information to make an estimation. The high credible intervals towards the beginning of the sample are conveying the uncertainty.
+  
 The WAR Estimation method is especially useful when trying to analyze the evolution of the parameter over the entire sample period. Because of the "forward and backward passes" in the algorithm seen in steps (b) and (c) of section [Section 9.4](#stepswar), the beginning of the sample period is estimated with as much precision as its ending. The addition of a reverse order filter means that the resulting estimate is "smoothed over" twice. This is a positive feature because there may be occasionally be "noisy" erronous data points or exceptions due to outside factors that are "smoothed" out by the dictating trend and nearby observations both before and after their occurence. Moreover, there is an inherent restriction of $\sum^T_t \delta_t = 0$, meaning that the positive $\delta_t$ deviations from the average parameter value or$\beta_{OLS}$ are exactly counterpoised by the negative ones. The path will always have the original, stable, time-invariant estimator as an average.   
 
-On the contrary, the STVP estimation is susceptible to exceptional or isolated changes to the price-reaction to the macro-announcements at any time during the sample. The $\beta_t$ will drastically changes when both the surprise $S_t$ shock and the difference $R_t - S_t^T\beta_{t-1}$ are large in absolute terms. 
+On the contrary, the STVP estimation is susceptible to exceptional or isolated changes to the price-reaction to the macro-announcements at any time during the sample. The $\beta_t$ path can drastically change when both the surprise $S_t$ shock and the difference $R_t - S_t^T\beta_{t-1}$ are large in absolute terms. A higher noise variance $\hat{\sigma}^2$ (constructed using residual errors) reduces the amount of variation the parameter will take while increasing the distance of the bounds which is undesirable but reflects the amount of uncertainty there is. 
+
+## Accuracy of the Estimations
+
+Using the bayesian perspective, the accuracy of the WAR line is measured using 95% posterior probability intervals (with priors being the weighting function of the random walks each having one of the 11 end-point variances.) [@muller_efficient_2010]. Therefore, given that the prior is correct and representative of the stable scenario case, the $\beta_t$ lies within the interval zone with a 95% probability. The posterior distribution at each time $t$, is a weighted compromise of the different random walks and is the variance of this distribution that is used for the credible intervals.
+  
+Conversely, the STVP estimation at time $t$ is achieved using the previous observation at $t-1$ as a prior. One can observe that the STVP estimation bounds are typically much more narrow than that of the WAR. 
     
 ## Use of the Post-Announcement 5 Minute Window
   
 The erronous or exceptional data can sometimes be quite obvious. An example would be that of the Canadian Core Retail Sales in July of 2013. On this day, the figure achieved a 1.2% increase versus the 0.1% that was expected and yet the 5 minute post-price difference was merely -11.3 pips. The price move was instantaneous to the extent that the beginning of the 14:30:00 candle already marked the majority of the price shock. A solution to this issue would have been to consider using a price before 14:30:00 although this would have introduced the issue of finding a general timing for all other releases that does not include irrelevant price movements before to the announcement time-stamp. Furthermore, in some circumstances, it could be desirable to omit these price jumps as they would result in what is called "slippage" (A difference between the price an investor will place an order at and the price it is executed at).
   
 ![USD/CAD on the 27th of July between 14h00 and 15h00 GMT+2. The "missing" data can be attributed to the sudden change in price and lack of liquidity in the moments preceding 14:30:00.](candlestick3.png)
+
+
   
+
 There are several explanations for these exceptions. One example in particular would be market interventions of the central banks which have been proven to occur during or in time proximity to figure releases as shown in studies such as that of @dominguez_market_2003. Similarly, there is evidence of insider trading preceding news announcements. Assets traded in such as the E-mini S&P 500 futures where exact order imbalance can be measured. It is perfectly possible that the same kind of activity is taking place in the decentralized currency exchange (or FX) markets [@bernile_can_2016]. It is impossible (or extremely difficult) to detect these external reasons for price shocks and the WAR conveniently "smooths" them over.
 
 One can observe that the estimation can "stray away from the dictating trend" to a larger extent than the other method. 
-
-## Accuracy of the Estimations
-
-From a bayesian perspective, the accuracy of the WAR line is measured using 95% posterior probability intervals (with priors being the weighting function of the random walks each having one of the 11 end-point variances.) [@muller_efficient_2010]. Therefore, given that the prior is correct and representative of the stable scenario case, the $\beta_t$ lies within the interval zone with a 95% probability. The posterior distribution at each time $t$, is a weighted compromise of the different random walks and is the variance of this distribution that is used for the credible intervals.
-  
-Conversely, the STVP estimation at time $t$ is achieved using a prior of the previous observation at $t-1$. One can observe that the STVP estimation bounds are typically much more narrow than that of the WAR. The posterior distribution that is used involves the error in prediction $e_t$.
 
 
 # Appendix
@@ -395,7 +402,7 @@ plotpath2(read.csv("~/R tests/finance related projects/usdnfp_path.csv", row.nam
           "US Non-Farm Payrolls")
 ```
   
-## Stochastic Recursive Least Squares Algorithm (SLRS) {#stepsslrs}
+## Stochastic Recursive Least Squares Algorithm (SRLS) {#stepsslrs}
   
 1. $\hat{\alpha}_t = \hat{\alpha}_{t-1} + g_t(R_t - S^T_t\hat{\alpha}_{t-1})$
 2. $g_t = P^*_{t-1}S_t(\hat{\sigma}^2 + S^T_tP^*_{t-1}S_t)^{-1}$
@@ -413,7 +420,7 @@ Prediction (Prior)
 Correction (Posterior)
   
 3. $\hat{\alpha}_t = \hat{\alpha}_t|\hat{\alpha}_{t-1} + g_t(R_t - S^T_t(\hat{\alpha}_t|\hat{\alpha}_{t-1}))$  
-4. $g_t = (P^*_t|P^*_{t-1})S_t(\hat{\sigma}^2 + S^T_t(P^*_t|P^*_{t-1})^{-1}$
+4. $g_t = (P^*_t|P^*_{t-1})S_t(\hat{\sigma}^2 + S^T_t(P^*_t|P^*_{t-1}))^{-1}$
 5. $P^*_t = P^*_t|P^*_{t-1} - g_tS^T_t(P^*_t|P^*_{t-1})$
   
 ## Steps to obtain qLL statistic {#stepsqLL}
@@ -440,6 +447,6 @@ Correction (Posterior)
 
 ## Variance for credible intervals of the WAR path
   
-$\Omega_t = \sum^{10}_{i=1}w_i(T^{-1}\hat{S_\beta}\kappa_t(c_i) + (\hat{\beta}_{i,t} - \hat{\beta_t})(\hat{\beta}_{i,t} - \hat{\beta_t})')$, $\kappa_t(c) = \frac{c(1 + e^{2c} + e^{2ct/T} + e^2c(1-t/T))}{2e^{2c} - 2}$
+$\Omega_t = \sum^{10}_{i=1}w_i(T^{-1}\hat{S}_\beta\kappa_t(c_i) + (\hat{\beta}_{i,t} - \hat{\beta_t})(\hat{\beta}_{i,t} - \hat{\beta_t})')$, $\kappa_t(c) = \frac{c(1 + e^{2c} + e^{2ct/T} + e^2c(1-t/T))}{2e^{2c} - 2}$
   
 # References
