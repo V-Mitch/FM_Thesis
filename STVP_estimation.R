@@ -3,9 +3,9 @@
 # Standard Recursive Time Variable Parameter
 
 # 1 Param
-S_t <- t(as.matrix(data_1$std_Difference))
+#S_t <- t(as.matrix(data_1$std_Difference))
 # 2 Param
-#S_t <- rbind(data_1$std_Difference, data_2$std_Difference)
+S_t <- rbind(data_1$std_Difference, data_2$std_Difference)
 #3 Param
 #S_t <- rbind(data_1$std_Difference, data_2$std_Difference, data_3$std_Difference)
 
@@ -117,4 +117,4 @@ colnames(stvp_df) <- c("beta_hat", "upper","lower", "beta_ols","date")
 # colnames(stvp_df) <- c("beta_hat", "upper","lower", "beta_ols","date")
 
 ##write.csv(stvp_df, file = "~/R tests/finance related projects/stvp_df.csv")
-##write.csv(stvp_df, file = "~/R tests/finance related projects/cadcpi_path_stvp.csv")
+##write.csv(stvp_df, file = "~/R tests/finance related projects/usdnfp_path_stvp.csv")
