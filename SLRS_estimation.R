@@ -60,12 +60,12 @@ lines(rep(mod1$coefficients[1],T) ~ as.Date(data_1$Date), lty = "dotdash")
 lines(upper[1,]~ as.Date(data_1$Date), type = "l", lty = 3)
 lines(lower[1,]~ as.Date(data_1$Date), type = "l", lty = 3)
 
-plot(beta_hat[2,] ~ as.Date(data_1$Date), type = "l")
-lines(rep(mod1$coefficients[2],T) ~ as.Date(data_1$Date), lty = "dotdash")
-lines(upper[2,]~ as.Date(data_1$Date), type = "l", lty = 3)
-lines(lower[2,]~ as.Date(data_1$Date), type = "l", lty = 3)
+# plot(beta_hat[2,] ~ as.Date(data_1$Date), type = "l")
+# lines(rep(mod1$coefficients[2],T) ~ as.Date(data_1$Date), lty = "dotdash")
+# lines(upper[2,]~ as.Date(data_1$Date), type = "l", lty = 3)
+# lines(lower[2,]~ as.Date(data_1$Date), type = "l", lty = 3)
 
-slrs_df <- data.frame(x = as.vector(beta_hat[2,]), as.vector(upper[2,]), as.vector(lower[2,]), 
+slrs_df <- data.frame(x = as.vector(beta_hat[1,]), as.vector(upper[1,]), as.vector(lower[1,]), 
                       rep(mod1$coefficients[2],T), as.Date(data_1$Date))
 colnames(slrs_df) <- c("beta_hat", "upper","lower", "beta_ols","date")
 

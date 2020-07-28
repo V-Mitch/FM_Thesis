@@ -35,11 +35,11 @@ library(ggthemes)
 
 plotwar <- function(betapath, beta_weights, title){
   B1_final <- betapath$B1_final
-  Time <- seq(0,135)
-  dat <- data.frame(t(rbind(Time, beta_weights)))[-1,]
-  dat <- data.frame(cbind(B1_final, dat))
+  Time <- as.Date(read.csv("~/R tests/finance related projects/gbpcpi_path_stvp.csv")$date)
+  dat <- data.frame(t(rbind(B1_final, beta_weights)))[-1,]
+  dat$Year <- as.Date(Time)
   #c("Time","one","two","three","four","five","six","seven","eight","nine","ten","eleven") <- colnames(dat)
-  ggplot(data=dat, aes(x = X1)) +
+  ggplot(data=dat, aes(x = Year)) +
     geom_line(aes(y = X2), color = "steelblue", linetype = "twodash") +
     geom_line(aes(y = X3), color = "darkgray") +
     geom_line(aes(y = X4), color = "darkgray") +
@@ -52,16 +52,18 @@ plotwar <- function(betapath, beta_weights, title){
     geom_line(aes(y = X11), color = "darkgray") +
     geom_line(aes(y = X12), color = "darkgray") +
     geom_line(aes(y = B1_final), color = "darkgreen") +
+    scale_x_date(date_breaks = "1 year", date_labels="%Y") +
+    labs(y = "Beta") +
     ggtitle(title) +
     theme_tufte()
 }
 
 plotcusum <- function(cusumpath, cusumpoints){
-  cusumpath$date <- as.Date(cusumpath$date)
+  cusumpath$Year <- as.Date(cusumpath$date)
   cusumpoints$startdate <- as.Date(cusumpoints$startdate)
   cusumpoints$enddate <- as.Date(cusumpoints$enddate)
   ggplot() +
-    geom_line(data = cusumpath, aes(x = date, y = w_t), color = "black", linetype = "solid") +
+    geom_line(data = cusumpath, aes(x = Year, y = w_t), color = "black", linetype = "solid") +
     geom_hline(yintercept = 0, linetype="dashed", color = "steel blue") +
     geom_segment(data = cusumpoints, aes(x = startdate, y = p1, xend = enddate, yend = p2), linetype = "dotted") +
     geom_segment(data = cusumpoints, aes(x = startdate, y = -p1, xend = enddate, yend = -p2), linetype = "dotted") +
@@ -69,36 +71,42 @@ plotcusum <- function(cusumpath, cusumpoints){
     geom_segment(data = cusumpoints, aes(x = startdate, y = -p3, xend = enddate, yend = -p4), linetype = "dotted") +
     geom_segment(data = cusumpoints, aes(x = startdate, y = p5, xend = enddate, yend = p6), linetype = "dotted") +
     geom_segment(data = cusumpoints, aes(x = startdate, y = -p5, xend = enddate, yend = -p6), linetype = "dotted") +
+    scale_x_date(date_breaks = "1 year", date_labels="%Y") +
+    labs(y = "Cumulative Standardized Errors") +
     ggtitle("CUSUM Test applied on UK CPI") +
     theme_tufte()
 }
 
 plotcusumsq <- function(cusumsqdf){
-  cusumsqdf$date <- as.Date(cusumsqdf$date)
+  cusumsqdf$Year <- as.Date(cusumsqdf$date)
   # cusumpoints$startdate <- as.Date(cusumpoints$startdate)
   # cusumpoints$enddate <- as.Date(cusumpoints$enddate)
   ggplot() +
-    geom_line(data = cusumsqdf, aes(x = date, y = w2_t), color = "black", linetype = "solid") +
-    geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line), color = "steel blue", linetype ="dashed") +
-    geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line + 0.144), linetype ="dotted") +
-    geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line - 0.144), linetype ="dotted") +
-    geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line + 0.114), linetype ="dotted") +
-    geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line - 0.114), linetype ="dotted") +
-    geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line + 0.100), linetype ="dotted") +
-    geom_line(data = cusumsqdf, aes(x = date, y = beta_dist_line - 0.100), linetype ="dotted") +
+    geom_line(data = cusumsqdf, aes(x = Year, y = w2_t), color = "black", linetype = "solid") +
+    geom_line(data = cusumsqdf, aes(x = Year, y = beta_dist_line), color = "steel blue", linetype ="dashed") +
+    geom_line(data = cusumsqdf, aes(x = Year, y = beta_dist_line + 0.144), linetype ="dotted") +
+    geom_line(data = cusumsqdf, aes(x = Year, y = beta_dist_line - 0.144), linetype ="dotted") +
+    geom_line(data = cusumsqdf, aes(x = Year, y = beta_dist_line + 0.114), linetype ="dotted") +
+    geom_line(data = cusumsqdf, aes(x = Year, y = beta_dist_line - 0.114), linetype ="dotted") +
+    geom_line(data = cusumsqdf, aes(x = Year, y = beta_dist_line + 0.100), linetype ="dotted") +
+    geom_line(data = cusumsqdf, aes(x = Year, y = beta_dist_line - 0.100), linetype ="dotted") +
+    scale_x_date(date_breaks = "1 year", date_labels="%Y") +
+    labs(y = "Cumulative Contribution to Total Errors") +
     ggtitle("CUSUM-squared Test on UK CPI") +
     theme_tufte()
 }
 
 plotslrs <- function(slrsdata){
-  slrsdata$date <- as.Date(slrsdata$date)
+  slrsdata$Year <- as.Date(slrsdata$date)
   #c("beta_hat", "beta_ols","upper","lower", "date")
   ggplot()+
-    geom_line(data = slrsdata, aes(x = date, y = beta_hat), color = "black", linetype = "solid") +
-    geom_line(data = slrsdata, aes(x = date, y = beta_ols), color = "steel blue", linetype ="dashed") +
-    geom_line(data = slrsdata, aes(x = date, y = upper ), linetype ="dotted") +
-    geom_line(data = slrsdata, aes(x = date, y = lower), linetype ="dotted") +
-    coord_cartesian(ylim = c(-10, 30)) +
+    geom_line(data = slrsdata, aes(x = Year, y = beta_hat), color = "black", linetype = "solid") +
+    geom_line(data = slrsdata, aes(x = Year, y = beta_ols), color = "steel blue", linetype ="dashed") +
+    geom_line(data = slrsdata, aes(x = Year, y = upper ), linetype ="dotted") +
+    geom_line(data = slrsdata, aes(x = Year, y = lower), linetype ="dotted") +
+    scale_x_date(date_breaks = "1 year", date_labels="%Y") +
+    labs(y = "Beta") +
+    coord_cartesian(ylim = c(max(slrsdata$upper[10:nrow(slrsdata)]), min(slrsdata$lower[10:nrow(slrsdata)]))) +
     #ylim(min(slrsdata$beta_ols)-3,max(slrsdata$beta_ols)-3) +
     theme_tufte()
 }

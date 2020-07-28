@@ -59,7 +59,7 @@ for(t in 2:nrow(data_1)){
   #empirical sigma - use full sample until time t
   if(t>k){
   residual_error[2,t] <- R_t[t] - S_t[t] * beta_hat[2,t-1]
-  sigma_temp <- sqrt(1/ (t - k) * sum(residual_error[2,1:t]^2))
+  sigma_temp <- sqrt(1/ (t - k) * sum(residual_error[2,1:t]^2))^1.1
   #sigma_temp <- sqrt(1/(t-dim(S_t)[1] -1) * sum( lm(m5 ~ std_Difference, data = data_1[1:t,])$residuals^2))
   }
   
