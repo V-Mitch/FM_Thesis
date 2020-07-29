@@ -335,6 +335,12 @@ Using the bayesian perspective, the accuracy of the WAR line is measured using 9
   
 Conversely, the STVP estimation at time $t$ is achieved using the previous observation at $t-1$ as a prior. One can observe that the STVP estimation bounds are typically much more narrow than that of the WAR. 
     
+## One-Step ahead Forecasts
+  
+While the primary aim of the study was not obtain forecasts, we investigate the possibilty of a naive prediction with their associated prediction intervals. The term naive is used because it will be assumed that the best measures for expectation and variance for the 5 minute pip change of $\hat{R}_{t+1}$ are obtained by using the most recent estimates of the sample at time $t$ . Furthermore, for this forecast, we put ourselves in the situation of an investor who has just observed the release of the UK CPI on January 15th 2020 at 11:30:00, and would like a measurement of certainty of where price will lie 5 minutes afterwards.
+
+Formally, the conditional expectation and variance 
+  
 ## Use of the Post-Announcement 5 Minute Window
   
 The erronous or exceptional data can sometimes be quite obvious. An example would be that of the Canadian Core Retail Sales in July of 2013. On this day, the figure achieved a 1.2% increase versus the 0.1% that was expected and yet the 5 minute post-price difference was merely -11.3 pips. The price move was instantaneous to the extent that the beginning of the 14:30:00 candle already marked the majority of the price shock. A solution to this issue would have been to consider using a price before 14:30:00 although this would have introduced the issue of finding a general timing for all other releases that does not include irrelevant price movements before to the announcement time-stamp. Furthermore, in some circumstances, it could be desirable to omit these price jumps as they would result in what is called "slippage" (A difference between the price an investor will place an order at and the price it is executed at).
@@ -445,7 +451,7 @@ Correction (Posterior)
 4. The parameter path estimator is given by ${\{\hat{\beta}_{t}\}_{t=1}^T} = \{\sum_{i=1}^{11}w_i\hat{\beta}_{i,t}\}_{t=1}^T$.  
 5. The statistic qLL(10) tests the null hypothesis of stability of $\beta$ and rejects for small values. Critical values depend on $p$ and are tabulated in Table 1 of @elliott_efficient_2006 and \@ref(tab:qLL).  
 
-## Variance for credible intervals of the WAR path
+## Variance for credible intervals for the WAR path
   
 $\Omega_t = \sum^{10}_{i=1}w_i(T^{-1}\hat{S}_\beta\kappa_t(c_i) + (\hat{\beta}_{i,t} - \hat{\beta_t})(\hat{\beta}_{i,t} - \hat{\beta_t})')$, $\kappa_t(c) = \frac{c(1 + e^{2c} + e^{2ct/T} + e^2c(1-t/T))}{2e^{2c} - 2}$
   
