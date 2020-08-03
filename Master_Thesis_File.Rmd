@@ -45,7 +45,7 @@ abstract here when I'm done with the writing and have all results.
 
 Some macroeconomic figures used to gauge the health of a nation's economy are released to the public on a predetermined schedule. These include for example the Non-Farm Employment change that is released on the first friday of every month informing economists and investors alike of the status of employment in the United States.  
 Standard economic theory helps us understand that an increase of interest rates is warranted when economies are performing well and prices are generally increasing. Those who decide to increase national interest rates, the central banks, typically refer to measures of inflation in order to make their decisions. Because of this, investors and traders alike pay close attention to news releases (such as inflation, and also the Non-Farm-Payrolls in the case of the United States) and react according to the results. These news releases are not made public until specific times on specific days and since investors and traders react to the same news the moment it is released, the result is often a violent reaction of price in one direction or another. The common discourse is that the direction and the magnitude of the change of price depends on the difference between the expectation of the market (combined expecation of worldwide investors) and the result of the news release.  
-In this paper, we decide to use currency pairs to measure the price shocks. As certain news pertaining to a particular country affects its respective currency more than other ones, it makes sense to observe the currency most relevant to the news announcement. As currency prices are typically measured in pairs, the second chosen currency will be another major currency that is known for its high liquidity (EUR, USD or CHF) and does not have any other news announcements at the same time^[When simultaneous news cannot be avoided, a sequence of  stability tests will be applied to ensure time variation is identified on a specific news release]. As an example, we would use the USD/CAD currency pair to measure the effect of the Canadian Consumer Price Index (CPI).  
+In this paper, we decide to use currency pairs to measure the price shocks. As certain news pertaining to a particular country affects its respective currency more than other ones, it makes sense to observe the currency most relevant to the news announcement. As currency prices are typically measured in pairs, the second chosen currency will be another major currency that is known for its high liquidity (EUR, USD or CHF) and does not have any other news announcements at the same time^[When simultaneous news cannot be avoided, a sequence of  stability tests will be applied to ensure time variation is identified on a specific news release. Alternatively, when simultaneous news for two announcements occur at the same time but only for a fraction of the sample, those observations are omitted (this was the case for the Canadian Retail Sales and Consumer Price Index).]. As an example, we would use the USD/CAD currency pair to measure the effect of the Canadian Consumer Price Index (CPI).  
 The paper of [@andersen_micro_2003] reveals that over the time period between 1987 and 2002 there has been little time-variation in the reaction to news. Some more recently published literature of [@ben_omrane_time-varying_2019] involving an analysis on euro-dollar contracts has determined that unlike the the decade(s) encompassing the "Great Moderation" where there was lower relative volatility in the financial markets, the time period between 2004 and 2014 is characterized by evolving reactions to macroeconomic news.  
 The objective of this paper is two-fold. Firstly, we aim to employ existing methodologies on new data to identify whether or not instability of market reaction is present. When reactions do change over time, we attempt to estimate the path that it takes using different procedures suggested by the literature given that the instability has been identified. 
 
@@ -169,7 +169,7 @@ L_{H0}(\beta_0, \beta_1, \sigma^2) = log\prod_{t=1}^{T} p(\Delta R_t | S_t ; \be
 = -\frac{T}{2}log(2\pi) - Tlog(\sigma) - \frac{1}{2\sigma^2}\sum_{t=1}^{T}(\Delta R_t - (\Delta\beta_0 + \Delta\beta_1 S_t))^2
 \end{equation}
 
-Only the last term of \@ref(eq:Lh0) is kept as the first constants will cancel out. $\Delta\beta_0 + \Delta\beta_1 S_t$ becomes 0 as the terms do not change with time.
+Only the last term of \@ref(eq:LH0) is kept as the first constants will cancel out. $\Delta\beta_0 + \Delta\beta_1 S_t$ becomes 0 as the terms do not change with time.
 
 \begin{equation}
 L_{H0} = \frac{1}{2\sigma^2}\sum_{t=1}^{T}(\Delta R_t)^2
@@ -261,11 +261,11 @@ s_t = \frac{dl}{d\beta_1} = \sigma^{-2} (R_t - \hat{\beta}_0 - \hat{\beta}_{1}S_
 (\#eq:helr)
 \end{equation}
     
-In the methodology, we are interested in the score of each particular observation and an *average* of the Hessians. This is why $\hat{H}$ is used instead of $h_t$ in (\#eq:helr). 
+In the methodology, we are interested in the score of each particular observation and an *average* of the Hessians. This is why $\hat{H}$ is used instead of $h_t$ in \@ref(eq:helr). 
 These two estimations, alongside the original $\beta_1$ and $\sigma^2$ from the time-invariant model are all that is needed to apply the entire WAR algorithm. The $s_t$ series provide a direction that the parameter can take. However, the magnitude of these changes from one step to the next still needs to be explained.
   
 Importantly, the score function is measuring the rate of change of the likelihood function with regards to its parameters. In the stable OLS model a lower valued score function for a certain observation in a sample indicates that a particular observation is decreasing the final $\beta_{OLS}$ estimate. In the WAR minimization method illustrated by our UK CPI example in \@ref(fig:warplot), the scores of the first few observations were mostly negative and led to $\beta_t$ values below the $\beta_{OLS}$
-Moreover, we recognize the Fisher Information of the linear regression case when taking the negative expectation of the Hessian (\#eq:helr) or equivalently taking the expectation of the square of (\#eq:stlr). Intuitively, the $s_t$ scores are therefore providing the vertical direction and a relative distance departure from the $\beta_{OLS}$ whereas the $\hat{H}$ Hessian is measuring the *overall* uncertainty 
+Moreover, we recognize the Fisher Information of the linear regression case when taking the negative expectation of the Hessian \@ref(eq:helr) or equivalently taking the expectation of the square of \@ref(eq:stlr). Intuitively, the $s_t$ scores are therefore providing the vertical direction and a relative distance departure from the $\beta_{OLS}$ whereas the $\hat{H}$ Hessian is measuring the *overall* uncertainty 
   
 In Figure \@ref(fig:warplot), one can observe 11 different random walk functions as well as the final estimated path for the UK CPI example. While they are all constructed using the scores and Hessian seen in \@ref(eq:stlr) and \@ref(eq:helr), they each have a unique end point standard deviation. The weights in step (e) of the Appendix [Section 9.3](#stepswar) depend on the sample size and the qLL statistic that are obtained using the qLL test statistic from [Section 4.1](#qLLtest). Specifically, it can be drawn from the expression $\exp^{-\frac{1}{2}qLL(c_i)}$ that a higher standard deviation in a RW function leads to a smaller qLL statistic and therefore more importance is placed on the weight associated with that particular RW. However, this is balanced by the preceding expression $\sqrt{T(1-r_i^2)r_i^{T-1}/(1-r_i^{2T})}$ that has the opposite effect of simply placing more weight on smaller RW functions. In our example, the random walk function that contributes the most weight for the UK CPI case is the 4th one.
 
@@ -277,7 +277,7 @@ plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
 
 ## Standard Recursive Time Variable Parameter Algorithm (STVP)
   
-Until now, the WAR minimization method provided a means to analyze the price reactions to the news over an entire sample period. In practice, it may be more useful to have a self-updating method that iteratively uses every new observation to improve the estimation progressively. The emphasis of the in this case is placed in gauging investor reactions to news in the present. When building this model, the assumption is that information available at time $t$ includes everything before that moment in time and nothing more, specifically information set $\Omega_{t-1}$ This is in contrast with the WAR minimization and is why this particular method is also included.
+Until now, the WAR minimization method provided a means to analyze the price reactions to the news over an entire sample period. In practice, it may be more useful to have a self-updating method that iteratively uses every new observation to improve the estimation progressively. The emphasis of the in this case is placed in gauging investor reactions to news in the present. When building this model, the assumption is that information available at time $t$ includes everything before that moment in time and nothing more, specifically information set $\mathcal{F}_{t-1}$ This is in contrast with the WAR minimization and is why this particular method is also included.
   
 Starting once more from the baseline case introduced in section [Section 2](#bb), a time-dependent measure of market reaction to news $\beta_t$ can be constructed by 1.) Transforming the problem of Ordinary Least Squares so that it can be recursively solved and 2.) Allowing for the parameter(s) to change over time sequentially. 
   
@@ -341,9 +341,22 @@ Conversely, the STVP estimation at time $t$ is achieved using the previous obser
     
 ## One-Step ahead Forecasts
   
-While the primary aim of the study was not obtain forecasts, we investigate the possibilty of a naive prediction with their associated prediction intervals. The term naive is used because it will be assumed that the best measures for expectation and variance for the 5 minute pip change of $\hat{R}_{t+1}$ are obtained by using the most recent estimates of the sample at time $t$ . Furthermore, for this forecast, we put ourselves in the situation of an investor who has just observed the release of the UK CPI on January 15th 2020 at 11:30:00, and would like a measurement of certainty of where price will lie 5 minutes afterwards.
+While the primary aim of the study was not to obtain forecasts, we investigate the possibilty of a naive prediction with their associated prediction intervals. The term *naive* is used because it will be assumed that the best measures for expectation and variance for the 5 minute pip change of $\hat{R}_{t+1}$ are obtained by using the most recent estimates of the sample at time $t$ . Furthermore, for this forecast, we put ourselves in the situation of an investor who has just observed the release of the UK CPI on January 15th 2020 at 11:30:00, and would like a measurement of certainty of where price will lie less than 5 minutes afterwards. Information set $\mathcal{F}_t$ includes all the past events whereas S_{t+1} is the new news surprise figure.
+  
+\begin{equation}
+E(\hat{R}_{t+1}|\mathcal{F}_t, S_{t+1}) = \hat{\beta}_{t}S_{t+1}
+\end{equation}
+  
+\begin{equation}
+Var(\hat{R}_{t+1}|\mathcal{F}_t, S_{t+1}) = S_{t+1}\sigma_{\beta}^2 + \sigma_{\epsilon}^2
+\end{equation}
+  
+Using the variances for the $\beta_t$ parameters of each model allows for creation of the two different 95% prediction intervals. These intervals are much wider than the credible intervals considered earlier as there is the additional uncertainty of the measurement $\sigma_{\epsilon}^2$ or often referred to as the irreducible error. This error is quite large relative to the $\sigma_{\beta}^2$, a clear sign that the models could be improved possibly by considering additional predictor variables aside from $S_t$.
 
-Formally, the conditional expectation and variance 
+![GBP/USD on the 15th of January between 14h00 and 15h00 GMT+2. UK CPI released with a figure of 1.3% versus the expected 1.5% (equivalently a -1.1579697 Std. Dev shock). Point-Estimates and 95% prediction bounds are colored in blue and green for the WAR and STVP estimations respectively. The time-invariant OLS case is also added in black for reference.](candlestick8.png)
+  
+![AUD/USD on the 10th of January between 02h00 and 03h00 GMT+2. Retail Sales announced at 0.9% versus the expected 0.4% that was expected (equivalently a +0.8801813 Std. Dev shock). Point-Estimates and 95% prediction bounds are colored in blue and green for the WAR and STVP estimations respectively. The time-invariant OLS estimate is also added in black for reference.](candlestick9.png)
+
   
 ## Use of the Post-Announcement 5 Minute Window
   
