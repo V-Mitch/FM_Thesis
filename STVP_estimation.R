@@ -3,9 +3,9 @@
 # Standard Recursive Time Variable Parameter
 
 # 1 Param
-#S_t <- t(as.matrix(data_1$std_Difference))
+S_t <- t(as.matrix(data_1$std_Difference))
 # 2 Param
-S_t <- rbind(data_1$std_Difference, data_2$std_Difference)
+#S_t <- rbind(data_1$std_Difference, data_2$std_Difference)
 #3 Param
 #S_t <- rbind(data_1$std_Difference, data_2$std_Difference, data_3$std_Difference)
 
@@ -41,6 +41,7 @@ I[1,1] <- 0 # assume the intercept is 0.
 # Assuming constant parameter variation, the variations are not correlated to one another
 #Qa <-  diag(summary(mod1)$coefficients[,2])^2 
 Qa <-  diag((1.25*beta_OLS - beta_OLS)^2, nrow = k)
+#Qa <- diag(10^6, nrow = k)
 Qa[1,1] <- 0
 #Qa[2,2] <- 0
 Qnvr <- Qa / sigma^2
@@ -52,18 +53,33 @@ sigma_temp <- 999
 g_t[,1] <- p_0 %*% S_t[,1] %*% (sigma_temp^2 + t(S_t[,1]) %*% p_0 %*% S_t[,1]) ^ -1
 p_t <- p_0 - g_t[,1] %*% t(S_t[,1]) %*% p_0
 
+# Optimization vectors and lists
+N <- 1000
+store_resids <- rep(0,N)
+store_betas <- rep(0,N)
+store_p_t <- list(diag(0,nrow=k))
 
-# nrow(data_1
+
+# # Optimization of Qa
+# for(i in 1:N){
+# 
+#   #optimization initialization
+#   vector_of_priors <- seq(from = 0, to = 10, by = 10/N)
+# 
+# 
+#   Qa <- diag((vector_of_priors[i]), nrow = k)
+#   Qa[1,1] <- 0
+
 for(t in 2:nrow(data_1)){
   
+  #nvr <- Qa / sigma_temp^2
+  
+  #Qa <- diag(0.02 , nrow = k)
   #empirical sigma - use full sample until time t
   if(t>k){
-  residual_error[2,t] <- R_t[t] - S_t[t] * beta_hat[2,t-1]
-  sigma_temp <- sqrt(1/ (t - k) * sum(residual_error[2,1:t]^2))^1.1
-  #sigma_temp <- sqrt(1/(t-dim(S_t)[1] -1) * sum( lm(m5 ~ std_Difference, data = data_1[1:t,])$residuals^2))
+    residual_error[2,t] <- R_t[t] - S_t[t] * beta_hat[2,t-1]
+    sigma_temp <- sqrt(1/ (t - k) * sum(residual_error[2,1:t]^2))
   }
-  
-  #nvr <- Qa / sigma_temp^2
   
   #priori
   beta_hat[,t] <- I %*% beta_hat[,t-1]
@@ -87,7 +103,16 @@ for(t in 2:nrow(data_1)){
   # sigma ML
   #sigma_ML_secondpart[t] <- epsilon[t]^2 / (1 + t(S_t[,t]) %*% p_t %*% S_t[,t])
   p_ttrack[t] <- p_t[2,2]
+  
+  
+
 }
+#   # Storing values for selection in the optimization - take lowest error and associated values
+#   store_resids[i] <- sum(residual_error[2,]^2)
+#   store_betas[i] <- beta_hat[2,t]
+#   store_p_t[[i]] <- p_t
+# 
+# }
 
 sigma_ML_sqr <- 1 / (T-k) * sum(sigma_ML_secondpart[(k+1):T])
 

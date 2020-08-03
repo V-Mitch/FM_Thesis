@@ -237,7 +237,7 @@ Conveniently, this method is somewhat of a natural extended use of the qLL test 
   
 First, we consider our stable model which is analogous to the linear regression model that is presented in the Equation \@ref(eq:stable). The resulting $\beta_{MLE/OLS}$ parameter obtained either through maximum likelihood estimation or minimization of ordinary least squares (depicted as the dot-dashed line in Figure \@ref(fig:warplot)) is representative of a scenario where it is assumed there is no time-related evolution of market reaction to news. As seen before, the likelihood in this case can be developed as Equation \@ref(eq:LH0) or also written more generally as $\sum_{t=1}^{T}l_t (\theta)$ with $\theta$ containing the constant parameters.
   
-We then turn to the case of varying $\beta_t$. Here, the general likelihood is the same but with time varying parameter(s) contained in $\theta_t$ = $\theta + \delta_t$ in $t = 1,...,T$. The $\delta_t$ can be imagined as the vertical distances in Figure \@ref(fig:warplot)) between the constant $\beta$ case and the *true* parameter path at time *t* that is unknown and that we are attempting to approximate. The main argument for the method is that this general likelihood function for a time varying model can be approximated by a second-order Taylor expansion of the likelihood function around $\beta_{MLE}$ and as a result an approximate estimate of the $\delta_t$ term mentioned earlier is obtainable. Effectively it is demonstrated in the paper that the approximation of the log-likelihood function of the parameter path can be restructured such that a log-likelihood function of a gaussian random variable is recognizable and results in a "pseudo model" as:  
+We then turn to the case of varying $\beta_t$. Here, the general likelihood is the same but with time varying parameter(s) contained in $\theta_t$ = $\theta + \delta_t$ in $t = 1,...,T$. The $\delta_t$ can be imagined as the vertical distances in Figure \@ref(fig:warplot)) between the constant $\beta$ case and the *true* parameter path at time *t* that is unknown and that we are attempting to approximate. The main argument for the method is that this general likelihood function for a time varying model can be approximated by a second-order Taylor expansion of the likelihood function around $\beta_{OLS/MLE}$ and as a result an approximate estimate of the $\delta_t$ term mentioned earlier is obtainable. Effectively it is demonstrated in the paper that the approximation of the log-likelihood function of the parameter path can be restructured such that a log-likelihood function of a gaussian random variable is recognizable and results in a "pseudo model" as:  
   
 \begin{equation}
 \beta_{MLE} = \beta_t + T^{-1/2}\hat{H}^{-1}v_0
@@ -249,21 +249,25 @@ s_t(\beta) = \hat{H}\delta_t + v_t, t = 1,...,T
 
 $\hat{H}$ is the Hessian of the Taylor approximation divided by the sample size T, $s_t$ is the score function for the stable model. The exact derivations to obtain (15) are elaborated in @muller_efficient_2010. The $\delta_t$ vertical distances can be isolated in the latter expression as all the other elements are available to us. 
   
-Essentially, the score function $s_t$ and Hessian $\hat{H}$ can be extracted from the stable linear regression shown in section [Section 2](#bb) and the likelihood function is therefore the one seen in equation (7). Deriving once and then twice with respect to $\beta_1$ yields the following respectively:
+To use the model of the authors and apply it to our case, we find expressions for $s_t$ and $\hat{H}$. Essentially, the score function $s_t$ and Hessian $\hat{H}$ can be extracted from the stable linear regression shown in section [Section 2](#bb) and the likelihood function is therefore the one seen in equation (7). Taking the derivative of the log likelihood once and then twice with respect to $\beta_1$ yields the following two expressions respectively:
   
 \begin{equation}
-s_t = \frac{dl}{d\beta_1} = -\sigma^{-2} \sum_{t=1}^T (R_t - \hat{\beta}_0 - \hat{\beta}_{1}S_t)S_t
+s_t = \frac{dl}{d\beta_1} = \sigma^{-2} (R_t - \hat{\beta}_0 - \hat{\beta}_{1}S_t)S_t
 (\#eq:stlr)
 \end{equation}
   
 \begin{equation}
-\hat{H} = \frac{dl^2}{d^2\beta_1^T} = -\sigma^{-2}\sum_{t=1}^T S_t^2
+\hat{H} = \frac{1}{T}\sum_{t=1}^{T}h_t(\hat{\beta}) = -\frac{dl^2}{d^2\beta_1^T} = \sigma^{-2}\sum_{t=1}^T S_t^2
 (\#eq:helr)
 \end{equation}
+    
+In the methodology, we are interested in the score of each particular observation and an *average* of the Hessians. This is why $\hat{H}$ is used instead of $h_t$ in (\#eq:helr). 
+These two estimations, alongside the original $\beta_1$ and $\sigma^2$ from the time-invariant model are all that is needed to apply the entire WAR algorithm. The $s_t$ series provide a direction that the parameter can take. However, the magnitude of these changes from one step to the next still needs to be explained.
   
-These two estimations, alongside the original $\beta_1$ and $\sigma^2$ from the time-invariant model are all that is needed to apply the entire WAR algorithm. The $s_t$ and $\hat{H}$ provide a direction that the parameter can take. However, the magnitude of these changes from one step to the next still needs to be explained.  
+Importantly, the score function is measuring the rate of change of the likelihood function with regards to its parameters. In the stable OLS model a lower valued score function for a certain observation in a sample indicates that a particular observation is decreasing the final $\beta_{OLS}$ estimate. In the WAR minimization method illustrated by our UK CPI example in \@ref(fig:warplot), the scores of the first few observations were mostly negative and led to $\beta_t$ values below the $\beta_{OLS}$
+Moreover, we recognize the Fisher Information of the linear regression case when taking the negative expectation of the Hessian (\#eq:helr) or equivalently taking the expectation of the square of (\#eq:stlr). Intuitively, the $s_t$ scores are therefore providing the vertical direction and a relative distance departure from the $\beta_{OLS}$ whereas the $\hat{H}$ Hessian is measuring the *overall* uncertainty 
   
-In Figure \@ref(fig:warplot), one can observe 11 different random walk functions as well as the final estimated path for the UK CPI example. While they are all constructed using the Score and Hessian seen in \@ref(eq:stlr) and \@ref(eq:helr), they each have a unique end point standard deviation. The weights in step (e) of the Appendix [Section 9.3](#stepswar) depend on the sample size and the qLL statistic that are obtained using the qLL test statistic from [Section 4.1](#qLLtest). Specifically, it can be drawn from the expression $\exp^{-\frac{1}{2}qLL(c_i)}$ that a higher standard deviation in a RW function leads to a smaller qLL statistic and therefore more importance is placed on the weight associated with that particular RW. However, this is balanced by the preceding expression $\sqrt{T(1-r_i^2)r_i^{T-1}/(1-r_i^{2T})}$ that has the opposite effect of simply placing more weight on smaller RW functions. In our example, the random walk function that contributes the most weight for the UK CPI case is the 4th one.
+In Figure \@ref(fig:warplot), one can observe 11 different random walk functions as well as the final estimated path for the UK CPI example. While they are all constructed using the scores and Hessian seen in \@ref(eq:stlr) and \@ref(eq:helr), they each have a unique end point standard deviation. The weights in step (e) of the Appendix [Section 9.3](#stepswar) depend on the sample size and the qLL statistic that are obtained using the qLL test statistic from [Section 4.1](#qLLtest). Specifically, it can be drawn from the expression $\exp^{-\frac{1}{2}qLL(c_i)}$ that a higher standard deviation in a RW function leads to a smaller qLL statistic and therefore more importance is placed on the weight associated with that particular RW. However, this is balanced by the preceding expression $\sqrt{T(1-r_i^2)r_i^{T-1}/(1-r_i^{2T})}$ that has the opposite effect of simply placing more weight on smaller RW functions. In our example, the random walk function that contributes the most weight for the UK CPI case is the 4th one.
 
 ```{r warplot, echo = FALSE, fig.cap="WAR minimizing over the 11 different randow walk weighting functions"}
 plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
@@ -273,17 +277,17 @@ plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
 
 ## Standard Recursive Time Variable Parameter Algorithm (STVP)
   
-Until now, the WAR minimization method provided a means to analyze the price reactions to the news over an entire sample period. In practice, it may be more useful to have a self-updating method that iteratively uses every new observation to improve the estimation progressively. It can also be argued that the emphasis of the prediction should be placed in gauging the shock that could occur in the present. When building this model, the assumption is that information available at time $t$ includes everything before that moment, specifically information set $\Omega_{t-1}$ This is in contrast with the WAR minimization and is why this particular method is also included.
+Until now, the WAR minimization method provided a means to analyze the price reactions to the news over an entire sample period. In practice, it may be more useful to have a self-updating method that iteratively uses every new observation to improve the estimation progressively. The emphasis of the in this case is placed in gauging investor reactions to news in the present. When building this model, the assumption is that information available at time $t$ includes everything before that moment in time and nothing more, specifically information set $\Omega_{t-1}$ This is in contrast with the WAR minimization and is why this particular method is also included.
   
-Starting once more from the baseline case introduced in section [Section 2](#bb), a time-dependent measure of market reaction to news $\beta_t$ can be constructed by 1.) Transforming the problem of Ordinary Least Squares so that it can be recursively solved and 2.) Allowing for the parameter(s) to change over time sequentially. Therefore, in sequence the
+Starting once more from the baseline case introduced in section [Section 2](#bb), a time-dependent measure of market reaction to news $\beta_t$ can be constructed by 1.) Transforming the problem of Ordinary Least Squares so that it can be recursively solved and 2.) Allowing for the parameter(s) to change over time sequentially. 
   
-To obtain the STVP algorithm presented in [Section 9.3](#stepsstvp) the first step consists of replacing the OLS equations by their recursive counterparts and achieve the intermediate SRLS algorithm. The following equations are similar to the familiar OLS equations setup.
+To obtain the STVP algorithm presented in [Section 9.3](#stepsstvp) the first step consists of replacing the OLS equations by their recursive counterparts and obtain the intermediate SRLS algorithm. The following equations are similar to the familiar OLS equations setup.
 
 \begin{equation}
 R_t = S_t^{T}\beta_1 + e_t
 \end{equation}
   
-The error vector contains a series of random variables $e_t$ that are assumed to be normally distributed with 0 mean and serially uncorrelated. We omit the constant intercept; the reasoning is elaborated in [Section 9.3](#stepswar).
+The error vector contains a series of random variables $e_t$ that are assumed to be normally distributed with 0 mean and serially uncorrelated. We omit the constant intercept; the reasoning is elaborated in [Section 7](#stepstvp).
   
 \begin{equation}
 \hat{\beta}_{OLS} = (S^{T}S)^{-1}S^{T}R 

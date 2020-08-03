@@ -3,7 +3,7 @@
 # List of datasets
 # cadcrs_m_m ; usdahe_m_m ; 
 
-data_1_o <- read.csv("~/R tests/finance related projects/nzdcpi_dataframe.csv")
+data_1_o <- read.csv("~/R tests/finance related projects/gbpcpi_dataframe.csv")
 data_1 <- data_1_o[nrow(data_1_o):1,]
 
 data_2_o <- read.csv("~/R tests/finance related projects/usdahe_m_m_dataframe.csv")
