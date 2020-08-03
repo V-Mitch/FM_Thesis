@@ -73,7 +73,7 @@ plotcusum <- function(cusumpath, cusumpoints){
     geom_segment(data = cusumpoints, aes(x = startdate, y = -p5, xend = enddate, yend = -p6), linetype = "dotted") +
     scale_x_date(date_breaks = "1 year", date_labels="%Y") +
     labs(y = "Cumulative Standardized Errors") +
-    ggtitle("CUSUM Test applied on UK CPI") +
+    ggtitle("CUSUM Test applied to UK CPI") +
     theme_tufte()
 }
 
@@ -92,7 +92,7 @@ plotcusumsq <- function(cusumsqdf){
     geom_line(data = cusumsqdf, aes(x = Year, y = beta_dist_line - 0.100), linetype ="dotted") +
     scale_x_date(date_breaks = "1 year", date_labels="%Y") +
     labs(y = "Cumulative Contribution to Total Errors") +
-    ggtitle("CUSUM-squared Test on UK CPI") +
+    ggtitle("CUSUM-squared Test to UK CPI") +
     theme_tufte()
 }
 
