@@ -37,7 +37,7 @@ d_t <- (Y_t - B0 - B1 * X_t)
 
 # Partial First derivatives and Score
 #dl_B1 <- -1/sig_sqr * sum(d_t*X_t) 
-dl_B1 <- - 1/sig_sqr * sum(d_t*X_t) 
+dl_B1 <-  1/sig_sqr * sum(d_t*X_t) 
 dl_sig_sqr <- -T + 1/sig_sqr * sum(d_t)^2
 dl_B0 <- -1/sig_sqr * sum(d_t)
 s_t <- c(dl_B1, dl_sig_sqr, dl_B0)
@@ -63,7 +63,7 @@ V <- T^-1 * s_t %*% t(s_t)
 # For loop for the calculation of the Path
 
 # We take only the parameter that is changing in time
-H <- H[1,1]
+H <- -H[1,1] * 10
 
 Hinv <- solve(H)
 
@@ -92,7 +92,7 @@ for (t in 1:T){
   ### d_t <- (Y_t - B0 - B2 - B1 * X_t)
   
   # First derivatives and Score
-  dl_B1[t] <- - 1/sig_sqr * sum(d_t*X_t) 
+  dl_B1[t] <- 1/sig_sqr * sum(d_t*X_t) 
   # dl_sig_sqr <- -t + 1/sig_sqr * sum(d_t)^2
   # dl_B0 <- -1/sig_sqr * sum(d_t)
   # s_t <- c(dl_B1, dl_sig_sqr, dl_B0)

@@ -93,6 +93,7 @@ plotcusumsq <- function(cusumsqdf){
     scale_x_date(date_breaks = "1 year", date_labels="%Y") +
     labs(y = "Cumulative Contribution to Total Errors") +
     ggtitle("CUSUM-squared Test to UK CPI") +
+    #scale_y_continuous(limits = c(0, 1)) +
     theme_tufte()
 }
 
