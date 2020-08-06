@@ -1,8 +1,10 @@
 ---
 title: "Time Variation of Regression Coefficients related to Macroeconomic News affecting Currency Prices"
-author: "Victor Mitchell"
+author: |
+  | Victor J. Mitchell
+  | Geneva School of Economics and Management, University of Geneva
 bibliography: ["citations.bib"]
-date: "November 5, 2019"
+date: "August 6th, 2020"
 always_allow_html: no
 output:
   bookdown::pdf_document2:
@@ -38,7 +40,7 @@ colnames(qLL_table) <- c("k",seq(from = 1,to = 5, by = 1))
 ```
 
 \begin{center}
-abstract here when I'm done with the writing and have all results.
+\textbf{Abstract}: This study uses data from 2008 to 2019 to investigate the possibility that the macroeconomic news announcements are causing inconsistent price shocks to exchange rates. The evolution of these price shocks is thereafter estimated when it is presumed there is instability over time. Separate methodologies from past literature are applied to the data and compared to one another. In addition we juxtapose the the methods with our objective and evaluate their use.
 \end{center}
 
 # Introduction
@@ -47,7 +49,7 @@ Some macroeconomic figures used to gauge the health of a nation's economy are re
 Economic theory helps us understand that an increase of interest rates is warranted when economies are performing well and prices are generally increasing. The authorities who decide to increase or decrease national interest rates, the central banks, typically refer to measures of inflation in order to make their decisions. Because of this, investors and traders alike pay close attention to news releases (such as inflation, and also the Non-Farm-Payrolls in the case of the United States) and react according to the results. These news releases are not made public until specific times on specific days and since investors and traders react to the same news the moment it is released, the result is often a violent reaction of price in one direction or another. The common belief is that the direction and the magnitude of the change of price depends on the difference between the expectation of the market (combined expecation of worldwide investors) and the actual result of the news release.  
 In this paper, we decide to use currency pairs to measure the price shocks. As certain news pertaining to a particular country affects its respective currency, it makes sense to observe the currency most relevant to the news announcement. As currency prices are typically measured in pairs, the second chosen currency will be another major currency that is known for its high liquidity (EUR, USD or CHF) and does not have any other news announcements at the same time^[When simultaneous news cannot be avoided, a sequence of  stability tests will be applied to ensure time variation is identified on a specific news release. Alternatively, when simultaneous news for two announcements occur at the same time but only for a fraction of the sample, those observations are omitted (this was the case for the Canadian Retail Sales and Consumer Price Index).]. As an example, we would use the USD/CAD currency pair to measure the effect of the Canadian Consumer Price Index (CPI).  
 The paper of @andersen_micro_2003 reveals that over the time period between 1987 and 2002 there has been little time-variation in the reaction to news. A more recently published paper of @ben_omrane_time-varying_2019 involving an analysis on euro-dollar contracts has determined that unlike the the decade(s) encompassing the "Great Moderation", where there was lower relative volatility in the financial markets, the time period between 2004 and 2014 is characterized by time-varying reactions to macroeconomic news.  
-The objective of this paper is twofold. First, we aim to employ existing methodologies on new data to identify whether or not instability of market reaction is present. When reactions do change over time, we attempt to estimate the path that it takes using different procedures suggested by the literature, given that the instability has been identified. 
+The objective of this paper is twofold. First, we aim to employ existing methodologies on new data to identify whether or not instability of market reaction is present. Second, when reactions do change over time, we attempt to estimate the path that it takes using different procedures suggested by the literature, given that the instability has been identified. 
 
   
 # Data
@@ -102,7 +104,7 @@ footnote(general = "The result of OLS estimation, referred to as the 'time invar
          ,threeparttable = T)
 ```
   
-Table \@ref(tab:tablereg) shows the result of the different $\beta_1$ coefficients for separate news reports. The construction of the truncation parameter in the Newey-West estimator is such that our monthly news reports consider 2 autocorrelation coefficients whereas the quarterly ones only contain 1. This is due to the difference in the number of observations in our data. A higher estimated autocorrelation between the errors of the regression will result in a stronger correction of the variance of $\beta_1$. In all of the news in Table \@ref(tab:tablereg), the higher standard error does not affect the significance of the term. While it is not formal evidence, we suspect that the regressions where the HAC standard error is larger than its unedited counterpart contain unknown regressors that may come from any of the findings that are well elaborated in other literature such as in @goldberg_time_2013. Overall, these results and that of the Durbin-Watson test show that there is little evidence for significant autocorrelation in the residuals.
+Table \@ref(tab:tablereg) shows the result of the different $\beta_1$ coefficients for separate news reports. The construction of the truncation parameter in the Newey-West estimator is such that our monthly news reports consider 2 autocorrelation coefficients whereas the quarterly ones only contain 1. This is due to the difference in the number of observations in our data. A higher estimated autocorrelation between the errors of the regression will result in a stronger correction of the variance of $\beta_1$. In all of the news in Table \@ref(tab:tablereg), the higher standard error does not affect the significance of the term. While it is not formal evidence, we suspect that the regressions where the HAC standard error is larger than its unedited counterpart contain unknown regressors that may come from any of the findings that are well expanded on in other literature such as in @goldberg_time_2013. Overall, these results and that of the Durbin-Watson test show that there is little evidence for significant autocorrelation in the residuals.
   
 ## The Gaussian Random Walk {#grw}
   
@@ -187,7 +189,7 @@ The qLL statistic is obtained by subtracting $L_{H0}$ from $L_{HA}$: $\frac{\sig
   
 ## CUSUM and CUSUM-squared tests
 
-Alternatives to the qLL test previously explained are considered. We explore the ones elaborated in @brown_techniques_1975 named the CUSUM and CUSUM-squared. These tests use the successive error terms of predictions of a standard Recursive-Least-Squares (RLS) model (details for this model in [Section 9.2](#stepsslrs)), that assumes stability of the $\beta$ parameter [@young_recursive_2011]. In this specific application, we use the result of the standard OLS as a baseline *prior* or initial value for the algorithm (i.e. $\beta_0$) and we use an empirical $\hat{\sigma}_\varepsilon$ residual error that is based on the entire sample. By examining the prediction errors, one can observe whether or not they violate the $\mathcal{N}(0,\sigma^2)$ assumptions. Namely that they are a 1.) zero mean sequence $E(\varepsilon_t) = 0$ and 2.) serially uncorrelated $E(\varepsilon_t \varepsilon_j) = 0\ \forall\ t \neq j$. The first step consists in running a standard RLS algorithm and obtaining one-step-ahead errors from it. These errors are obtained as follows:
+Alternatives to the qLL test previously explained are considered. We explore the ones mentioned in @brown_techniques_1975 named the CUSUM and CUSUM-squared. These tests use the successive error terms of predictions of a standard Recursive-Least-Squares (RLS) model (details for this model in [Section 9.2](#stepsslrs)), that assumes stability of the $\beta$ parameter [@young_recursive_2011]. In this specific application, we use the result of the standard OLS as a baseline *prior* or initial value for the algorithm (i.e. $\beta_0$) and we use an empirical $\hat{\sigma}_\varepsilon$ residual error that is based on the entire sample. By examining the prediction errors, one can observe whether or not they violate the $\mathcal{N}(0,\sigma^2)$ assumptions. Namely that they are a 1.) zero mean sequence $E(\varepsilon_t) = 0$ and 2.) serially uncorrelated $E(\varepsilon_t \varepsilon_j) = 0\ \forall\ t \neq j$. The first step consists in running a standard RLS algorithm and obtaining one-step-ahead errors from it. These errors are obtained as follows:
   
 \begin{equation}
 u_t = R_t - E(\hat{R_t}|R_{t-1})
@@ -225,7 +227,7 @@ Under a null hypothesis of a constant parameter(s), this cumulative sum of squar
 plotcusumsq(read.csv("~/R tests/finance related projects/cusum_sq_df.csv"))
 ```
 
-# Parameter Path Estimations
+# Parameter Path Estimations {#ppe}
 
 Having established that there is instability over time in the market reactions to at least some of the news, we take on the task of obtaining a time series that conveys the change over the time frame considered. Specifically, we would like to obtain a visual representation of the change of the parameter such that a researcher or investor is able to easily gather information.
   
@@ -235,9 +237,9 @@ In this section, we will utilize wo different algorithms from the literature. Bo
 R_t = \beta_0 + \beta_{1,t} S_t + \varepsilon_t
 \end{equation}
   
-## Weighted Average Risk Minimization
+## Weighted Average Risk Minimization (WAR)
   
-Conveniently, this method is somewhat of a natural extended use of the qLL test elaborated in [Section 4.1](#qLLtest). It provides a heuristic means means to approximate a parameter path [@muller_efficient_2010]. 
+Conveniently, this method is somewhat of a natural extended use of the qLL test elaborated on in [Section 4.1](#qLLtest). It provides a heuristic means means to approximate a parameter path [@muller_efficient_2010]. 
   
 First, we consider our stable model which is analogous to the linear regression model that is presented in the Equation \@ref(eq:stable). The resulting $\beta_{MLE/OLS}$ parameter obtained either through maximum likelihood estimation or minimization of ordinary least squares (depicted as the dot-dashed line in Figure \@ref(fig:warplot)) is representative of a scenario where it is assumed there is no time-related evolution of market reaction to news. As seen before, the likelihood in this case can be developed as equation \@ref(eq:LH0) or also written more generally as $\sum_{t=1}^{T}l_t (\theta)$ with $\theta$ containing the constant parameters.
   
@@ -275,10 +277,10 @@ Moreover, we recognize the Fisher Information of the linear regression case when
   
 In Figure \@ref(fig:warplot), one can observe 11 different random walk functions as well as the final estimated path for the UK CPI example. While they are all constructed using the scores and Hessian seen in \@ref(eq:stlr) and \@ref(eq:helr), they each have a unique end point standard deviation. The weights in step (e) of the Appendix Section \@ref(stepswar) depend on the sample size and the qLL statistic that are obtained using the qLL test statistic from Section \@ref(qLLtest). Specifically, in this step, it can be drawn from the expression $\exp^{-\frac{1}{2}qLL(c_i)}$ that the higher standard deviations in the RW functions lead to a smaller qLL statistic and therefore more importance is placed on the weight associated with that particular RW. However, this is balanced by the preceding expression $\sqrt{T(1-r_i^2)r_i^{T-1}/(1-r_i^{2T})}$ that has the opposite effect of simply placing more weight on smaller RW functions. In our example, the 4th RW function contributes the most weight to the UK CPI final path (green curve in \@ref(fig:warplot)).
 
-```{r warplot, echo = FALSE, fig.cap="WAR Minimization"}
+```{r warplot, echo = FALSE, fig.cap="WAR minimizing over the 11 different randow walk weighting functions. The green path, a compromise of the others, is the final path where the loss or is lowest. The dash-dot line is the OLS estimate."}
 plotwar(read.csv("~/R tests/finance related projects/gbpcpi_path.csv"),
         read.csv("~/R tests/finance related projects/gbpcpi_magn.csv"),
-        "WAR minimizing over the 11 different randow walk weighting functions. The green path, a compromise of the others, is the final path where the loss or is lowest. The dash-dot line is the OLS estimate.")
+        "WAR Minimization")
 ```
 
 ## Standard Recursive Time Variable Parameter Algorithm (STVP)
@@ -294,7 +296,7 @@ R_t = S_t^{T}\beta_1 + e_t
 (\#eq:slrs1)
 \end{equation}
   
-The error vector contains a series of random variables $e_t$ that are assumed to be normally distributed with 0 mean and serially uncorrelated. We omit the constant intercept; the reasoning is elaborated in Section \@ref(stepstvp).
+The error vector contains a series of random variables $e_t$ that are assumed to be normally distributed with 0 mean and serially uncorrelated. We omit the constant intercept; the reasoning is explained in Section \@ref(stepsstvp).
   
 \begin{equation}
 \hat{\beta}_{OLS} = (S^{T}S)^{-1}S^{T}R 
@@ -331,13 +333,21 @@ R_t = S_t^{T}\beta_t + e_t, \quad e_t \sim \mathcal{N}(0,\sigma^2)
 (\#eq:stvp3)
 \end{equation}
   
-When transitioning from the SLRS to STVP method, the setup described by \@ref(eq:slrs1), \@ref(eq:slrs2) and \@ref(eq:slrs3) are replaced by \@ref(eq:stvp1), \@ref(eq:stvp2) and \@ref(eq:stvp3). The latter three STVP equations above are thus the foundation for the construction of the algorithm that is implemented for use and shown in Section \@ref(stepsstvp). When initializing the first values, we set the variance of the estimator $P^*_t$ to be very large and the $\beta_t$ parameter to be 0 to reflect 0 knowledge of the nature of the estimation at the beginning of the sample. The variance $\sigma_{\beta}$ of \@ref(eq:stvp3) is set as 25% of the $\beta_OLS$ of the full sample. This is the standard deviation of the random walk *prior* that was deliberately chosen and has important implications in the estimation of the path. Further analysis and review of this choice is covered in Section \@ref(ditp)
+When transitioning from the SLRS to STVP method, the setup described by \@ref(eq:slrs1), \@ref(eq:slrs2) and \@ref(eq:slrs3) are replaced by \@ref(eq:stvp1), \@ref(eq:stvp2) and \@ref(eq:stvp3). The latter three STVP equations above are thus the foundation for the construction of the algorithm that is implemented for use and shown in Section \@ref(stepsstvp). When initializing the first values, we set the variance of the estimator $P^*_t$ to be very large and the $\beta_t$ parameter to be 0 to reflect 0 knowledge of the nature of the estimation at the beginning of the sample. The variance $\sigma_{\beta}$ of \@ref(eq:stvp3) is set as 25% of the $\beta_OLS$ of the full sample. This is the standard deviation of the random walk *prior* that was deliberately chosen and has important implications in the estimation of the path. Further analysis and review of this choice is covered in Section \@ref(fivemin)
     
 ```{r stvpplot, echo = FALSE, fig.cap="STVP applied to the UK CPI"}
 plotslrs(read.csv("~/R tests/finance related projects/stvp_df.csv"))
 ```
 
 # Discussion
+  
+## The Three Tests for Instability {#ttt}
+  
+Of the three stability tests applied in this study, the qLL test appears to be the most dependable. Notably, unlike the other tests, it is an efficient test statistic that is a monotone transformation of the Likelihood Ratio Test (LRT)^[The Neyman-Pearson lemma confirms that the likelihood ratio is the most optimal among other tests] and has asymptotic critical values upon which we can compare the test statistic. Furthermore, it was possible to construct sequential tests in order to detect which news announcement covariate(s) caused the instability by alternating which event is considered "stable" in the test.
+  
+On the other hand, the CUSUM and CUSUM-sq tests are comparable to indicators with which it is possible to compare the transformed errors, rather than formal tests [@brown_techniques_1975]. However, they do provide the means to analyze the errors so that it is possible to determine at which moment in the sample the instability is taking place. Moreover, because the CUSUM-sq test exposed instability to a much larger degree than the CUSUM for all of the news, it may be an overall trend that there is a changing residual variance. It is important to note that for the CUSUM-sq, the bounds should be even closer to the diagonal beta distribution line than they are as we used the bounds for a sample size of 100 despite having larger samples. 
+  
+We use the combination of all three tests to determine whether or not instability is present and the paths of $\beta_t$ parameter of each news event is worth estimating. If at least two of the three tests were significant at the 10% level , their path was estimated using the methodologies presented in \@ref(ppe) and they are illustrated in \@ref(app).
   
 ## Differences and Irregularities of Two Paths {#ditp}
   
@@ -365,7 +375,7 @@ E(\hat{R}_{t+1}|\mathcal{F}_t, S_{t+1}) = \hat{\beta}_{t}S_{t+1}
 \end{equation}
   
 \begin{equation}
-Var(\hat{R}_{t+1}|\mathcal{F}_t, S_{t+1}) = S_{t+1}\sigma_{\beta}^2 + \sigma_{\epsilon}^2
+Var(\hat{R}_{t+1}|\mathcal{F}_t, S_{t+1}) = S_{t+1}^2\sigma_{\beta}^2 + \sigma_{\epsilon}^2
 \end{equation}
   
 Using the variances for the $\beta_t$ parameters of each model allows for creation of the two different 95% prediction intervals. These intervals are much wider than the credible intervals considered earlier as there is the additional uncertainty of measurement $\sigma_{\epsilon}^2$ or often referred to as the irreducible error. This error is quite large relative to the $\sigma_{\beta}^2$, a clear sign that the models could possibly be improved by considering additional predictor variables aside from $S_t$. 
@@ -377,7 +387,7 @@ Another example but for the release of the Australian Retail Sales on the 10th o
 ![AUD/USD on the 10th of January between 02h00 and 03h00 GMT+2. Retail Sales announced at 0.9% versus the expected 0.4% that was expected (equivalently a +0.8801813 Std. Dev shock). Point-Estimates and 95% prediction bounds are colored in blue and green for the WAR and STVP estimations respectively. The time-invariant OLS estimate is also added in black for reference.](candlestick9.png)
 
   
-## Use of the Post-Announcement 5 Minute Window
+## Use of the Post-Announcement 5 Minute Window {#fivemin}
   
 The erronous or exceptional data can sometimes be quite obvious. An example would be that of the Canadian Core Retail Sales in July of 2013. On this day, the figure achieved a 1.2% increase versus the 0.1% that was expected and yet the 5 minute post-price difference was merely -11.3 pips. The price move was instantaneous to the extent that the beginning of the 14:30:00 candle already marked the majority of the price shock. A solution to this issue would have been to consider using a price before 14:30:00 although this would have introduced the issue of finding a general timing for all other releases that does not include irrelevant price movements before to the announcement time stamp. Furthermore, in some circumstances, it could be desirable to omit these price jumps as they would result in what is called "slippage" (a difference between the price an investor will place an order at and the price it is executed at).
   
@@ -387,10 +397,20 @@ The erronous or exceptional data can sometimes be quite obvious. An example woul
   
 
 There are several explanations for these exceptions. One example in particular would be market interventions of the central banks which have been proven to occur during or in time proximity to figure releases as shown in studies such as that of @dominguez_market_2003. Similarly, there is evidence of insider trading preceding news announcements. This is shown in assets such as the E-mini S&P 500 futures where exact order imbalance can be measured. It is perfectly possible that the same kind of activity is taking place in the decentralized currency exchange (or FX) markets [@bernile_can_2016]. It is impossible (or extremely difficult) to detect these external reasons for price shocks and the WAR conveniently "smooths" them over.
-
+  
+It is important to consider that the assets used in this study are well chosen to assess the market reaction to news but they are subject to other factors even during the short 5 minute time frames that are used and this could affect the $R_t$ change in price. Currencies will appreciate or depreciate to a large extent during the day and even during a 5-minute time frame whether or not news is present where $E(\Delta Base/Quote_t)\neq0$. The use of the smaller time window, despite the shortcomings mentioned above, does allow for the researcher to minimize the amount of "noise" or price movements that are unrelated to the news announcement in theory^[The papers of @ben_omrane_time-varying_2019, @andersen_micro_2003 and @fatum_asymmetries_2012 among others use the 5 minute window.].
+  
+## Suggestions for Future Research
+  
+There are many elements that were not accounted for in the model that is first introduced. Despite allowing for time variation, there are many ways to improve upon the initial model. For instance, it has been proven that exchange rate prices may react in an asymmetric fashion where the expectation of a positive price jump is disparate to that of a negative one [@andersen_micro_2003]. The magnitude is also affected by the situation of the business cycle for the country from which the news is pertaining to [@fatum_asymmetries_2012]. We also disregard the "volume" activity data that is available to us which could be a contributing factor for future models. These types of changes might enhance the estimation and make for a more accurate representation of the true path. We have also shown that the data collection procedure can benefit from improvements. A meticulous selection of the time window considered and whether it should be fixed to a specific amount of time, as 5 minutes (like in this study), or chosen to vary depending on the conditions could vastly improve the quality of the analysis.
+  
+Specifically, the prior for the STVP algorithm is easily adjustable using the ideas of @young_recursive_2011 or otherwise and a much better representation of the $\beta_t$ path would be achievable by having a higher quality one. Most notably, a prior that would place a limit whereby the $\beta_t$ could not change in sign. If it was discovered that previous surprises affect future ones, the use of a prior other than the 0 mean random walk could also be justified. 
+    
+Finally, if the One-Step ahead forecasts were to be the priority, the emphasis should of course be placed on minimizing a loss function and thereby reducing irreducible and reducible errors alike. A Machine-Learning approach with algorithms designed specifically for prediction are most likely better suited to this purpose. The time dependency of the problem would nevertheless add to the complexity of such an algorithm and it would be worth considering using the estimators of this study as possible predictors.
+  
 # Appendix
 
-## Parameter Paths
+## Parameter Paths {#app}
   
 The following path estimations should be interpreted as follows: a one standard deviation unanticipated positive change in the economic variable $S_t$ results in an appreciation or depreciation in the exchange rate of the relevant currency pair by $R_t$ amount of pips or basis points. 
   
