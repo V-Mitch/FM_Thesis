@@ -40,7 +40,7 @@ colnames(qLL_table) <- c("k",seq(from = 1,to = 5, by = 1))
 ```
 
 \begin{center}
-\textbf{Abstract}: This study uses data from 2008 to 2019 to investigate the possibility that the macroeconomic news announcements are causing inconsistent price shocks to exchange rates. The evolution of these price shocks is thereafter estimated when it is presumed there is instability over time. Separate methodologies from past literature are applied to the data and compared to one another. In addition we juxtapose the the methods with our objective and evaluate their use.
+\textbf{Abstract}: This study uses data from 2008 to 2019 to investigate the possibility that macroeconomic news announcements are causing inconsistent price shocks to exchange rates. The evolution of these price shocks is thereafter estimated when it is presumed there is instability over time. Separate methodologies from past literature are applied to the data and compared to one another. In addition we juxtapose the methods with our objective to evaluate their usage.
 \end{center}
 
 # Introduction
@@ -85,7 +85,7 @@ S_t = \frac{A_t - E_t}{\sigma_d}
 $A_t$ is the actual result of the news at time $t$, $E_t$ is the expected result aggregated from experts and $\sigma_d$ is the empirical standard deviation of their difference over the entire sample.  Thereafter, we use this surprise element in a first simple OLS model.  
 
 \begin{equation}
-R_t = \beta_0 + \beta_1 S_t + \varepsilon_t
+\hat{R}_t = \beta_0 + \beta_1 S_t + \varepsilon_t
 (\#eq:stable)
 \end{equation}  
   
@@ -218,7 +218,7 @@ plotcusum(read.csv("~/R tests/finance related projects/cusum_df.csv"),
 The second test, the CUSUM-squared, can be run by once more by creating a new series, similar to $W_t$ from earlier. Here we consider:
   
 \begin{equation}
-V_t = \frac{\sum_{i=k+1}^{t} u_{n,i}}{\sum_{i=k+1}^{T} u_{n,i}}
+V_t = \frac{\sum_{i=k+1}^{t} u_{n,i}^2}{\sum_{i=k+1}^{T} u_{n,i}^2}
 \end{equation}
   
 Under a null hypothesis of a constant parameter(s), this cumulative sum of squares follow a beta distribution and its mean is $(k-h)/(N-h)$. As significance levels, we use the bounds set as $\pm c_o + (k-h)/(N-h)$. The values of $c_0$ depend on the sample size. Our sample sizes are typically larger than the maximum value given in @brown_techniques_1975. For those particular samples, the maximum value was used.
@@ -333,7 +333,7 @@ R_t = S_t^{T}\beta_t + e_t, \quad e_t \sim \mathcal{N}(0,\sigma^2)
 (\#eq:stvp3)
 \end{equation}
   
-When transitioning from the SLRS to STVP method, the setup described by \@ref(eq:slrs1), \@ref(eq:slrs2) and \@ref(eq:slrs3) are replaced by \@ref(eq:stvp1), \@ref(eq:stvp2) and \@ref(eq:stvp3). The latter three STVP equations above are thus the foundation for the construction of the algorithm that is implemented for use and shown in Section \@ref(stepsstvp). When initializing the first values, we set the variance of the estimator $P^*_t$ to be very large and the $\beta_t$ parameter to be 0 to reflect 0 knowledge of the nature of the estimation at the beginning of the sample. The variance $\sigma_{\beta}$ of \@ref(eq:stvp3) is set as 25% of the $\beta_OLS$ of the full sample. This is the standard deviation of the random walk *prior* that was deliberately chosen and has important implications in the estimation of the path. Further analysis and review of this choice is covered in Section \@ref(fivemin)
+When transitioning from the SLRS to STVP method, the setup described by \@ref(eq:slrs1), \@ref(eq:slrs2) and \@ref(eq:slrs3) are replaced by \@ref(eq:stvp1), \@ref(eq:stvp2) and \@ref(eq:stvp3). The latter three STVP equations above are thus the foundation for the construction of the algorithm that is implemented for use and shown in Section \@ref(stepsstvp). When initializing the first values, we set the variance of the estimator $P^*_t$ to be very large and the $\beta_t$ parameter to be 0 to reflect 0 knowledge of the nature of the estimation at the beginning of the sample. The variance $\sigma_{\beta}$ of \@ref(eq:stvp3) is set as 25% of the $\beta_{OLS}$ of the full sample. This is the standard deviation of the random walk *prior* that was deliberately chosen and has important implications in the estimation of the path. Further analysis and review of this choice is covered in Section \@ref(fivemin)
     
 ```{r stvpplot, echo = FALSE, fig.cap="STVP applied to the UK CPI"}
 plotslrs(read.csv("~/R tests/finance related projects/stvp_df.csv"))
@@ -404,7 +404,7 @@ It is important to consider that the assets used in this study are well chosen t
   
 There are many elements that were not accounted for in the model that is first introduced. Despite allowing for time variation, there are many ways to improve upon the initial model. For instance, it has been proven that exchange rate prices may react in an asymmetric fashion where the expectation of a positive price jump is disparate to that of a negative one [@andersen_micro_2003]. The magnitude is also affected by the situation of the business cycle for the country from which the news is pertaining to [@fatum_asymmetries_2012]. We also disregard the "volume" activity data that is available to us which could be a contributing factor for future models. These types of changes might enhance the estimation and make for a more accurate representation of the true path. We have also shown that the data collection procedure can benefit from improvements. A meticulous selection of the time window considered and whether it should be fixed to a specific amount of time, as 5 minutes (like in this study), or chosen to vary depending on the conditions could vastly improve the quality of the analysis.
   
-Specifically, the prior for the STVP algorithm is easily adjustable using the ideas of @young_recursive_2011 or otherwise and a much better representation of the $\beta_t$ path would be achievable by having a higher quality one. Most notably, a prior that would place a limit whereby the $\beta_t$ could not change in sign. If it was discovered that previous surprises affect future ones, the use of a prior other than the 0 mean random walk could also be justified. 
+The prior for the STVP algorithm is easily adjustable using the ideas of @young_recursive_2011 or otherwise and a much better representation of the $\beta_t$ path would be achievable by having a higher quality one. Most notably, a prior that would place a limit whereby the $\beta_t$ could not change in sign. If it was discovered that previous surprises affect future ones, the use of a prior other than the 0 mean random walk could also be justified. 
     
 Finally, if the One-Step ahead forecasts were to be the priority, the emphasis should of course be placed on minimizing a loss function and thereby reducing irreducible and reducible errors alike. A Machine-Learning approach with algorithms designed specifically for prediction are most likely better suited to this purpose. The time dependency of the problem would nevertheless add to the complexity of such an algorithm and it would be worth considering using the estimators of this study as possible predictors.
   
