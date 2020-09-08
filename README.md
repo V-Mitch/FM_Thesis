@@ -1,2 +1,2 @@
-# FM_Private
-A private collection of files relating to my projects in finance
+# FM_Thesis
+Files pertaining to the research of my Masters Thesis
